@@ -10,7 +10,6 @@ const importZod = (from: string) => {
           "Update your default export and try again."
       );
     }
-    console.log(module)
 
     return module.default as unknown as Zod.Schema
   });

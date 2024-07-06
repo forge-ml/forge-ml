@@ -4,8 +4,6 @@ import { writeToJSON } from "../utils/toJSON";
 import path from "path";
 
 const transform = async (inFile: string, outFile: string) => {
-  console.log(inFile);
-
   const extension = inFile.split(".").pop();
   
   const filePath = path.join(process.cwd(), inFile);

@@ -4,6 +4,7 @@ import fs from "fs";
 import zodToJsonSchema from "zod-to-json-schema";
 import deploy from "./commands/deploy";
 import transform from "./commands/transform";
+import testCommand from "./commands/test";
 
 const NAME = "boop";
 
@@ -14,6 +15,7 @@ const cli = yargs(hideBin(process.argv));
 // commands
 deploy(cli);
 transform(cli);
+testCommand(cli)
 
 // list
 // get

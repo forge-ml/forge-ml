@@ -1,3 +1,4 @@
+import axios, { AxiosHeaders } from "axios";
 import https from "https";
 import http from "node:http";
 
@@ -8,7 +9,7 @@ export enum EP {
   DEPLOY,
 }
 
-const rootURL = "http://localhost:3000";
+const rootURL = "http://localhost:3009";
 
 const EPS = {
   [EP.TEST]: "/test",
@@ -17,20 +18,22 @@ const EPS = {
 
 type Options = {
   method: "GET" | "POST" | "PUT" | "DELETE";
-  headers?: http.OutgoingHttpHeaders;
-  body: {};
+  headers?: AxiosHeaders;
+  data: {};
 };
 
-const makeRequest = (action: EP, { method, headers, body }: Options) => {
-  https.request({
-    path: rootURL + EPS[action],
-    method: method || "GET",
-    headers: {
-      authorization: `Bearer ${API_KEY}`,
-      "content-type": body ? "application/json" : undefined,
-      ...headers,
-    },
-  });
+// TODO: wrap in a try catch, return {data, error}
+const makeRequest = async (action: EP, { method, headers, data }: Options) => {
+     return await  axios.request({
+           url: rootURL + EPS[action],
+           method: method || "GET",
+           headers: {
+               authorization: `Bearer ${API_KEY}`,
+               "content-type": data ? "application/json" : undefined,
+               ...headers,
+            },
+            data
+        });
 };
 
 export default makeRequest;

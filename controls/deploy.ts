@@ -12,7 +12,7 @@ const deploy = async (inFile: string, endpoint: string) => {
 
   makeRequest(EP.DEPLOY, {
     method: "POST",
-    body: {
+    data: {
       schema: json,
       endpoint,
     },
