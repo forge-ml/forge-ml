@@ -1,12 +1,11 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-import fs from "fs";
-import zodToJsonSchema from "zod-to-json-schema";
 import deploy from "./commands/deploy";
 import transform from "./commands/transform";
 import testCommand from "./commands/test";
+import auth from "./commands/auth";
+import authService from "./controls/auth/svc";
 
-const NAME = "boop";
 
 // import { clean_notes, create_note_handler, get_notes_handler, open_web_ui, search_note_handler } from "./handlers";
 
@@ -16,6 +15,7 @@ const cli = yargs(hideBin(process.argv));
 deploy(cli);
 transform(cli);
 testCommand(cli)
+auth(cli)
 
 // list
 // get

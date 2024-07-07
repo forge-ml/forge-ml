@@ -1,4 +1,5 @@
 import type { Argv } from "yargs";
+import authService from "../controls/auth/svc";
 
 const deploy = (cli: Argv) =>
   cli.command(
@@ -10,6 +11,11 @@ const deploy = (cli: Argv) =>
         type: "string",
       }),
     (args) => {
+      const apiKey = authService.getAPIKey();
+      if (!apiKey) {
+        console.log("No API key found. Run `fax login` or `fax signup` to create one.");
+        return;
+      }
       console.log(args.endpoint);
     }
   );

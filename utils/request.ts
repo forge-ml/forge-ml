@@ -1,8 +1,8 @@
 import axios, { AxiosHeaders } from "axios";
 import https from "https";
 import http from "node:http";
+import authService from "../controls/auth/svc";
 
-const API_KEY = "LOW KEY NO KEY";
 
 export enum EP {
   TEST,
@@ -24,11 +24,18 @@ type Options = {
 
 // TODO: wrap in a try catch, return {data, error}
 const makeRequest = async (action: EP, { method, headers, data }: Options) => {
+    const apiKey = authService.getAPIKey();
+    
      return await  axios.request({
            url: rootURL + EPS[action],
            method: method || "GET",
            headers: {
-               authorization: `Bearer ${API_KEY}`,
+            ...(
+              apiKey ? {
+                authorization: `Bearer ${apiKey}`,
+              } : {}
+            ),
+               authorization: `Bearer ${apiKey}`,
                "content-type": data ? "application/json" : undefined,
                ...headers,
             },

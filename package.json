@@ -1,9 +1,10 @@
 {
-  "name": "ai-cli",
+  "name": "aim",
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
     "@types/bun": "latest",
+    "@types/prompt-sync": "^4.2.3",
     "@types/yargs": "^17.0.32"
   },
   "peerDependencies": {
@@ -13,6 +14,7 @@
     "axios": "^1.7.2",
     "json-schema-to-zod": "^2.3.0",
     "path": "^0.12.7",
+    "prompt-sync": "^4.2.0",
     "yargs": "^17.7.2",
     "zod-to-json-schema": "^3.23.1"
   }

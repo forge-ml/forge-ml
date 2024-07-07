@@ -114,6 +114,7 @@ web_modules/
 
 .next
 out
+example
 
 # Nuxt.js build / generate output
 
@@ -175,3 +176,7 @@ dist
 .DS_Store
 
 notes.md
+
+
+## Testing
+schemas
