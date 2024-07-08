@@ -5,7 +5,7 @@ import { config } from "../../config/config";
 
 const login = async () => {
   const email = prompt()("Enter your email: ");
-  const password = prompt()("Enter your password: " );
+  const password = prompt().hide("Enter your password: " );
 
   try {
     const response = await axios.post(
