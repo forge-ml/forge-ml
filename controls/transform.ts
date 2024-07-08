@@ -1,6 +1,6 @@
-import importZod from "../utils/imports";
-import { toZod, writeToZod } from "../utils/toZod";
+import { importZod } from "../utils/imports";
 import { writeToJSON } from "../utils/toJSON";
+import { writeToZod } from "../utils/toZod";
 import path from "path";
 
 const transform = async (inFile: string, outFile: string) => {

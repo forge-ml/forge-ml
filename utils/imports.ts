@@ -1,7 +1,7 @@
 import fs from "fs";
 import { toJSON } from "./toJSON";
 
-const importZod = (from: string) => {
+export const importZod = (from: string) => {
   return import(from).then((module) => {
     if (!("_def" in module.default)) {
       throw Error(
@@ -11,8 +11,12 @@ const importZod = (from: string) => {
       );
     }
 
-    return module.default as unknown as Zod.Schema
+    return module.default as unknown as Zod.Schema;
   });
 };
 
-export default importZod
+export const importConfig = (from: string) => {
+  return import(from).then((module) => {
+    return module.config as { path?: string };
+  });
+};
