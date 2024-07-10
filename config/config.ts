@@ -1,5 +1,9 @@
+import os from "os";
+
+const bin = "forge";
 
 export const config = {
   serverUrl: "http://localhost:3009",
-  apiKeyFilePath: ".fax/key.json",
+  apiKeyFilePath: os.homedir() + `/.${bin}/key.json`,
+  bin,
 };

@@ -21,7 +21,7 @@ const authCommand = (cli: Argv) =>
           type: "string",
         }),
     async (args) => {
-      const { action, key } = args;
+      const { action } = args;
 
       switch (action) {
         case "signup":

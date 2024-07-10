@@ -3,22 +3,19 @@ import prompt from "prompt-sync";
 import authService from "./svc";
 import { config } from "../../config/config";
 
+
 const login = async () => {
   const email = prompt()("Enter your email: ");
-  const password = prompt().hide("Enter your password: " );
+  const password = prompt().hide("Enter your password: ");
 
   try {
-    const response = await axios.post(
-      `${config.serverUrl}/cli/login`,
-      {
-        email,
-        password,
-      }
-    );
+    const response = await axios.post(`${config.serverUrl}/cli/login`, {
+      email,
+      password,
+    });
 
     if (response.status === 200) {
       const apiKey = response.data.apiKey;
-      console.log(apiKey);
       console.log("Login successful!");
 
       // Set the apiKey for future requests

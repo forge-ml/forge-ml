@@ -3,6 +3,9 @@ import authService from "../controls/auth/svc";
 import { deploy, deployAll } from "../controls/deploy";
 import { importConfig } from "../utils/imports";
 import path from "path";
+import cWrap from "../utils/logging";
+import { config } from "../config/config";
+import authGate from "../utils/authGate";
 
 const deployCommand = (cli: Argv) =>
   cli.command(
@@ -20,9 +23,15 @@ const deployCommand = (cli: Argv) =>
           description:
             "the path to deploy the schema to. This will override the exported path. Only alphanumeric characters are valid.",
           type: "string",
-        }).example("deploy all", "Deploy all schemas in the fax directory")
-        .example("deploy mySchema.ts", "Deploy the schema in the fax directory with the name mySchema"),
+        })
+        .example("deploy all", "Deploy all schemas in the fax directory")
+        .example(
+          "deploy mySchema.ts",
+          "Deploy the schema in the fax directory with the name mySchema"
+        ),
     async (args) => {
+      authGate();
+
       if (args.filename === "all") {
         await deployAll();
         return;
@@ -44,8 +53,8 @@ const deployCommand = (cli: Argv) =>
         return;
       }
 
-      console.log(`Deployed schema to ${response.data.url}`);
-    }
+      console.log(`Deployed schema to ${cWrap.fg(response.data.url)}`);
+    },
   );
 
 export default deployCommand;

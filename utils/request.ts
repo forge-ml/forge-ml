@@ -6,6 +6,7 @@ import authService from "../controls/auth/svc";
 export enum EP {
   TEST,
   DEPLOY,
+  GET_DOCS_URL,
 }
 
 const rootURL = "http://localhost:3009";
@@ -13,12 +14,13 @@ const rootURL = "http://localhost:3009";
 const EPS = {
   [EP.TEST]: "/test",
   [EP.DEPLOY]: "/endpoint",
+  [EP.GET_DOCS_URL]: "/docs/url",
 };
 
 type Options = {
   method: "GET" | "POST" | "PUT" | "DELETE";
   headers?: AxiosHeaders;
-  data: {};
+  data?: {};
 };
 
 // TODO: wrap in a try catch, return {data, error}
@@ -43,7 +45,7 @@ const makeRequest = async (action: EP, { method, headers, data }: Options) => {
     });
   } catch (error) {
     console.log(JSON.stringify((error as any).response.data, null, 2));
-    return { error };
+    return { error, message: (error as any).response.data.message };
   }
 };
 

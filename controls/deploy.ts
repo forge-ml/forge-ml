@@ -9,7 +9,7 @@ const deploy = async (inFile: string, endpoint: string) => {
   const zod = await importZod(inFile);
   const json = toJSON(zod);
 
-  return await makeRequest(EP.DEPLOY, {
+  const response = await makeRequest(EP.DEPLOY, {
     method: "POST",
     data: {
       name: "default description",
@@ -18,6 +18,13 @@ const deploy = async (inFile: string, endpoint: string) => {
       path: endpoint,
     },
   });
+
+  if ("error" in response) {
+    console.log(cWrap.br("Error deploying"));
+    console.log(cWrap.fr(response.message.error as string));
+  }
+
+  return response;
 };
 
 

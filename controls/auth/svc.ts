@@ -1,5 +1,6 @@
 import fs from "fs";
 import { config } from "../../config/config";
+import login from "./login";
 
 const API_KEY_FILE_PATH = config.apiKeyFilePath;
 
@@ -24,6 +25,15 @@ const authService = {
       return false;
     }
     fs.unlinkSync(filePath);
+    return true;
+  },
+  useAuthGuard: () => {
+    const apiKey = authService.getAPIKey();
+    if (apiKey === null) {
+      console.log("No API key found. Please login to continue.");
+      login();
+      return false;
+    }
     return true;
   },
 };
