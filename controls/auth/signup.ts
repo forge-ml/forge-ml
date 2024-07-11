@@ -6,6 +6,7 @@ import authService from "./svc";
 const signup = async () => {
   const email = prompt()("Enter your email: ");
   const password = prompt().hide("Enter your password: ");
+  const apiKey = prompt().hide(`Enter your OpenAI API key (this is used for ${config.bin} test and deployed schemas): `);
   
   try {
     const response = await axios.post(
@@ -13,6 +14,7 @@ const signup = async () => {
       {
         email,
         password,
+        apiKey,
       }
     );
 

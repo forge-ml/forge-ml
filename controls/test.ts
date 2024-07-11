@@ -5,6 +5,7 @@ import makeRequest, { EP } from "../utils/request";
 import readline from "node:readline";
 import { stdin as input, stdout as output } from "node:process";
 import cWrap from "../utils/logging";
+import getErrorMessage from "./auth/errors.util";
 
 const test = async (inFile: string) => {
   const filePath = path.join(process.cwd(), inFile);
@@ -25,13 +26,9 @@ const test = async (inFile: string) => {
 
     if ("error" in res) {
       console.log(cWrap.br(res.error as string));
-      console.log(cWrap.fr("Issue with " + inFile));
-      console.log(
-        cWrap.fr(
-          "Consider adding better descriptors to your zod schema or modifying your prompt."
-        )
-      );
-      return;
+      console.log(cWrap.fr("Issue testing " + inFile + ":\n"));
+      console.log(cWrap.fr(getErrorMessage(res.message)));
+      process.exit(1);
     }
 
     console.log(cWrap.bg("Healthy response from " + inFile));
