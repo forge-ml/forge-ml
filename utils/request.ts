@@ -1,6 +1,4 @@
 import axios, { AxiosHeaders } from "axios";
-import https from "https";
-import http from "node:http";
 import localConfigService from "../controls/auth/svc";
 
 export enum EP {

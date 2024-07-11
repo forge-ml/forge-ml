@@ -1,6 +1,7 @@
 import fs from "fs";
 import { config } from "../../config/config";
 import login from "./login";
+import { Keys } from "../../commands/key";
 
 const API_KEY_FILE_PATH = config.apiKeyFilePath;
 
@@ -32,13 +33,13 @@ const localConfigService = {
     return config[key] || null;
   },
   storeAPIKey: (key: string, filePath = API_KEY_FILE_PATH) => {
-    localConfigService.storeValue("apiKey", key, filePath);
+    localConfigService.storeValue(Keys.FORGE, key, filePath);
   },
   getAPIKey: (filePath = API_KEY_FILE_PATH): string | null => {
-    return localConfigService.getValue("apiKey", filePath);
+    return localConfigService.getValue(Keys.FORGE, filePath);
   },
   deleteAPIKey: (filePath = API_KEY_FILE_PATH): boolean => {
-    return localConfigService.deleteValue("apiKey", filePath);
+    return localConfigService.deleteValue(Keys.FORGE, filePath);
   },
   useAuthGuard: () => {
     const apiKey = localConfigService.getAPIKey();

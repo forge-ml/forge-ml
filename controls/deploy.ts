@@ -29,7 +29,14 @@ const deploy = async (inFile: string, endpoint: string) => {
 };
 
 const deployAll = async () => {
-  const files = fs.readdirSync(path.join(process.cwd(), cfg.schemaPath));
+  let files;
+  try {
+    files = fs.readdirSync(path.join(process.cwd(), cfg.schemaPath));
+  } catch (error) {
+    console.error(cWrap.fr(`Error reading schema directory \`${cfg.schemaPath}\`. Please verify it exists and try again.`));
+    return;
+  }
+
   for (const file of files) {
     const filePath = path.join(process.cwd(), cfg.schemaPath, file);
     const config = await importConfig(filePath);

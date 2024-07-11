@@ -1,21 +1,35 @@
 {
-  "name": "aim",
-  "module": "index.ts",
+  "name": "forge-ml",
+  "version": "1.0.0",
+  "description": "A CLI tool for schema validation and deployment",
+  "main": "index.js",
+  "bin": {
+    "forge": "./index.js"
+  },
   "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node index.js"
+  },
   "devDependencies": {
     "@types/bun": "latest",
     "@types/prompt-sync": "^4.2.3",
-    "@types/yargs": "^17.0.32"
-  },
-  "peerDependencies": {
+    "@types/yargs": "^17.0.32",
     "typescript": "^5.0.0"
   },
   "dependencies": {
     "axios": "^1.7.2",
     "json-schema-to-zod": "^2.3.0",
-    "path": "^0.12.7",
     "prompt-sync": "^4.2.0",
     "yargs": "^17.7.2",
     "zod-to-json-schema": "^3.23.1"
-  }
+  },
+  "keywords": [
+    "cli",
+    "schema",
+    "validation",
+    "deployment"
+  ],
+  "author": "",
+  "license": "ISC"
 }

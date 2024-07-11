@@ -16,8 +16,8 @@ const keyCommand = (cli: Argv) =>
         "list",
         "lists the supported providers and key status",
         async () => {
-          const apiKey = localConfigService.getValue(Keys.FORGE + "Key");
-          const openAiKey = localConfigService.getValue(Keys.OPENAI + "Key");
+          const apiKey = localConfigService.getValue(Keys.FORGE);
+          const openAiKey = localConfigService.getValue(Keys.OPENAI);
           console.log("     Key       |     Status     ");
           console.log("--------------------------------");
           console.log(

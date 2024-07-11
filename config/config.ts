@@ -4,7 +4,7 @@ const bin = "forge";
 
 export const config = {
   serverUrl: "http://localhost:3009",
-  schemaPath: "schemas",
+  schemaPath: "forge",
   apiKeyFilePath: os.homedir() + `/.${bin}/key.json`,
   bin,
 };

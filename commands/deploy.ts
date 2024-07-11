@@ -10,24 +10,30 @@ import authGate from "../utils/authGate";
 const deployCommand = (cli: Argv) =>
   cli.command(
     "deploy <filename>",
-    "deploy a schema to the fax api. You can optionally override the path by passing in the --path flag.",
+    "deploy a schema to the forge api. You can optionally override the path by passing in the --path flag.",
     (yargs) =>
       yargs
         .positional("filename", {
-          description:
-            "The filename of the schema to deploy. This is the name of the file that contains the schema. `deploy all` to deploy all schemas in the fax directory.",
+          description: `The filename of the schema to deploy. This is the name of the file that contains the schema. ${cWrap.fg(
+            "deploy all"
+          )} to deploy all schemas in the ${cWrap.fg("forge/")} directory.`,
           type: "string",
           default: "all",
         })
         .option("path", {
           description:
-            "the path to deploy the schema to. This will override the exported path. Only alphanumeric characters are valid.",
+            "the path to deploy the schema to. This will override the path specified by the exported config. Only alphanumeric characters are valid.",
           type: "string",
         })
-        .example("deploy all", "Deploy all schemas in the fax directory")
         .example(
-          "deploy mySchema.ts",
-          "Deploy the schema in the fax directory with the name mySchema"
+          "deploy all",
+          `Deploy all schemas in the ${cWrap.fg("forge/")} directory`
+        )
+        .example(
+          "deploy forge/mySchema.ts",
+          `Deploy the schema in the ${cWrap.fg(
+            "forge/"
+          )} directory with the name mySchema`
         ),
     async (args) => {
       authGate();
@@ -54,7 +60,7 @@ const deployCommand = (cli: Argv) =>
       }
 
       console.log(`Deployed schema to ${cWrap.fg(response.data.url)}`);
-    },
+    }
   );
 
 export default deployCommand;
