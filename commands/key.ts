@@ -1,7 +1,6 @@
 import type { Argv } from "yargs";
 import makeRequest, { EP } from "../utils/request";
 import cWrap from "../utils/logging";
-import authGate from "../utils/authGate";
 import localConfigService from "../controls/auth/svc";
 
 export enum Keys {
