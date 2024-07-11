@@ -29,7 +29,7 @@ const makeRequest = async (action: EP, { method, headers, data }: Options) => {
   const apiKey = localConfigService.getAPIKey();
 
   try {
-    return await axios.request({
+    const response = await axios.request({
       url: rootURL + EPS[action],
       method: method || "GET",
       headers: {
@@ -43,9 +43,14 @@ const makeRequest = async (action: EP, { method, headers, data }: Options) => {
       },
       data,
     });
+    return { data: response.data, error: null, message: null };
   } catch (error) {
     console.log(JSON.stringify((error as any).response.data, null, 2));
-    return { error, message: (error as any).response.data.message };
+    return {
+      error,
+      message: (error as any).response.data.message,
+      data: null,
+    };
   }
 };
 

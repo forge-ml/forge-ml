@@ -69,7 +69,7 @@ const keyCommand = (cli: Argv) =>
               return;
             }
             console.log(`Key set successfully for ${cWrap.fg(keyToSet)}.`);
-            return;
+            
           }
 
           try {

@@ -12,12 +12,12 @@ const docsCommand = (cli: Argv) =>
       
       const response = await makeRequest(EP.GET_DOCS_URL, { method: "GET" });
 
-      if ("error" in response) {
+      if (response.error) {
         console.log(`${cWrap.br("Error")} fetching docs url.`);
         return;
-      }
-
-      console.log(`Your docs are available at: ${cWrap.fg(response.data.url)}`);
+      } else {
+        console.log(`Your docs are available at: ${cWrap.fg(response.data.url)}`);
+        }
     }
   );
 

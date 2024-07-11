@@ -24,15 +24,16 @@ const test = async (inFile: string) => {
       },
     });
 
-    if ("error" in res) {
+    if (res.error) {
       console.log(cWrap.br(res.error as string));
       console.log(cWrap.fr("Issue testing " + inFile + ":\n"));
       console.log(cWrap.fr(getErrorMessage(res.message)));
       process.exit(1);
+    } else {
+ 
+      console.log(cWrap.bg("Healthy response from " + inFile));
+      console.log(res.data);
     }
-
-    console.log(cWrap.bg("Healthy response from " + inFile));
-    console.log(res.data);
 
     rl.close();
   });

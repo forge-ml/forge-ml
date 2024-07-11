@@ -48,9 +48,9 @@ const deployCommand = (cli: Argv) =>
 
       const response = await deploy(file, endpoint);
 
-      if ("error" in response) {
+      if (response.error) {
         console.error("Whoops! Looks like something went wrong.");
-        return;
+        process.exit(1);
       }
 
       console.log(`Deployed schema to ${cWrap.fg(response.data.url)}`);
