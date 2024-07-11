@@ -1,5 +1,6 @@
 import type { Argv } from "yargs";
 import test from "../controls/test";
+import authGate from "../utils/authGate";
 
 const testCommand = (cli: Argv) =>
   cli.command(
@@ -7,13 +8,16 @@ const testCommand = (cli: Argv) =>
     "runs a prompt against a given schema to simulate a Forge endpoint",
     (yargs) =>
       yargs.positional("schema-file", {
-        description: "The location of the file containing the zod schema to test against.",
+        description:
+          "The location of the file containing the zod schema to test against.",
         type: "string",
         demandOption: true,
       }),
     (args) => {
-      test(args["schema-file"])
+      authGate();
+
+      test(args["schema-file"]);
     }
   );
 
-  export default testCommand;
+export default testCommand;

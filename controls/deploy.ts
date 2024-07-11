@@ -1,9 +1,10 @@
-import {importConfig, importZod} from "../utils/imports";
-import { toJSON} from "../utils/toJSON";
+import { importConfig, importZod } from "../utils/imports";
+import { toJSON } from "../utils/toJSON";
 import path from "path";
 import makeRequest, { EP } from "../utils/request";
 import fs from "fs";
 import { cWrap } from "../utils/logging";
+import { config as cfg } from "../config/config";
 
 const deploy = async (inFile: string, endpoint: string) => {
   const zod = await importZod(inFile);
@@ -27,23 +28,32 @@ const deploy = async (inFile: string, endpoint: string) => {
   return response;
 };
 
-
 const deployAll = async () => {
-  const files = fs.readdirSync(path.join(process.cwd(), "schemas"));
+  const files = fs.readdirSync(path.join(process.cwd(), cfg.schemaPath));
   for (const file of files) {
-    const filePath = path.join(process.cwd(), "schemas", file);
+    const filePath = path.join(process.cwd(), cfg.schemaPath, file);
     const config = await importConfig(filePath);
 
     if (!config?.path) {
-      console.log(`- ${cWrap.fm("No path found")} in ${cWrap.fg(file)}. Skipping...`);
+      console.log(
+        `- ${cWrap.fm("No path found")} in ${cWrap.fg(file)}. Skipping...`
+      );
       continue;
     }
 
     try {
       await deploy(filePath, config.path);
-      console.log(`- ${cWrap.fg("Deployed")} ${cWrap.fg(file)} to ${cWrap.fg(config.path)}`);
+      console.log(
+        `- ${cWrap.fg("Deployed")} ${cWrap.fg(file)} to ${cWrap.fg(
+          config.path
+        )}`
+      );
     } catch (error) {
-      console.log(`- ${cWrap.br("Error deploying")} ${cWrap.fg(file)}. Please check that you have a valid zodSchema as the default export. Skipping...`);
+      console.log(
+        `- ${cWrap.br("Error deploying")} ${cWrap.fg(
+          file
+        )}. Please check that you have a valid zodSchema as the default export. Skipping...`
+      );
     }
   }
 };
