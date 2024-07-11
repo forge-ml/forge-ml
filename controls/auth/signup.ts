@@ -6,8 +6,8 @@ import { Keys } from "../../commands/key";
 
 const signup = async () => {
   const email = prompt()("Enter your email: ");
-  const userName = prompt()("Enter your username: ");
   const password = prompt().hide("Enter your password: ");
+  const userName = prompt()("Enter your username: ");
   const apiKey = prompt().hide(
     `Enter your OpenAI API key (this is used for ${config.bin} test and deployed schemas): `
   );
@@ -24,7 +24,6 @@ const signup = async () => {
       const apiKey = response.data.apiKey;
       const username = response.data.userName;
       console.log("Signup successful!");
-      console.log("Your API key is stored here: ", config.apiKeyFilePath);
       console.log("Your username is: '" + username + "'");
 
       // Set the apiKey for future requests

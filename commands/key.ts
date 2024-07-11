@@ -5,8 +5,8 @@ import authGate from "../utils/authGate";
 import localConfigService from "../controls/auth/svc";
 
 export enum Keys {
-  FORGE = "forgeKey",
-  OPENAI = "openAiKey",
+  FORGE = "forge",
+  OPENAI = "openAI",
 }
 
 const keyCommand = (cli: Argv) =>
@@ -16,8 +16,8 @@ const keyCommand = (cli: Argv) =>
         "list",
         "lists the supported providers and key status",
         async () => {
-          const apiKey = localConfigService.getValue(Keys.FORGE);
-          const openAiKey = localConfigService.getValue(Keys.OPENAI);
+          const apiKey = localConfigService.getValue(Keys.FORGE + "Key");
+          const openAiKey = localConfigService.getValue(Keys.OPENAI + "Key");
           console.log("     Key       |     Status     ");
           console.log("--------------------------------");
           console.log(
@@ -29,15 +29,29 @@ const keyCommand = (cli: Argv) =>
         }
       )
       .command(
-        "copy <key>",
-        "copies a forge key to your clipboard",
+        "copy <provider>",
+        "copies a forge key to your clipboard. This is a nice utility function to help with authenticated requests.",
         (yargs) =>
-          yargs.positional("key", {
-            description: "The key to copy",
+          yargs.positional("provider", {
+            description: "The provider to copy the key for",
             type: "string",
             demandOption: true,
+            choices: Object.values(Keys),
           }),
-        async (args) => {}
+        async (args) => {
+          const { provider } = args;
+          const key = localConfigService.getValue(provider);
+          if (!key) {
+            console.log(`${cWrap.br("Error")} copying key.`);
+            return;
+          }
+          // ONLY WORKS ON MACOS
+          const proc = require("child_process").spawn("pbcopy");
+          proc.stdin.write(key);
+          proc.stdin.end();
+
+          console.log(`Key copied to clipboard for ${cWrap.fg(provider)}.`);
+        }
       )
       .command(
         "set <key>",
@@ -61,20 +75,19 @@ const keyCommand = (cli: Argv) =>
 
           if (keyToSet === Keys.OPENAI) {
             const { data, error } = await makeRequest(EP.SET_OPENAI_KEY, {
-              data: { key },
+              data: { apiKey: key },
               method: "POST",
             });
             if (error) {
               console.log(`${cWrap.br("Error")} setting key.`);
               return;
             }
-            console.log(`Key set successfully for ${cWrap.fg(keyToSet)}.`);
-            
+            console.log(`Deployment key successfully updated for ${cWrap.fg(keyToSet)}.`);
           }
 
           try {
             localConfigService.storeValue(keyToSet, key);
-            console.log(`Key set successfully for ${cWrap.fg(keyToSet)}.`);
+            console.log(`Local key successfully updated for ${cWrap.fg(keyToSet)}.`);
           } catch (error) {
             console.log(`${cWrap.br("Error")} setting key.`);
             return;

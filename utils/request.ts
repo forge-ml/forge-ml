@@ -16,7 +16,7 @@ const EPS = {
   [EP.TEST]: "/test",
   [EP.DEPLOY]: "/endpoint",
   [EP.GET_DOCS_URL]: "/docs/url",
-  [EP.SET_OPENAI_KEY]: "/cli/set",
+  [EP.SET_OPENAI_KEY]: "/cli/key",
 };
 
 type Options = {
