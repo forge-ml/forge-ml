@@ -1,8 +1,8 @@
 import { config } from "../../config/config";
-import authService from "./svc";
+import localConfigService from "./svc";
 
 const logout = () => {
-  const success = authService.deleteAPIKey();
+  const success = localConfigService.deleteAPIKey();
   if (success) {
     console.log("Bye!");
   } else {

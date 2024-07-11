@@ -4,31 +4,44 @@ import login from "./login";
 
 const API_KEY_FILE_PATH = config.apiKeyFilePath;
 
-const authService = {
-  storeAPIKey: (key: string, filePath = API_KEY_FILE_PATH) => {
-    const apiKey = { key };
-    const dir = filePath.substring(0, filePath.lastIndexOf("/"));
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    fs.writeFileSync(filePath, JSON.stringify(apiKey));
-  },
-  getAPIKey: (filePath = API_KEY_FILE_PATH): string | null => {
+const localConfigService = {
+  loadConfig: (filePath = API_KEY_FILE_PATH) => {
     if (!fs.existsSync(filePath)) {
       return null;
     }
-    const apiKey = fs.readFileSync(filePath, "utf8");
-    return JSON.parse(apiKey).key;
-  },
-  deleteAPIKey: (filePath = API_KEY_FILE_PATH): boolean => {
-    if (!fs.existsSync(filePath)) {
-      return false;
+    const value = fs.readFileSync(filePath, "utf8");
+    try {
+      return JSON.parse(value);
+    } catch (error) {
+      return {};
     }
-    fs.unlinkSync(filePath);
+  },
+  storeValue: (key: string, value: string, filePath = API_KEY_FILE_PATH) => {
+    const config = localConfigService.loadConfig(filePath);
+    config[key] = value;
+    fs.writeFileSync(filePath, JSON.stringify(config));
+  },
+  deleteValue: (key: string, filePath = API_KEY_FILE_PATH): boolean => {
+    const config = localConfigService.loadConfig(filePath);
+    delete config[key];
+    fs.writeFileSync(filePath, JSON.stringify(config));
     return true;
   },
+  getValue: (key: string, filePath = API_KEY_FILE_PATH): string | null => {
+    const config = localConfigService.loadConfig(filePath);
+    return config[key] || null;
+  },
+  storeAPIKey: (key: string, filePath = API_KEY_FILE_PATH) => {
+    localConfigService.storeValue("apiKey", key, filePath);
+  },
+  getAPIKey: (filePath = API_KEY_FILE_PATH): string | null => {
+    return localConfigService.getValue("apiKey", filePath);
+  },
+  deleteAPIKey: (filePath = API_KEY_FILE_PATH): boolean => {
+    return localConfigService.deleteValue("apiKey", filePath);
+  },
   useAuthGuard: () => {
-    const apiKey = authService.getAPIKey();
+    const apiKey = localConfigService.getAPIKey();
     if (apiKey === null) {
       console.log("No API key found. Please login to continue.");
       login();
@@ -38,4 +51,4 @@ const authService = {
   },
 };
 
-export default authService;
+export default localConfigService;

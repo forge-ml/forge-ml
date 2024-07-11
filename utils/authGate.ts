@@ -1,9 +1,9 @@
 import { config } from "../config/config";
-import authService from "../controls/auth/svc";
+import localConfigService from "../controls/auth/svc";
 import cWrap from "./logging";
 
 const authGate = () => {
-  const loggedIn = authService.getAPIKey();
+  const loggedIn = localConfigService.getAPIKey();
 
   if (!loggedIn) {
     console.log(

@@ -1,6 +1,6 @@
 import axios from "axios";
 import prompt from "prompt-sync";
-import authService from "./svc";
+import localConfigService from "./svc";
 import { config } from "../../config/config";
 
 
@@ -19,7 +19,7 @@ const login = async () => {
       console.log("Login successful!");
 
       // Set the apiKey for future requests
-      authService.storeAPIKey(apiKey);
+      localConfigService.storeAPIKey(apiKey);
     } else {
       console.error(
         "Login failed. Please check your credentials and try again."

@@ -1,5 +1,5 @@
 import type { Argv } from "yargs";
-import authService from "../controls/auth/svc";
+import localConfigService from "../controls/auth/svc";
 import signup from "../controls/auth/signup";
 import login from "../controls/auth/login";
 import logout from "../controls/auth/logout";
@@ -26,11 +26,15 @@ const authCommand = (cli: Argv) =>
       switch (action) {
         case "signup":
           await signup();
-          console.log("Your API key is stored here: ", config.apiKeyFilePath);
+          console.log(
+            `Your ${config.bin} configuration is stored here: ${config.apiKeyFilePath}`
+          );
           break;
         case "login":
           await login();
-          console.log("Your API key is stored here: ", config.apiKeyFilePath);
+          console.log(
+            `Your ${config.bin} configuration is stored here: ${config.apiKeyFilePath}`
+          );
           break;
         case "logout":
           logout();

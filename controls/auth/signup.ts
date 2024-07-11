@@ -1,7 +1,8 @@
 import axios from "axios";
 import { config } from "../../config/config";
 import prompt from "prompt-sync";
-import authService from "./svc";
+import localConfigService from "./svc";
+import { Keys } from "../../commands/key";
 
 const signup = async () => {
   const email = prompt()("Enter your email: ");
@@ -23,7 +24,8 @@ const signup = async () => {
       console.log("Signup successful!");
 
       // Set the apiKey for future requests
-      authService.storeAPIKey(apiKey);
+      localConfigService.storeAPIKey(apiKey);
+      localConfigService.storeValue(Keys.OPENAI, apiKey);
     } else {
       console.error(
         "Signup failed. Please check your credentials and try again."

@@ -1,5 +1,5 @@
 import type { Argv } from "yargs";
-import authService from "../controls/auth/svc";
+import localConfigService from "../controls/auth/svc";
 import { deploy, deployAll } from "../controls/deploy";
 import { importConfig } from "../utils/imports";
 import path from "path";
