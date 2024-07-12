@@ -8,6 +8,10 @@ const API_KEY_FILE_PATH = config.apiKeyFilePath;
 const localConfigService = {
   loadConfig: (filePath = API_KEY_FILE_PATH): Record<string, string> => {
     if (!fs.existsSync(filePath)) {
+      fs.mkdirSync(filePath.substring(0, filePath.lastIndexOf("/")), {
+        recursive: true,
+      });
+      fs.writeFileSync(filePath, JSON.stringify({}));
       return {};
     }
     const value = fs.readFileSync(filePath, "utf8");
