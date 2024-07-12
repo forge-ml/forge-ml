@@ -1,7 +1,6 @@
 bun.lockb
 publish.sh
 tsconfig.json
-index.ts
 
 .env
 
