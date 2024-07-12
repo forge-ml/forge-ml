@@ -4,6 +4,7 @@ import signup from "../controls/auth/signup";
 import login from "../controls/auth/login";
 import logout from "../controls/auth/logout";
 import { config } from "../config/config";
+import update from "../controls/auth/update";
 
 const authCommand = (cli: Argv) =>
   cli.command(
@@ -35,6 +36,9 @@ const authCommand = (cli: Argv) =>
           console.log(
             `Your ${config.bin} configuration is stored here: ${config.apiKeyFilePath}`
           );
+          break;
+        case "update":
+          await update();
           break;
         case "logout":
           logout();

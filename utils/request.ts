@@ -6,6 +6,7 @@ export enum EP {
   DEPLOY,
   GET_DOCS_URL,
   SET_OPENAI_KEY,
+  UPDATE_USERNAME,
 }
 
 const rootURL = "http://localhost:3009";
@@ -15,6 +16,7 @@ const EPS = {
   [EP.DEPLOY]: "/endpoint",
   [EP.GET_DOCS_URL]: "/docs/url",
   [EP.SET_OPENAI_KEY]: "/cli/key",
+  [EP.UPDATE_USERNAME]: "/cli/updateUsername",
 };
 
 type Options = {
