@@ -24,6 +24,16 @@ const test = async (inFile: string) => {
       },
     });
 
+    //in case user signs up with no openAI key
+    if (res.message === "OpenAI provider key is required") {
+      console.log(
+        cWrap.fr(
+          "You have not set up an OpenAI key. Please set up an OpenAI key by running `forge key set`"
+        )
+      );
+      process.exit(1);
+    }
+
     if (
       res.data.error ===
       "Invalid API key provided. Please check your API key and try again."
