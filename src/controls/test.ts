@@ -40,7 +40,7 @@ const test = async (inFile: string) => {
     ) {
       console.log(
         cWrap.fr(
-          "There was an OpenAI invalid key error when testing your schema: Please check if you have an active OpenAI key set up in your account.\nIf not, you can set it up by running `forge key set`"
+          "There was an OpenAI invalid key error when testing your schema: Please verify if you have an active OpenAI key set up in your account.\nIf not, you can set your OpenAI key by running `forge key set`"
         )
       );
       process.exit(1);
