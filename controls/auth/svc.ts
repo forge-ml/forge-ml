@@ -32,17 +32,8 @@ const localConfigService = {
     const config = localConfigService.loadConfig(filePath);
     return config[key] || null;
   },
-  storeAPIKey: (key: string, filePath = API_KEY_FILE_PATH) => {
-    localConfigService.storeValue(Keys.FORGE, key, filePath);
-  },
-  getAPIKey: (filePath = API_KEY_FILE_PATH): string | null => {
-    return localConfigService.getValue(Keys.FORGE, filePath);
-  },
-  deleteAPIKey: (filePath = API_KEY_FILE_PATH): boolean => {
-    return localConfigService.deleteValue(Keys.FORGE, filePath);
-  },
   useAuthGuard: () => {
-    const apiKey = localConfigService.getAPIKey();
+    const apiKey = localConfigService.getValue(Keys.FORGE);
     if (apiKey === null) {
       console.log("No API key found. Please login to continue.");
       login();

@@ -9,7 +9,7 @@ export enum Keys {
 }
 
 const keyCommand = (cli: Argv) =>
-  cli.command("key", "manage your forge keys", (yargs) =>
+  cli.command("key", "manage your forge-associated keys", (yargs) =>
     yargs
       .command(
         "list",

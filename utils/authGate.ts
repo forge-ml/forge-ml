@@ -1,9 +1,10 @@
+import { Keys } from "../commands/key";
 import { config } from "../config/config";
 import localConfigService from "../controls/auth/svc";
 import cWrap from "./logging";
 
 const authGate = () => {
-  const loggedIn = localConfigService.getAPIKey();
+  const loggedIn = localConfigService.getValue(Keys.FORGE);
 
   if (!loggedIn) {
     console.log(

@@ -27,7 +27,7 @@ const signup = async () => {
       console.log("Your username is: '" + username + "'");
 
       // Set the apiKey for future requests
-      localConfigService.storeAPIKey(apiKey);
+      localConfigService.storeValue(Keys.FORGE, apiKey);
       localConfigService.storeValue(Keys.OPENAI, apiKey);
     } else {
       console.error(

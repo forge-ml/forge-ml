@@ -16,6 +16,7 @@ const authCommand = (cli: Argv) =>
           description: "The action to perform: signup, login, logout, update",
           choices: ["signup", "login", "logout", "update"],
           type: "string",
+          choices: ["signup", "login", "logout"],
           demandOption: true,
         })
         .option("key", {

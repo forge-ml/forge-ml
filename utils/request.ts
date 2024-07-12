@@ -1,5 +1,6 @@
 import axios, { AxiosHeaders } from "axios";
 import localConfigService from "../controls/auth/svc";
+import { Keys } from "../commands/key";
 
 export enum EP {
   TEST,
@@ -26,7 +27,7 @@ type Options = {
 };
 
 const makeRequest = async (action: EP, { method, headers, data }: Options) => {
-  const apiKey = localConfigService.getAPIKey();
+  const apiKey = localConfigService.getValue(Keys.FORGE);
 
   try {
     const response = await axios.request({
