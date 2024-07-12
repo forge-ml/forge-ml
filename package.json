@@ -4,7 +4,7 @@
   "description": "A CLI tool for schema validation and deployment",
   "main": "index.js",
   "bin": {
-    "forge": "./bin/forge-ml.js"
+    "forge": "bin/index.js"
   },
   "type": "module",
   "scripts": {
