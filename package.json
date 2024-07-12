@@ -9,8 +9,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "start": "tsx index.ts",
-    "prepublishOnly": "npm run build"
+    "start": "tsx index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
