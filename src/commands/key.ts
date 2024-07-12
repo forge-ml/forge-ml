@@ -67,6 +67,16 @@ const keyCommand = (cli: Argv) =>
               description: "The provider to set the key for",
               choices: Object.values(Keys),
               default: Keys.OPENAI,
+            })
+            .fail((msg, err, yargs) => {
+              if (err) throw err;
+              if (
+                msg ===
+                "Not enough non-option arguments: got 0, need at least 1"
+              ) {
+                console.error("You need to provide a key to set:\n");
+              }
+              yargs.showHelp();
             }),
         async (args) => {
           const { key, provider } = args;
@@ -89,7 +99,7 @@ const keyCommand = (cli: Argv) =>
           try {
             localConfigService.storeValue(keyToSet, key);
             console.log(
-              `Local key successfully updated for ${cWrap.fg(keyToSet)}.`,
+              `Local key successfully updated for ${cWrap.fg(keyToSet)}.`
             );
           } catch (error) {
             console.log(`${cWrap.br("Error")} setting key.`);
