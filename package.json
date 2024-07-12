@@ -4,12 +4,13 @@
   "description": "A CLI tool for schema validation and deployment",
   "main": "index.js",
   "bin": {
-    "forge": "index.js"
+    "forge": "forge-ml"
   },
   "type": "module",
   "scripts": {
-    "build": "bun build index.ts --target node > index.js",
-    "start": "tsx index.ts"
+    "build": "bun build index.ts --compile --outfile forge-ml",
+    "start": "tsx index.ts",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@types/bun": "latest",
