@@ -1,6 +1,7 @@
 import prompt from "prompt-sync";
 import makeRequest, { EP } from "../../utils/request";
 import cWrap from "../../utils/logging";
+import getErrorMessage from "./errors.util";
 
 //sends a post request to update username
 const update = async () => {
@@ -10,12 +11,13 @@ const update = async () => {
   const newUsername = prompt()("Enter your new username: ");
 
   try {
-    const { data, error } = await makeRequest(EP.UPDATE_USERNAME, {
+    const { data, error, message } = await makeRequest(EP.UPDATE_USERNAME, {
       data: { username: newUsername },
       method: "POST",
     });
     if (error) {
       console.log(`${cWrap.br("Error")} setting new username.`);
+      console.log(cWrap.fr(getErrorMessage(message)));
       return;
     }
     console.log(`Username successfully updated to ${cWrap.fg(newUsername)}.`);

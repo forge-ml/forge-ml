@@ -9,11 +9,12 @@ import update from "../controls/auth/update";
 const authCommand = (cli: Argv) =>
   cli.command(
     "auth <action>",
-    "manages authentication actions: signup, login, logout",
+    "manages authentication actions: signup, login, logout, username updates",
     (yargs) =>
       yargs
         .positional("action", {
-          description: "The action to perform: signup, login, logout",
+          description: "The action to perform: signup, login, logout, update",
+          choices: ["signup", "login", "logout", "update"],
           type: "string",
           demandOption: true,
         })
