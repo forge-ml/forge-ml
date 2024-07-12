@@ -4,11 +4,11 @@
   "description": "A CLI tool for schema validation and deployment",
   "main": "index.js",
   "bin": {
-    "forge": "./index.ts"
+    "forge": "./index.js"
   },
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "bun build index.ts --target node > index.js",
     "start": "tsx index.ts"
   },
   "devDependencies": {

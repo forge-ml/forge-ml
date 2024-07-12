@@ -20,9 +20,9 @@ const deploy = async (inFile: string, endpoint: string) => {
     },
   });
 
-  if ("error" in response) {
+  if (response.error) {
     console.log(cWrap.br("Error deploying"));
-    console.log(cWrap.fr(response.message.error as string));
+    console.log(cWrap.fr(response?.message as string));
   }
 
   return response;
@@ -33,7 +33,11 @@ const deployAll = async () => {
   try {
     files = fs.readdirSync(path.join(process.cwd(), cfg.schemaPath));
   } catch (error) {
-    console.error(cWrap.fr(`Error reading schema directory \`${cfg.schemaPath}\`. Please verify it exists and try again.`));
+    console.error(
+      cWrap.fr(
+        `Error reading schema directory \`${cfg.schemaPath}\`. Please verify it exists and try again.`
+      )
+    );
     return;
   }
 
@@ -49,15 +53,24 @@ const deployAll = async () => {
     }
 
     try {
-      await deploy(filePath, config.path);
-      console.log(
-        `- ${cWrap.fg("Deployed")} ${cWrap.fg(file)} to ${cWrap.fg(
-          config.path
-        )}`
-      );
+
+      const response = await deploy(filePath, config.path);
+      if (response.error) {
+        console.log(
+          `- ${cWrap.fr("Error deploying")} ${cWrap.fm(
+            file
+          )}. Something went wrong. Are you logged in?`
+        );
+      } else {
+        console.log(
+          `- ${cWrap.fg("Deployed")} ${cWrap.fg(file)} to ${cWrap.fg(
+            config.path
+          )}`
+        );
+      }
     } catch (error) {
       console.log(
-        `- ${cWrap.br("Error deploying")} ${cWrap.fg(
+        `- ${cWrap.fr("Error deploying")} ${cWrap.fm(
           file
         )}. Please check that you have a valid zodSchema as the default export. Skipping...`
       );

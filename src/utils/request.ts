@@ -1,6 +1,7 @@
 import axios, { AxiosHeaders } from "axios";
 import localConfigService from "../controls/auth/svc";
 import { Keys } from "../commands/key";
+import { config } from "../config/config";
 
 export enum EP {
   TEST,
@@ -10,7 +11,7 @@ export enum EP {
   UPDATE_USERNAME,
 }
 
-const rootURL = "http://localhost:3009";
+const rootURL = config.serverUrl;
 
 const EPS = {
   [EP.TEST]: "/test",
