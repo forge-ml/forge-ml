@@ -18,7 +18,7 @@ import { spawn } from 'child_process';
 
 try {
     const args = process.argv.slice(2);
-    const bunProcess = spawn('bun', ['./bin/index.js', ...args], { stdio: 'inherit' });
+    const bunProcess = spawn('bun', ['index.ts', ...args], { stdio: 'inherit' });
 
     bunProcess.on('error', (error) => {
         if (error.code === 'ENOENT') {

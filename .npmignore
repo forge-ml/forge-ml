@@ -5,5 +5,4 @@ index.ts
 
 .env
 
-src/**/*
 bin/**/*
