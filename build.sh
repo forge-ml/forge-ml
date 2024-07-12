@@ -1,5 +1,10 @@
 npm run build
 
-## Insert node shebang for forge-ml
-echo "#!/usr/bin/env node" | cat - forge-ml > forge-ml.js
-chmod +x forge-ml.js
+filename="forge-ml.js"
+
+## Insert node shebang into built forge-ml.js
+sed -i.bak '1i\
+#!/usr/bin/env node
+' "$filename" && rm "${filename}.bak"
+
+echo "Shebang inserted successfully at the beginning of $filename"
