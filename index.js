@@ -15,11 +15,14 @@ import { spawn } from "child_process";
  * Additionally, if there is an error related to the 'spawn bun' syscall, it logs a specific error message indicating
  * that 'bun' is not installed and exits the process with a status code of 1.
  */
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
 try {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
   const args = process.argv.slice(2);
-  const bunProcess = spawn("bun", ["index.ts", ...args], { stdio: "inherit" });
-
+  const bunProcess = spawn("bun", [join(__dirname, "index.ts"), ...args], { stdio: "inherit" });
   bunProcess.on("error", (error) => {
     if (error.code === "ENOENT") {
       console.error(
