@@ -9,7 +9,7 @@ import { config } from "./src/config/config";
 import cWrap from "./src/utils/logging";
 import keys from "./src/commands/key";
 
-const cli = yargs(hideBin(process.argv));
+const cli = yargs(hideBin(process.argv)).scriptName("forge")
 // commands
 deploy(cli);
 transform(cli);
@@ -17,6 +17,7 @@ test(cli);
 auth(cli);
 docs(cli);
 keys(cli);
+
 
 cli.command("$0", "default", (args) => {
   console.log(
