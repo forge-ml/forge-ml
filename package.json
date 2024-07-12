@@ -1,15 +1,15 @@
 {
   "name": "forge-ml",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A CLI tool for schema validation and deployment",
   "main": "index.js",
   "bin": {
-    "forge": "./index.js"
+    "forge": "./index.ts"
   },
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "start": "node index.js"
+    "start": "tsx index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
@@ -21,6 +21,7 @@
     "axios": "^1.7.2",
     "json-schema-to-zod": "^2.3.0",
     "prompt-sync": "^4.2.0",
+    "tsx": "^4.16.2",
     "yargs": "^17.7.2",
     "zod-to-json-schema": "^3.23.1"
   },
