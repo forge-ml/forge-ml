@@ -24,13 +24,23 @@ const test = async (inFile: string) => {
       },
     });
 
+    if (
+      res.data.error ===
+      "Invalid API key provided. Please check your API key and try again."
+    ) {
+      console.log(
+        cWrap.fr(
+          "There was an error testing your schema: Please check if you have an active OpenAI set up"
+        )
+      );
+      process.exit(1);
+    }
     if (res.error) {
       console.log(cWrap.br(res.error as string));
       console.log(cWrap.fr("Issue testing " + inFile + ":\n"));
       console.log(cWrap.fr(getErrorMessage(res.message)));
       process.exit(1);
     } else {
- 
       console.log(cWrap.bg("Healthy response from " + inFile));
       console.log(res.data);
     }
