@@ -24,7 +24,7 @@ const PixelmanSchema = z.object({
   rarity: z
     .enum(rarity)
     .describe(
-      "Rarity level of the Pixelman. Acceptable values are " + rarity.join(",")
+      "Rarity level of the Pixelman. Acceptable values are " + rarity.join(","),
     ),
   stats: z
     .object({

@@ -9,8 +9,7 @@ import { config } from "./src/config/config";
 import cWrap from "./src/utils/logging";
 import keys from "./src/commands/key";
 
-
-const cli = yargs(hideBin(process.argv));
+const cli = yargs(hideBin(process.argv)).scriptName("forge")
 // commands
 deploy(cli);
 transform(cli);
@@ -19,11 +18,12 @@ auth(cli);
 docs(cli);
 keys(cli);
 
+
 cli.command("$0", "default", (args) => {
   console.log(
     `Welcome to Forge! Try running ${cWrap.fg(
-      config.bin + " auth signup"
-    )} or ${cWrap.fg(config.bin + " --help")} to get started.`
+      config.bin + " auth signup",
+    )} or ${cWrap.fg(config.bin + " --help")} to get started.`,
   );
 });
 

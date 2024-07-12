@@ -25,11 +25,11 @@ const transformCommand = (cli: Argv) =>
         }
 
         return args.from.replace(/\.\w+$/, (ext) =>
-          ext === ".json" ? ".ts" : ".json"
+          ext === ".json" ? ".ts" : ".json",
         );
       })();
       const defaultFile = transform(args.from, to);
-    }
+    },
   );
 
 export default transformCommand;

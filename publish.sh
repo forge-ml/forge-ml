@@ -1,6 +1,6 @@
 git add .
 git commit -m "version change"
 git push
-sh build.sh
+npm run build
 npm version patch
 npm publish

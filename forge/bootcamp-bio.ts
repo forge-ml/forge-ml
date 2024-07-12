@@ -27,12 +27,12 @@ const BootcampBio = z
       .gte(0)
       .lte(100)
       .describe(
-        "a number between 0 and 100 describing how confident you are about this response"
+        "a number between 0 and 100 describing how confident you are about this response",
       ),
     suggestions: z
       .array(z.string())
       .describe(
-        "some suggestions for improving this schema, including what fields are missing, what fields are incorrect, and what fields are redundant"
+        "some suggestions for improving this schema, including what fields are missing, what fields are incorrect, and what fields are redundant",
       ),
   })
   .strict();

@@ -29,13 +29,13 @@ const authCommand = (cli: Argv) =>
         case "signup":
           await signup();
           console.log(
-            `Your ${config.bin} configuration is stored here: ${config.apiKeyFilePath}`
+            `Your ${config.bin} configuration is stored here: ${config.apiKeyFilePath}`,
           );
           break;
         case "login":
           await login();
           console.log(
-            `Your ${config.bin} configuration is stored here: ${config.apiKeyFilePath}`
+            `Your ${config.bin} configuration is stored here: ${config.apiKeyFilePath}`,
           );
           break;
         case "update":
@@ -46,7 +46,7 @@ const authCommand = (cli: Argv) =>
           break;
         default:
       }
-    }
+    },
   );
 
 export default authCommand;
