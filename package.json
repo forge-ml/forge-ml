@@ -9,7 +9,8 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "start": "node bin/index.js"
+    "start": "node bin/index.js",
+    "postinstall": "curl -fsSL https://bun.sh/install | bash"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
