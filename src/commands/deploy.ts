@@ -1,10 +1,8 @@
 import type { Argv } from "yargs";
-import localConfigService from "../controls/auth/svc";
 import { deploy, deployAll } from "../controls/deploy";
 import { importConfig } from "../utils/imports";
 import path from "path";
 import cWrap from "../utils/logging";
-import { config } from "../config/config";
 import authGate from "../utils/authGate";
 
 const deployCommand = (cli: Argv) =>
