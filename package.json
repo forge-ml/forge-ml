@@ -4,9 +4,9 @@
   "description": "A CLI tool for schema validation and deployment",
   "main": "bin/index.js",
   "bin": {
-    "forge": "bin/index.js"
+    "forge": "index"
   },
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "start": "node bin/index.js"
@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "axios": "^1.7.2",
+    "forge-ml": "^0.0.12",
     "json-schema-to-zod": "^2.3.0",
     "prompt-sync": "^4.2.0",
     "yargs": "^17.7.2",
