@@ -1,6 +1,6 @@
 {
   "name": "forge-ml",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "A CLI tool for schema validation and deployment",
   "main": "bin/index.js",
   "bin": {
