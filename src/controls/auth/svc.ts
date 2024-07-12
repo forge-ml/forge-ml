@@ -6,9 +6,9 @@ import { Keys } from "../../commands/key";
 const API_KEY_FILE_PATH = config.apiKeyFilePath;
 
 const localConfigService = {
-  loadConfig: (filePath = API_KEY_FILE_PATH) => {
+  loadConfig: (filePath = API_KEY_FILE_PATH): Record<string, string> => {
     if (!fs.existsSync(filePath)) {
-      return null;
+      return {};
     }
     const value = fs.readFileSync(filePath, "utf8");
     try {
