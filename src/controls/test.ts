@@ -30,7 +30,6 @@ const test = async (inFile: string) => {
       console.log(cWrap.fr(getErrorMessage(res.message)));
       process.exit(1);
     } else {
- 
       console.log(cWrap.bg("Healthy response from " + inFile));
       console.log(res.data);
     }

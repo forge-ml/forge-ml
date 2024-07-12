@@ -5,7 +5,7 @@ import path from "path";
 
 const transform = async (inFile: string, outFile: string) => {
   const extension = inFile.split(".").pop();
-  
+
   const filePath = path.join(process.cwd(), inFile);
 
   switch (extension) {

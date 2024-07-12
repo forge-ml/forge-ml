@@ -4,7 +4,6 @@ import localConfigService from "./svc";
 import { config } from "../../config/config";
 import { Keys } from "../../commands/key";
 
-
 const login = async () => {
   const email = prompt()("Enter your email: ");
   const password = prompt().hide("Enter your password: ");
@@ -23,7 +22,7 @@ const login = async () => {
       localConfigService.storeValue(Keys.FORGE, apiKey);
     } else {
       console.error(
-        "Login failed. Please check your credentials and try again."
+        "Login failed. Please check your credentials and try again.",
       );
     }
   } catch (error: any) {

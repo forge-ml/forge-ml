@@ -35,8 +35,8 @@ const deployAll = async () => {
   } catch (error) {
     console.error(
       cWrap.fr(
-        `Error reading schema directory \`${cfg.schemaPath}\`. Please verify it exists and try again.`
-      )
+        `Error reading schema directory \`${cfg.schemaPath}\`. Please verify it exists and try again.`,
+      ),
     );
     return;
   }
@@ -47,32 +47,31 @@ const deployAll = async () => {
 
     if (!config?.path) {
       console.log(
-        `- ${cWrap.fm("No path found")} in ${cWrap.fg(file)}. Skipping...`
+        `- ${cWrap.fm("No path found")} in ${cWrap.fg(file)}. Skipping...`,
       );
       continue;
     }
 
     try {
-
       const response = await deploy(filePath, config.path);
       if (response.error) {
         console.log(
           `- ${cWrap.fr("Error deploying")} ${cWrap.fm(
-            file
-          )}. Something went wrong. Are you logged in?`
+            file,
+          )}. Something went wrong. Are you logged in?`,
         );
       } else {
         console.log(
           `- ${cWrap.fg("Deployed")} ${cWrap.fg(file)} to ${cWrap.fg(
-            config.path
-          )}`
+            config.path,
+          )}`,
         );
       }
     } catch (error) {
       console.log(
         `- ${cWrap.fr("Error deploying")} ${cWrap.fm(
-          file
-        )}. Please check that you have a valid zodSchema as the default export. Skipping...`
+          file,
+        )}. Please check that you have a valid zodSchema as the default export. Skipping...`,
       );
     }
   }

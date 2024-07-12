@@ -20,12 +20,12 @@ const keyCommand = (cli: Argv) =>
           console.log("     Key       |     Status     ");
           console.log("--------------------------------");
           console.log(
-            `Forge API Key  |   ${cWrap.fg(apiKey ? "Set" : "Not Set")}`
+            `Forge API Key  |   ${cWrap.fg(apiKey ? "Set" : "Not Set")}`,
           );
           console.log(
-            `OpenAI API Key |   ${cWrap.fg(openAiKey ? "Set" : "Not Set")}`
+            `OpenAI API Key |   ${cWrap.fg(openAiKey ? "Set" : "Not Set")}`,
           );
-        }
+        },
       )
       .command(
         "copy <provider>",
@@ -50,7 +50,7 @@ const keyCommand = (cli: Argv) =>
           proc.stdin.end();
 
           console.log(`Key copied to clipboard for ${cWrap.fg(provider)}.`);
-        }
+        },
       )
       .command(
         "set <key>",
@@ -81,18 +81,22 @@ const keyCommand = (cli: Argv) =>
               console.log(`${cWrap.br("Error")} setting key.`);
               return;
             }
-            console.log(`Deployment key successfully updated for ${cWrap.fg(keyToSet)}.`);
+            console.log(
+              `Deployment key successfully updated for ${cWrap.fg(keyToSet)}.`,
+            );
           }
 
           try {
             localConfigService.storeValue(keyToSet, key);
-            console.log(`Local key successfully updated for ${cWrap.fg(keyToSet)}.`);
+            console.log(
+              `Local key successfully updated for ${cWrap.fg(keyToSet)}.`,
+            );
           } catch (error) {
             console.log(`${cWrap.br("Error")} setting key.`);
             return;
           }
-        }
-      )
+        },
+      ),
   );
 
 export default keyCommand;

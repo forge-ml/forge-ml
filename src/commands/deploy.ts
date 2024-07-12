@@ -8,12 +8,14 @@ import authGate from "../utils/authGate";
 const deployCommand = (cli: Argv) =>
   cli.command(
     "deploy <filename>",
-    cWrap.fm("Deploy a schema to the Forge API. You can optionally override the path by passing in the --path flag."),
+    cWrap.fm(
+      "Deploy a schema to the Forge API. You can optionally override the path by passing in the --path flag.",
+    ),
     (yargs) =>
       yargs
         .positional("filename", {
           description: cWrap.fg(
-            `The filename of the schema to deploy. This is the name of the file that contains the schema. \`deploy all\` to deploy all schemas in the forge/ directory.`
+            `The filename of the schema to deploy. This is the name of the file that contains the schema. \`deploy all\` to deploy all schemas in the forge/ directory.`,
           ),
           type: "string",
           default: "all",
@@ -25,13 +27,13 @@ const deployCommand = (cli: Argv) =>
         })
         .example(
           "deploy all",
-          `Deploy all schemas in the ${cWrap.fg("forge/")} directory`
+          `Deploy all schemas in the ${cWrap.fg("forge/")} directory`,
         )
         .example(
           "deploy forge/mySchema.ts",
           `Deploy the schema in the ${cWrap.fg(
-            "forge/"
-          )} directory with the name mySchema`
+            "forge/",
+          )} directory with the name mySchema`,
         ),
     async (args) => {
       authGate();
@@ -52,7 +54,7 @@ const deployCommand = (cli: Argv) =>
 
       const response = await deploy(file, endpoint);
 
-      console.log(response)
+      console.log(response);
 
       if (response.error) {
         console.error("Whoops! Looks like something went wrong.");
@@ -60,7 +62,7 @@ const deployCommand = (cli: Argv) =>
       } else {
         console.log(`Deployed schema to ${cWrap.fg(response.data.url)}`);
       }
-    }
+    },
   );
 
 export default deployCommand;

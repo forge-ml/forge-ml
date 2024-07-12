@@ -17,7 +17,7 @@ const testCommand = (cli: Argv) =>
       authGate();
 
       test(args["schema-file"]);
-    }
+    },
   );
 
 export default testCommand;

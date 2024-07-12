@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { spawn } from 'child_process';
+import { spawn } from "child_process";
 /**
  * This file is the entry point for the Forge CLI tool. It uses the 'child_process' module to spawn a new process
  * that runs the 'bun' command with the provided arguments. The 'bun' command is used to execute the 'bin/index.js' file,
@@ -17,26 +17,30 @@ import { spawn } from 'child_process';
  */
 
 try {
-    const args = process.argv.slice(2);
-    const bunProcess = spawn('bun', ['index.ts', ...args], { stdio: 'inherit' });
+  const args = process.argv.slice(2);
+  const bunProcess = spawn("bun", ["index.ts", ...args], { stdio: "inherit" });
 
-    bunProcess.on('error', (error) => {
-        if (error.code === 'ENOENT') {
-            console.error("\x1b[31m%s\x1b[0m", "Please install bun (curl -fsSL https://bun.sh/install | bash) to use Forge CLI.");
-            process.exit(1);
-        } else {
-            throw error;
-        }
-    });
-
-    bunProcess.on('close', (code) => {
-        process.exit(code);
-    });
-    
-} catch (error) {
-    console.log(error.syscall)
-    if (error.syscall === 'spawn bun') {
-        console.error('Error running bun. Please make sure you have bun installed.');
-        process.exit(1);
+  bunProcess.on("error", (error) => {
+    if (error.code === "ENOENT") {
+      console.error(
+        "\x1b[31m%s\x1b[0m",
+        "Please install bun (curl -fsSL https://bun.sh/install | bash) to use Forge CLI.",
+      );
+      process.exit(1);
+    } else {
+      throw error;
     }
+  });
+
+  bunProcess.on("close", (code) => {
+    process.exit(code);
+  });
+} catch (error) {
+  console.log(error.syscall);
+  if (error.syscall === "spawn bun") {
+    console.error(
+      "Error running bun. Please make sure you have bun installed.",
+    );
+    process.exit(1);
+  }
 }
