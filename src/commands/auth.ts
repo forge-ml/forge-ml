@@ -8,7 +8,14 @@ import cWrap from "../utils/logging";
 const authCommand = (cli: Argv) =>
   cli.command(
     "auth <action>",
-    "manages authentication actions: signup, login, logout, username updates",
+    `${cWrap.fm("Manage authentication state with actions:")}
+${cWrap.fb("signup")}\t\tsign up for a forge account
+${cWrap.fb("login")}\t\tsign in to an existing forge account
+${cWrap.fb("logout")}\t\tlog out of the current forge account
+${cWrap.fb(
+  "update"
+)}\t\tupdate the username associated with the current forge account
+`,
     (yargs) =>
       yargs
         .positional("action", {

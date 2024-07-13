@@ -5,8 +5,11 @@ import cWrap from "../utils/logging";
 
 const testCommand = (cli: Argv) =>
   cli.command(
-    "test <schema-file>",
-    cWrap.fm("runs a prompt against a given schema to simulate a Forge endpoint"),
+    "test <path-to-schema>",
+    `${cWrap.fm(
+      "Run a prompt against a given schema to simulate a Forge endpoint."
+    )}
+`,
     (yargs) =>
       yargs.positional("schema-file", {
         description:
@@ -18,7 +21,7 @@ const testCommand = (cli: Argv) =>
       authGate();
 
       test(args["schema-file"]);
-    },
+    }
   );
 
 export default testCommand;

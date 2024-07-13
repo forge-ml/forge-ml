@@ -8,7 +8,8 @@ import test from "./src/commands/test";
 import { config } from "./src/config/config";
 import cWrap from "./src/utils/logging";
 
-const cli = yargs(hideBin(process.argv)).scriptName("forge");
+// wrap(null) removes the default 80 character limit
+const cli = yargs(hideBin(process.argv)).scriptName("forge").wrap(null);
 // commands
 deploy(cli);
 // transform(cli);

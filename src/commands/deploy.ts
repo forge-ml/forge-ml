@@ -1,21 +1,21 @@
+import path from "path";
 import type { Argv } from "yargs";
 import { deploy, deployAll } from "../controls/deploy";
-import { importConfig } from "../utils/imports";
-import path from "path";
-import cWrap from "../utils/logging";
 import authGate from "../utils/authGate";
+import { importConfig } from "../utils/imports";
+import cWrap from "../utils/logging";
 
 const deployCommand = (cli: Argv) =>
   cli.command(
-    "deploy <filename>",
-    cWrap.fm(
-      "Deploy a schema to the Forge API. You can optionally override the path by passing in the --path flag.",
-    ),
+    "deploy <path-to-schema>",
+    `${cWrap.fm("Deploy a schema to the Forge API.")}
+${cWrap.fb("--path <path>")}\toverride the endpoint path
+`,
     (yargs) =>
       yargs
         .positional("filename", {
           description: cWrap.fg(
-            `The filename of the schema to deploy. This is the name of the file that contains the schema. \`deploy all\` to deploy all schemas in the forge/ directory.`,
+            `The filename of the schema to deploy. This is the name of the file that contains the schema. \`deploy all\` to deploy all schemas in the forge/ directory.`
           ),
           type: "string",
           default: "all",
@@ -27,13 +27,13 @@ const deployCommand = (cli: Argv) =>
         })
         .example(
           "deploy all",
-          `Deploy all schemas in the ${cWrap.fg("forge/")} directory`,
+          `Deploy all schemas in the ${cWrap.fg("forge/")} directory`
         )
         .example(
           "deploy forge/mySchema.ts",
           `Deploy the schema in the ${cWrap.fg(
-            "forge/",
-          )} directory with the name mySchema`,
+            "forge/"
+          )} directory with the name mySchema`
         ),
     async (args) => {
       authGate();
@@ -61,7 +61,7 @@ const deployCommand = (cli: Argv) =>
       } else {
         console.log(`Deployed schema to ${cWrap.fg(response.data.url)}`);
       }
-    },
+    }
   );
 
 export default deployCommand;
