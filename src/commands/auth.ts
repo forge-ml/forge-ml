@@ -25,7 +25,7 @@ const authCommand = (cli: Argv) =>
         })
         .example(
           cWrap.fg("$0 auth signup"),
-          cWrap.fc("Sign up with an API key")
+          cWrap.fc("Sign up and store your API key")
         )
         .example(cWrap.fg("$0 auth login"), cWrap.fc("Log in to your account"))
         .example(
