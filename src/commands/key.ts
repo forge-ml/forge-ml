@@ -29,7 +29,7 @@ const keyCommand = (cli: Argv) =>
       )
       .command(
         "copy <provider>",
-        "copies a key to your clipboard. This is a nice utility function, particularly useful for grabbing your forge key once you need to make authenticated requests.",
+        "copies a key to your clipboard. This is a nice utility function, particularly useful for grabbing your forge key when you need to make authenticated requests.",
         (yargs) =>
           yargs
             .positional("provider", {
@@ -133,6 +133,6 @@ const keyCommand = (cli: Argv) =>
         cWrap.fc("lists the supported providers and key status")
       )
       .showHelp()
-  )
+  );
 
 export default keyCommand;

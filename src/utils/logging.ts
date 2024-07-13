@@ -4,8 +4,8 @@ const c = {
   fr: "\x1b[31m", // red
   fg: "\x1b[32m", // green
   fy: "\x1b[33m", // orange
-  fm: "\x1b[35m", // magenta
   fb: "\x1b[34m", // blue
+  fm: "\x1b[35m", // magenta
   fc: "\x1b[36m", // cyan
 };
 const reset = "\x1b[0m"; // reset
