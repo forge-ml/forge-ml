@@ -24,15 +24,21 @@ const authCommand = (cli: Argv) =>
           type: "string",
         })
         .example(
-          cWrap.fg("$0 auth signup"),
+          cWrap.fg("forge auth signup"),
           cWrap.fc("Sign up and store your API key")
         )
-        .example(cWrap.fg("$0 auth login"), cWrap.fc("Log in to your account"))
         .example(
-          cWrap.fg("$0 auth logout"),
+          cWrap.fg("forge auth login"),
+          cWrap.fc("Log in to your account")
+        )
+        .example(
+          cWrap.fg("forge auth logout"),
           cWrap.fc("Log out of your account")
         )
-        .example(cWrap.fg("$0 auth update"), cWrap.fc("Update your username")),
+        .example(
+          cWrap.fg("forge auth update"),
+          cWrap.fc("Update your username")
+        ),
     async (args) => {
       const { action } = args;
 
