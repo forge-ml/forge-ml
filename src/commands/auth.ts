@@ -1,5 +1,4 @@
 import type { Argv } from "yargs";
-import { config } from "../config/config";
 import login from "../controls/auth/login";
 import logout from "../controls/auth/logout";
 import signup from "../controls/auth/signup";
@@ -33,9 +32,6 @@ const authCommand = (cli: Argv) =>
         case "login":
           console.log(cWrap.fg("Log in to your existing forge account!"));
           await login();
-          console.log(
-            `Your ${config.bin} configuration is stored here: ${config.apiKeyFilePath}`
-          );
           break;
         case "update":
           await update();
