@@ -20,23 +20,32 @@ const keyCommand = (cli: Argv) =>
           console.log("     Key       |     Status     ");
           console.log("--------------------------------");
           console.log(
-            `Forge API Key  |   ${cWrap.fg(apiKey ? "Set" : "Not Set")}`,
+            `Forge API Key  |   ${cWrap.fg(apiKey ? "Set" : "Not Set")}`
           );
           console.log(
-            `OpenAI API Key |   ${cWrap.fg(openAiKey ? "Set" : "Not Set")}`,
+            `OpenAI API Key |   ${cWrap.fg(openAiKey ? "Set" : "Not Set")}`
           );
-        },
+        }
       )
       .command(
         "copy <provider>",
-        "copies a forge key to your clipboard. This is a nice utility function to help with authenticated requests.",
+        "copies a key to your clipboard. This is a nice utility function, particularly useful for grabbing your forge key once you need to make authenticated requests.",
         (yargs) =>
-          yargs.positional("provider", {
-            description: "The provider to copy the key for",
-            type: "string",
-            demandOption: true,
-            choices: Object.values(Keys),
-          }),
+          yargs
+            .positional("provider", {
+              description: "The provider to copy the key for",
+              type: "string",
+              demandOption: true,
+              choices: Object.values(Keys),
+            })
+            .example(
+              cWrap.fg("forge key copy forge"),
+              cWrap.fc("gets forge API Key"),
+            )
+            .example(
+              cWrap.fg("forge key copy openAI"),
+              cWrap.fc("gets locally set OpenAI API Key")
+            ),
         async (args) => {
           const { provider } = args;
           const key = localConfigService.getValue(provider);
@@ -50,11 +59,11 @@ const keyCommand = (cli: Argv) =>
           proc.stdin.end();
 
           console.log(`Key copied to clipboard for ${cWrap.fg(provider)}.`);
-        },
+        }
       )
       .command(
         "set <key>",
-        "sets a key",
+        "sets a key. defaults to setting your openAI key.",
         (yargs) =>
           yargs
             .positional("key", {
@@ -77,7 +86,11 @@ const keyCommand = (cli: Argv) =>
                 console.error("You need to provide a key to set:\n");
               }
               yargs.showHelp();
-            }),
+            })
+            .example(
+              cWrap.fg("forge key set sk-abcxyz"),
+              cWrap.fc("sets your openAI key")
+            ),
         async (args) => {
           const { key, provider } = args;
           const keyToSet = provider || Keys.OPENAI;
@@ -92,7 +105,7 @@ const keyCommand = (cli: Argv) =>
               return;
             }
             console.log(
-              `Deployment key successfully updated for ${cWrap.fg(keyToSet)}.`,
+              `Deployment key successfully updated for ${cWrap.fg(keyToSet)}.`
             );
           }
 
@@ -105,8 +118,21 @@ const keyCommand = (cli: Argv) =>
             console.log(`${cWrap.br("Error")} setting key.`);
             return;
           }
-        },
-      ),
-  );
+        }
+      )
+      .example(
+        cWrap.fg("forge key set sk-abcxyz"),
+        cWrap.fc("sets your openAI key")
+      )
+      .example(
+        cWrap.fg("forge key copy forge"),
+        cWrap.fc("copies your forge API Key to clipboard")
+      )
+      .example(
+        cWrap.fg("forge key list"),
+        cWrap.fc("lists the supported providers and key status")
+      )
+      .showHelp()
+  )
 
 export default keyCommand;
