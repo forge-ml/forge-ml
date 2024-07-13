@@ -9,11 +9,8 @@
 #### Forge is the fastest way to deploy extraction and structured output from LLMs
 
 [Installation](#-installation) •
-[Features](#-features) •
-[Usage](#-usage) •
-[Updating](#-updating) •
-[Uninstalling](#-uninstalling) •
-[Contributing](#-contributing)
+[Getting Started](#-getting-started) •
+[Creating Your First Endpoint](#-creating-your-first-endpoint)
 
 </div>
 
