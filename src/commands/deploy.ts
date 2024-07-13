@@ -26,14 +26,14 @@ ${cWrap.fb("--path <path>")}\toverride the endpoint path
           type: "string",
         })
         .example(
-          "deploy all",
-          `Deploy all schemas in the ${cWrap.fg("forge/")} directory`
+          cWrap.fg("deploy all"),
+          cWrap.fc("Deploy all schemas in the forge/ directory")
         )
         .example(
-          "deploy forge/mySchema.ts",
-          `Deploy the schema in the ${cWrap.fg(
-            "forge/"
-          )} directory with the name mySchema`
+          cWrap.fg("deploy forge/mySchema.ts"),
+          cWrap.fc(
+            "Deploy schema file in the forge/ directory with the name mySchema"
+          )
         ),
     async (args) => {
       authGate();

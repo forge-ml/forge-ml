@@ -27,7 +27,23 @@ ${cWrap.fb(
         .option("key", {
           description: "The API key to store (required for signup action)",
           type: "string",
-        }),
+        })
+        .example(
+          cWrap.fg("forge auth signup"),
+          cWrap.fc("Sign up and store your API key")
+        )
+        .example(
+          cWrap.fg("forge auth login"),
+          cWrap.fc("Log in to your account")
+        )
+        .example(
+          cWrap.fg("forge auth logout"),
+          cWrap.fc("Log out of your account")
+        )
+        .example(
+          cWrap.fg("forge auth update"),
+          cWrap.fc("Update your username")
+        ),
     async (args) => {
       const { action } = args;
 

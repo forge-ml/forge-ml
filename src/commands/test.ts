@@ -11,12 +11,17 @@ const testCommand = (cli: Argv) =>
     )}
 `,
     (yargs) =>
-      yargs.positional("schema-file", {
-        description:
-          "The location of the file containing the zod schema to test against.",
-        type: "string",
-        demandOption: true,
-      }),
+      yargs
+        .positional("schema-file", {
+          description:
+            "The location of the file containing the zod schema to test against.",
+          type: "string",
+          demandOption: true,
+        })
+        .example(
+          cWrap.fg("forge test <schema-file>"),
+          cWrap.fc("tests schema file with a user entered prompt")
+        ),
     (args) => {
       authGate();
 
