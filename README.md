@@ -37,6 +37,32 @@ Forge uses a combination of tools like [Zod](https://github.com/colinhacks/zod) 
 
 You define a [Zod](https://github.com/colinhacks/zod) schema, test it locally, and then deploy it to the cloud. From there you can access it from any application that can make HTTP requests, and it's guaranteed to have the expected response structure.
 
+```js
+// Define your schema
+const whois = z.object({
+  name: z.string(),
+  occupation: z.string(),
+  hobbies: z.array(z.string()),
+});
+```
+
+```bash
+# deploy
+forge deploy whois.ts
+```
+
+```ts
+// endpoint: https://api.forge-ml.com/q/jakezegil/whois
+// prompt: Jake Zegil is a Software Engineer who likes ripping code and driving boats
+// Your endpoint response -
+{
+  name: "Jake Zegil",
+  occupation: "Software Engineer",
+  hobbies: ["ripping code", "driving boats"],
+}
+
+```
+
 ## 📈 Getting Started
 
 ```bash
@@ -96,19 +122,19 @@ forge auth update    # update your forge username
 
 ## 🔑 Managing API Keys
 
-  Your api keys live in `~/.forge/key.json`. You can manage them using some of the utility functions forge provides out of the box:
+Your api keys live in `~/.forge/key.json`. You can manage them using some of the utility functions forge provides out of the box:
 
-  ```bash
-    # List API key status (are keys set?)
-    forge key list
+```bash
+  # List API key status (are keys set?)
+  forge key list
 
-    # Copy a key from the local forge credential cache to your clipboard
-    # You'll need this once you're ready to hit a deployed endpoint
-    forge key copy <provider>
+  # Copy a key from the local forge credential cache to your clipboard
+  # You'll need this once you're ready to hit a deployed endpoint
+  forge key copy <provider>
 
-    # Set a key (defaults to setting your openAI key, in case it isn't valid anymore or you want to change it)
-    forge key set <API_KEY> --provider <provider>
-   ```
+  # Set a key (defaults to setting your openAI key, in case it isn't valid anymore or you want to change it)
+  forge key set <API_KEY> --provider <provider>
+```
 
 ## ⚡️ Creating your first endpoint
 
@@ -171,7 +197,7 @@ forge auth update    # update your forge username
    };
    ```
 
-1. Test the endpoint
+4. Test the endpoint
 
    ```bash
    forge test ./forge/endpointSchema.ts
@@ -207,20 +233,20 @@ forge auth update    # update your forge username
    }
    ```
 
-1. Deploy the endpoint, and check it out in your swagger docs
+5. Deploy the endpoint, and check it out in your swagger docs
 
    ```bash
    forge deploy ./forge/endpointSchema.ts    ## Deploy the endpoint
    forge docs    ## Check out your swagger docs
    ```
 
-1. Grab your forge key
+6. Grab your forge key
 
    ```bash
    forge key copy forge  ## Copy your forge key to your clipboard
    ```
 
-1. Make your first request!
+7. Make your first request!
 
    ```bash
    # Make a request to your endpoint
@@ -263,7 +289,7 @@ forge test <path-to-schema>
 
 Example schemas can be found in the `./forge` folder of this project.
 
-`forge deploy all` deploys all schemas in the `./forge` by default. 
+`forge deploy all` deploys all schemas in the `./forge` by default.
 
 ```bash
 forge deploy <.path-to-schema>    ## Deploy a single schema
