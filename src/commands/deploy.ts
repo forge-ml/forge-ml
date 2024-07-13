@@ -1,16 +1,16 @@
+import path from "path";
 import type { Argv } from "yargs";
 import { deploy, deployAll } from "../controls/deploy";
-import { importConfig } from "../utils/imports";
-import path from "path";
-import cWrap from "../utils/logging";
 import authGate from "../utils/authGate";
+import { importConfig } from "../utils/imports";
+import cWrap from "../utils/logging";
 
 const deployCommand = (cli: Argv) =>
   cli.command(
-    "deploy <filename>",
-    cWrap.fm(
-      "Deploy a schema to the Forge API. You can optionally override the path by passing in the --path flag."
-    ),
+    "deploy <path-to-schema>",
+    `${cWrap.fm("Deploy a schema to the Forge API.")}
+${cWrap.fb("--path <path>")}\toverride the endpoint path
+`,
     (yargs) =>
       yargs
         .positional("filename", {

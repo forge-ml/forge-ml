@@ -1,16 +1,21 @@
 import type { Argv } from "yargs";
-import localConfigService from "../controls/auth/svc";
-import signup from "../controls/auth/signup";
 import login from "../controls/auth/login";
 import logout from "../controls/auth/logout";
-import { config } from "../config/config";
+import signup from "../controls/auth/signup";
 import update from "../controls/auth/update";
 import cWrap from "../utils/logging";
 
 const authCommand = (cli: Argv) =>
   cli.command(
     "auth <action>",
-    "manages authentication actions: signup, login, logout, username updates",
+    `${cWrap.fm("Manage authentication state with actions:")}
+${cWrap.fb("signup")}\t\tsign up for a forge account
+${cWrap.fb("login")}\t\tsign in to an existing forge account
+${cWrap.fb("logout")}\t\tlog out of the current forge account
+${cWrap.fb(
+  "update"
+)}\t\tupdate the username associated with the current forge account
+`,
     (yargs) =>
       yargs
         .positional("action", {
@@ -44,16 +49,12 @@ const authCommand = (cli: Argv) =>
 
       switch (action) {
         case "signup":
+          console.log(cWrap.fg("Signup for a forge account!"));
           await signup();
-          console.log(
-            `Your ${config.bin} configuration is stored here: ${config.apiKeyFilePath}`
-          );
           break;
         case "login":
+          console.log(cWrap.fg("Log in to your existing forge account!"));
           await login();
-          console.log(
-            `Your ${config.bin} configuration is stored here: ${config.apiKeyFilePath}`
-          );
           break;
         case "update":
           await update();
