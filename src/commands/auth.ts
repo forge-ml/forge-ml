@@ -5,6 +5,7 @@ import login from "../controls/auth/login";
 import logout from "../controls/auth/logout";
 import { config } from "../config/config";
 import update from "../controls/auth/update";
+import cWrap from "../utils/logging";
 
 const authCommand = (cli: Argv) =>
   cli.command(
@@ -21,7 +22,23 @@ const authCommand = (cli: Argv) =>
         .option("key", {
           description: "The API key to store (required for signup action)",
           type: "string",
-        }),
+        })
+        .example(
+          cWrap.fg("forge auth signup"),
+          cWrap.fc("Sign up and store your API key")
+        )
+        .example(
+          cWrap.fg("forge auth login"),
+          cWrap.fc("Log in to your account")
+        )
+        .example(
+          cWrap.fg("forge auth logout"),
+          cWrap.fc("Log out of your account")
+        )
+        .example(
+          cWrap.fg("forge auth update"),
+          cWrap.fc("Update your username")
+        ),
     async (args) => {
       const { action } = args;
 
@@ -29,13 +46,13 @@ const authCommand = (cli: Argv) =>
         case "signup":
           await signup();
           console.log(
-            `Your ${config.bin} configuration is stored here: ${config.apiKeyFilePath}`,
+            `Your ${config.bin} configuration is stored here: ${config.apiKeyFilePath}`
           );
           break;
         case "login":
           await login();
           console.log(
-            `Your ${config.bin} configuration is stored here: ${config.apiKeyFilePath}`,
+            `Your ${config.bin} configuration is stored here: ${config.apiKeyFilePath}`
           );
           break;
         case "update":
@@ -46,7 +63,7 @@ const authCommand = (cli: Argv) =>
           break;
         default:
       }
-    },
+    }
   );
 
 export default authCommand;
