@@ -16,7 +16,7 @@ const testCommand = (cli: Argv) =>
           demandOption: true,
         })
         .example(
-          cWrap.fg("$0 test <schema-file>"),
+          cWrap.fg("forge test <schema-file>"),
           cWrap.fc("tests schema file with a user entered prompt")
         ),
     (args) => {
