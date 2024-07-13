@@ -45,16 +45,15 @@ const deployCommand = (cli: Argv) =>
 
       const file = path.join(process.cwd(), args.filename);
 
-      const endpoint = args.path || (await importConfig(file)).path;
+      const config = await importConfig(file);
+      const endpoint = args.path || config.path;
 
       if (!endpoint) {
         console.log("No path found. Please provide a path or filename.");
         return;
       }
 
-      const response = await deploy(file, endpoint);
-
-      console.log(response);
+      const response = await deploy(file, endpoint, config);
 
       if (response.error) {
         console.error("Whoops! Looks like something went wrong.");

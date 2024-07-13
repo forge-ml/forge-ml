@@ -5,18 +5,20 @@ import makeRequest, { EP } from "../utils/request";
 import fs from "fs";
 import { cWrap } from "../utils/logging";
 import { config as cfg } from "../config/config";
+import { SchemaConfig } from "../utils/config";
 
-const deploy = async (inFile: string, endpoint: string) => {
+const deploy = async (inFile: string, endpoint: string, config: SchemaConfig) => {
   const zod = await importZod(inFile);
   const json = toJSON(zod);
 
   const response = await makeRequest(EP.DEPLOY, {
     method: "POST",
     data: {
-      name: "default description",
-      description: "default description",
+      name: config.name || "Set me in the schema config (name)",
+      description: config.description || "Set me in the schema config (description)",
       structure: JSON.stringify(json),
       path: endpoint,
+      public: config.public,
     },
   });
 
@@ -53,7 +55,7 @@ const deployAll = async () => {
     }
 
     try {
-      const response = await deploy(filePath, config.path);
+      const response = await deploy(filePath, config.path, config);
       if (response.error) {
         console.log(
           `- ${cWrap.fr("Error deploying")} ${cWrap.fm(
