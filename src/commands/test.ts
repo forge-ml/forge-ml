@@ -12,20 +12,22 @@ const testCommand = (cli: Argv) =>
 `,
     (yargs) =>
       yargs
-        .positional("schema-file", {
+        .positional("path-to-schema", {
           description:
             "The location of the file containing the zod schema to test against.",
           type: "string",
           demandOption: true,
         })
         .example(
-          cWrap.fg("forge test <schema-file>"),
+          cWrap.fg("forge test <path-to-schema>"),
           cWrap.fc("tests schema file with a user entered prompt")
         ),
     (args) => {
       authGate();
 
-      test(args["schema-file"]);
+      console.log(args["path-to-schema"]);
+
+      test(args["path-to-schema"]);
     }
   );
 
