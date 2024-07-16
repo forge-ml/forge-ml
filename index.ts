@@ -1,4 +1,4 @@
-import yargs from "yargs";
+import yargs, { CommandModule } from "yargs";
 import { hideBin } from "yargs/helpers";
 import auth from "./src/commands/auth";
 import deploy from "./src/commands/deploy";
@@ -20,17 +20,17 @@ keys(cli);
 test(cli);
 // transform(cli);
 
-cli.command(
-  "$0",
-  "default",
-  (args) => {},
-  (args) => {
+const defaultCommand: CommandModule = {
+  command: "$0",
+  describe: false,
+  handler: () => {
     console.log(
       `Welcome to Forge! Try running ${cWrap.fg(
         config.bin + " auth signup"
       )} or ${cWrap.fg(config.bin + " --help")} to get started.`
     );
-  }
-);
+  },
+};
+cli.command(defaultCommand);
 
 cli.parse();
