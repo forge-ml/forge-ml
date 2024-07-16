@@ -4,7 +4,7 @@ import cWrap from "../utils/logging";
 
 const parentCommand: CommandModule = {
   command: `schema`,
-  describe: cWrap.fm("Manage your endpoint schemas"),
+  describe: cWrap.fm("Manage your endpoint schemas\n"),
   builder: (yargs) =>
     yargs
       .hide("version")
