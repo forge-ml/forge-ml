@@ -20,12 +20,17 @@ keys(cli);
 test(cli);
 // transform(cli);
 
-cli.command("$0", "default", (args) => {
-  console.log(
-    `Welcome to Forge! Try running ${cWrap.fg(
-      config.bin + " auth signup"
-    )} or ${cWrap.fg(config.bin + " --help")} to get started.`
-  );
-});
+cli.command(
+  "$0",
+  "default",
+  (args) => {},
+  (args) => {
+    console.log(
+      `Welcome to Forge! Try running ${cWrap.fg(
+        config.bin + " auth signup"
+      )} or ${cWrap.fg(config.bin + " --help")} to get started.`
+    );
+  }
+);
 
 cli.parse();
