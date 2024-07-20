@@ -5,6 +5,7 @@ import deploy from "./src/commands/deploy";
 import docs from "./src/commands/docs";
 import init from "./src/commands/init";
 import keys from "./src/commands/key";
+import schema from "./src/commands/schema";
 import test from "./src/commands/test";
 import { config } from "./src/config/config";
 import cWrap from "./src/utils/logging";
@@ -17,6 +18,7 @@ deploy(cli);
 docs(cli);
 init(cli);
 keys(cli);
+schema(cli);
 test(cli);
 // transform(cli);
 
