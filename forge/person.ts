@@ -1,5 +1,4 @@
 import z from "zod";
-import { EndpointConfig } from "../src/types/endpointConfig";
 
 const PersonCategory = z.enum([
   "historical",
@@ -31,16 +30,23 @@ const PersonSchema = z.object({
 
 export default PersonSchema;
 
-export const config: EndpointConfig = {
+type EndpointConfig = {
   /** path to the endpoint. one word, no special characters */
-  path: "person",
+  path: string;
   /**
    * determines if the endpoint is available for public access
    * users must use their own OpenAI API key
    */
-  public: false,
+  public: boolean;
   /** name of the endpoint */
-  name: "Person",
+  name?: string;
   /** description of the endpoint */
+  description?: string;
+};
+
+export const config: EndpointConfig = {
+  path: "person",
+  public: false,
+  name: "Person",
   description: "A person in history or the present day",
 };

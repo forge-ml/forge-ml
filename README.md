@@ -66,8 +66,8 @@ forge deploy whois.ts
 # Sign up for a forge account
 forge auth signup
 
-## Create a zod schema
-mkdir forge && touch forge/my_schema.ts
+## Create an example zod schema
+forge init
 
 # Test your endpoint
 forge test ./forge/my_schema.ts
