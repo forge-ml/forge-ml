@@ -139,7 +139,7 @@ ${cWrap.fb("set")}\t\tset a key. defaults to setting your openAI key
           cWrap.fg("forge key list"),
           cWrap.fc("lists the supported providers and key status")
         )
-        .showHelp()
+        .showHelpOnFail(true)
   );
 
 export default keyCommand;
