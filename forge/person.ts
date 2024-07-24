@@ -42,6 +42,10 @@ type EndpointConfig = {
   name?: string;
   /** description of the endpoint */
   description?: string;
+  /**
+   * the cache config - "None", "Common", "Individual"
+   */
+  cache?: "None" | "Common" | "Individual";
 };
 
 export const config: EndpointConfig = {
@@ -49,4 +53,5 @@ export const config: EndpointConfig = {
   public: false,
   name: "Person",
   description: "A person in history or the present day",
+  cache: "Common",
 };
