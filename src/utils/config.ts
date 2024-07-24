@@ -1,7 +1,7 @@
 export enum CacheType {
-  COMMON = "common",
-  NONE = "none",
-  INDIVIDUAL = "individual",
+  COMMON = "Common",
+  NONE = "None",
+  INDIVIDUAL = "Individual",
 }
 
 export type SchemaConfig = {
