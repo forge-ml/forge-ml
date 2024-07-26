@@ -4,7 +4,6 @@ import { deploy, deployAll } from "../controls/deploy";
 import authGate from "../utils/authGate";
 import { importConfig } from "../utils/imports";
 import cWrap from "../utils/logging";
-
 const deployCommand = (cli: Argv) =>
   cli.command(
     "deploy <path-to-schema>",
@@ -13,12 +12,12 @@ ${cWrap.fb("--path <path>")}\toverride the endpoint path
 `,
     (yargs) =>
       yargs
-        .positional("filename", {
+        .positional("path-to-schema", {
           description: cWrap.fg(
-            `The filename of the schema to deploy. This is the name of the file that contains the schema. \`deploy all\` to deploy all schemas in the forge/ directory.`
+            `The filename of the schema to deploy. This is the name of the file that contains the schema. \`deploy all\` to deploy all schemas in the forge/schema directory.`
           ),
           type: "string",
-          default: "all",
+          default: "all"
         })
         .option("path", {
           description:
@@ -38,12 +37,14 @@ ${cWrap.fb("--path <path>")}\toverride the endpoint path
     async (args) => {
       authGate();
 
-      if (args.filename === "all") {
+      const filename = args["path-to-schema"] || "all";
+
+      if (filename === "all") {
         await deployAll();
         return;
       }
 
-      const file = path.join(process.cwd(), args.filename);
+      const file = path.join(process.cwd(), filename);
 
       const config = await importConfig(file);
       const endpoint = args.path || config.path;

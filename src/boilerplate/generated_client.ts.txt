@@ -1,0 +1,77 @@
+
+
+// Any code above this line will be ignored by a file loading boilerplate
+// --- START -- //
+
+/** THIS IS A GENERATED FILE, EDITS WILL BE OVERWRITTEN */
+
+type ClientOptions = {
+  forgeKey: string;
+  //   defaultModel: string;
+};
+
+type RequestOptions = {
+  token?: string;
+  // model: string;
+  // cache?: "Bust" | "Evade" // (only if cache setting)
+};
+
+// Options that will be set at generation time
+type GeneratedOptions = {
+  username: string;
+  path: string;
+};
+
+export const createRequest = (params: GeneratedOptions) => {
+  return async (query: string, opts: RequestOptions) => {
+    try {
+      const response = await fetch(
+        `${serverUrl}/q/${params.username}/${params.path}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${opts.token}`,
+          },
+          body: JSON.stringify({
+            q: query,
+          }),
+        }
+      );
+
+      return response.json();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
+
+const Forge = (options: ClientOptions) => {
+  const forgeKey = options.forgeKey;
+  //   const defaultModel = options.defaultModel;
+
+  const client = generatedClient(forgeKey);
+
+  return client;
+};
+
+export default Forge;
+
+// --- END -- //
+// Any code below this line will be ignored by a file loading boilerplate
+
+const generatedClient = (forgeKey: string) => {
+  return {
+    user: {
+      query: (prompt: string, opts?: RequestOptions) => {
+        return createRequest({
+          username: "${username}",
+          path: "${path}",
+        })(prompt, {
+          token: opts?.token || forgeKey,
+          // cache: opts?.cache,
+        });
+      },
+    },
+  };
+};
