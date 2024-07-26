@@ -9,6 +9,7 @@ export enum EP {
   GET_DOCS_URL,
   SET_OPENAI_KEY,
   UPDATE_USERNAME,
+  CREATE,
 }
 
 const rootURL = config.serverUrl;
@@ -19,6 +20,7 @@ const EPS = {
   [EP.GET_DOCS_URL]: "/docs/url",
   [EP.SET_OPENAI_KEY]: "/cli/key",
   [EP.UPDATE_USERNAME]: "/cli/updateUsername",
+  [EP.CREATE]: "/create",
 };
 
 type Options = {

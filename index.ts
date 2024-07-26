@@ -6,6 +6,7 @@ import docs from "./src/commands/docs";
 import init from "./src/commands/init";
 import keys from "./src/commands/key";
 import test from "./src/commands/test";
+import create from "./src/commands/create";
 import { config } from "./src/config/config";
 import cWrap from "./src/utils/logging";
 
@@ -18,6 +19,7 @@ docs(cli);
 init(cli);
 keys(cli);
 test(cli);
+create(cli);
 // transform(cli);
 
 const defaultCommand: CommandModule = {
