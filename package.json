@@ -15,7 +15,7 @@
     "@types/node": "^20.0.0",
     "@types/prompt-sync": "^4.2.3",
     "@types/yargs": "^17.0.32",
-    "typescript": "^5.0.0"
+    "typescript": "^5.5.4"
   },
   "dependencies": {
     "axios": "^1.7.2",

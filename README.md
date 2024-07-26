@@ -247,7 +247,7 @@ Your api keys live in `~/.forge/key.json`. You can manage them using some of the
 
    ```bash
    # Make a request to your endpoint
-   curl -X POST https://api.forge-ml.com/q/your_username/the_path -H "Authorization: Bearer <your-forge-key>" -d '{"prompt": "Who is Mark Twain?"}'
+   curl -X POST https://api.forge-ml.com/q/your_username/the_path -H "Authorization: Bearer <your-forge-key>" -d '{"q": "Who is Mark Twain?"}'
    ```
 
 ## ⚙️ Endpoint Config
@@ -284,9 +284,9 @@ forge test <path-to-schema>
 
 ## 👆 Deploying a schema
 
-Example schemas can be found in the `./forge` folder of this project.
+Example schemas can be found in the `./forge/schema` folder of this project.
 
-`forge deploy all` deploys all schemas in the `./forge` by default.
+`forge deploy all` deploys all schemas in the `./forge/schema` folder by default. Files with a .ignore.ts extension are ignored.
 
 ```bash
 forge deploy <.path-to-schema>    ## Deploy a single schema

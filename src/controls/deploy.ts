@@ -2,10 +2,11 @@ import { importConfig, importZod } from "../utils/imports";
 import { toJSON } from "../utils/toJSON";
 import path from "path";
 import makeRequest, { EP } from "../utils/request";
-import fs from "fs";
 import { cWrap } from "../utils/logging";
 import { config as cfg } from "../config/config";
 import { SchemaConfig } from "../utils/config";
+import { loadDirectoryFiles } from "../utils/directory";
+import { generate } from "./generate";
 
 const deploy = async (inFile: string, endpoint: string, config: SchemaConfig) => {
   const zod = await importZod(inFile);
@@ -31,25 +32,23 @@ const deploy = async (inFile: string, endpoint: string, config: SchemaConfig) =>
 };
 
 const deployAll = async () => {
-  let files;
-  try {
-    files = fs.readdirSync(path.join(process.cwd(), cfg.schemaPath));
-  } catch (error) {
-    console.error(
-      cWrap.fr(
-        `Error reading schema directory \`${cfg.schemaPath}\`. Please verify it exists and try again.`,
-      ),
-    );
-    return;
-  }
+  const files = loadDirectoryFiles();
+
 
   for (const file of files) {
     const filePath = path.join(process.cwd(), cfg.schemaPath, file);
     const config = await importConfig(filePath);
-
+    
     if (!config?.path) {
       console.log(
         `- ${cWrap.fm("No path found")} in ${cWrap.fg(file)}. Skipping...`,
+      );
+      continue;
+    }
+    
+    if (file.includes(".ignore.")) {
+      console.log(
+        `- ${cWrap.fm("Ignoring")} ${cWrap.fg(file)}. Skipping...`,
       );
       continue;
     }
@@ -77,6 +76,8 @@ const deployAll = async () => {
       );
     }
   }
+
+  generate();
 };
 
 export { deploy, deployAll };
