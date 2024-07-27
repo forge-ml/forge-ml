@@ -226,11 +226,10 @@ Your api keys live in `~/.forge/key.json`. You can manage them using some of the
      "sources": ["https://en.wikipedia.org/wiki/Mark_Twain"],
      "_meta": {
        "usage": {
-         "prompt_tokens": 211,
-         "completion_tokens": 257,
-         "total_tokens": 468
-       },
-       "cacheHit": false
+         "prompt_tokens": 75,
+         "completion_tokens": 79,
+         "total_tokens": 154
+       }
      }
    }
    ```
