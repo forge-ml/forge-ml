@@ -7,6 +7,7 @@ import { cWrap } from "../utils/logging";
 import readline from "node:readline";
 import { stdin as input, stdout as output } from "node:process";
 import { selectOptionBinary, selectOption } from "../utils/optionSelect";
+import { config } from "../config/config";
 
 //TODO: VALIDATION FOR FORGE FILE PATH
 //TODO BACKLOG: Manual schema creation
@@ -154,20 +155,19 @@ const create = async () => {
     if (write === "Yes") {
       //DOUBLE CHECK THAT THIS IS THE CORRECT FILE PATH
       //DOUBLE CHECK NAMING CONVENTION FOR SCHEMA FILE
-      const destinationDir = path.join(process.cwd(), "forge");
-      const forgeFilePath = "forge/" + promptAnswers.path + ".ts";
+      const schemaDir = path.join(process.cwd(), config.schemaPath);
+      const filePath = promptAnswers.path + ".ts";
 
       //filename uses endpoint path - CHECK IF SHOULD HAVE schema.ts
-      const destinationFilePath =
-        destinationDir + "/" + promptAnswers.path + ".ts";
+      const destinationFilePath = path.join(schemaDir, filePath);
 
       console.log(cWrap.fm("\nDestination file path:"), destinationFilePath);
 
       //check if directory exists
-      const directoryExists = fs.existsSync(destinationDir);
+      const directoryExists = fs.existsSync(schemaDir);
       if (!directoryExists) {
         console.log(cWrap.fm("Forge directory does not exist. Creating..."));
-        fs.mkdirSync(destinationDir);
+        fs.mkdirSync(schemaDir, { recursive: true });
       }
 
       //check if file exists - notify user and ask to overwrite
@@ -194,11 +194,13 @@ const create = async () => {
           console.log(cWrap.fm("File has been overwritten"));
           console.log(
             cWrap.fm("You can deploy your file by running:"),
-            cWrap.fg("forge deploy " + forgeFilePath) // check if this is correct - does it work when someone is not in forge cli directory
+            cWrap.fg("forge deploy all") // check if this is correct - does it work when someone is not in forge cli directory
           );
           console.log(
             cWrap.fm("You can test your file by running:"),
-            cWrap.fg("forge test " + forgeFilePath)
+            cWrap.fg(
+              "forge test " + config.schemaPath + "/" + filePath
+            )
           );
         } catch (error) {
           console.error(cWrap.fr("Failed to write file:"), error);
@@ -212,11 +214,13 @@ const create = async () => {
           console.log(cWrap.fm("File has been written"));
           console.log(
             cWrap.fm("You can deploy your file by running:"),
-            cWrap.fg("forge deploy " + forgeFilePath) // check if this is correct - does it work when someone is not in forge cli directory
+            cWrap.fg("forge deploy all") // check if this is correct - does it work when someone is not in forge cli directory
           );
           console.log(
             cWrap.fm("You can test your file by running:"),
-            cWrap.fg("forge test " + forgeFilePath)
+            cWrap.fg(
+              "forge test " + config.schemaPath + "/" + filePath
+            )
           );
         } catch (error) {
           console.error(cWrap.fr("\nFailed to write file:"), error);
