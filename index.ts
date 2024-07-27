@@ -7,8 +7,10 @@ import init from "./src/commands/init";
 import keys from "./src/commands/key";
 import test from "./src/commands/test";
 import create from "./src/commands/create";
+import generate from "./src/commands/generate";
 import { config } from "./src/config/config";
 import cWrap from "./src/utils/logging";
+
 
 // wrap(null) removes the default 80 character limit
 const cli = yargs(hideBin(process.argv)).scriptName("forge").wrap(null);
@@ -20,6 +22,7 @@ init(cli);
 keys(cli);
 test(cli);
 create(cli);
+generate(cli);
 // transform(cli);
 
 const defaultCommand: CommandModule = {

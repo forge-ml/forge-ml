@@ -2,12 +2,17 @@ import { importConfig, importZod } from "../utils/imports";
 import { toJSON } from "../utils/toJSON";
 import path from "path";
 import makeRequest, { EP } from "../utils/request";
-import fs from "fs";
 import { cWrap } from "../utils/logging";
 import { config as cfg } from "../config/config";
-import { SchemaConfig } from "../utils/config";
+import { CacheType, SchemaConfig } from "../utils/config";
+import { loadDirectoryFiles } from "../utils/directory";
+import { generate } from "./generate";
 
-const deploy = async (inFile: string, endpoint: string, config: SchemaConfig) => {
+const deploy = async (
+  inFile: string,
+  endpoint: string,
+  config: SchemaConfig
+) => {
   const zod = await importZod(inFile);
   const json = toJSON(zod);
 
@@ -15,10 +20,12 @@ const deploy = async (inFile: string, endpoint: string, config: SchemaConfig) =>
     method: "POST",
     data: {
       name: config.name || "Set me in the schema config (name)",
-      description: config.description || "Set me in the schema config (description)",
+      description:
+        config.description || "Set me in the schema config (description)",
       structure: JSON.stringify(json),
       path: endpoint,
       public: config.public,
+      cacheSetting: config.cache || CacheType.NONE,
     },
   });
 
@@ -31,17 +38,7 @@ const deploy = async (inFile: string, endpoint: string, config: SchemaConfig) =>
 };
 
 const deployAll = async () => {
-  let files;
-  try {
-    files = fs.readdirSync(path.join(process.cwd(), cfg.schemaPath));
-  } catch (error) {
-    console.error(
-      cWrap.fr(
-        `Error reading schema directory \`${cfg.schemaPath}\`. Please verify it exists and try again.`,
-      ),
-    );
-    return;
-  }
+  const files = loadDirectoryFiles();
 
   for (const file of files) {
     const filePath = path.join(process.cwd(), cfg.schemaPath, file);
@@ -49,8 +46,13 @@ const deployAll = async () => {
 
     if (!config?.path) {
       console.log(
-        `- ${cWrap.fm("No path found")} in ${cWrap.fg(file)}. Skipping...`,
+        `- ${cWrap.fm("No path found")} in ${cWrap.fg(file)}. Skipping...`
       );
+      continue;
+    }
+
+    if (file.includes(".ignore.")) {
+      console.log(`- ${cWrap.fm("Ignoring")} ${cWrap.fg(file)}. Skipping...`);
       continue;
     }
 
@@ -59,24 +61,26 @@ const deployAll = async () => {
       if (response.error) {
         console.log(
           `- ${cWrap.fr("Error deploying")} ${cWrap.fm(
-            file,
-          )}. Something went wrong. Are you logged in?`,
+            file
+          )}. Something went wrong. Are you logged in?`
         );
       } else {
         console.log(
           `- ${cWrap.fg("Deployed")} ${cWrap.fg(file)} to ${cWrap.fg(
-            config.path,
-          )}`,
+            config.path
+          )}`
         );
       }
     } catch (error) {
       console.log(
         `- ${cWrap.fr("Error deploying")} ${cWrap.fm(
-          file,
-        )}. Please check that you have a valid zodSchema as the default export. Skipping...`,
+          file
+        )}. Please check that you have a valid zodSchema as the default export. Skipping...`
       );
     }
   }
+
+  generate();
 };
 
 export { deploy, deployAll };

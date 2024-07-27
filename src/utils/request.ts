@@ -6,6 +6,7 @@ import { config } from "../config/config";
 export enum EP {
   TEST,
   DEPLOY,
+  ENDPOINT_ALL,
   GET_DOCS_URL,
   SET_OPENAI_KEY,
   UPDATE_USERNAME,
@@ -17,6 +18,7 @@ const rootURL = config.serverUrl;
 const EPS = {
   [EP.TEST]: "/test",
   [EP.DEPLOY]: "/endpoint",
+  [EP.ENDPOINT_ALL]: "/endpoint/all",
   [EP.GET_DOCS_URL]: "/docs/url",
   [EP.SET_OPENAI_KEY]: "/cli/key",
   [EP.UPDATE_USERNAME]: "/cli/updateUsername",
