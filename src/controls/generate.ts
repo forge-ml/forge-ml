@@ -2,7 +2,7 @@
 
 import path from "path";
 import { loadDirectoryFiles } from "../utils/directory";
-import { config as cfg } from "../config/config";
+import { config as cfg, config } from "../config/config";
 import { importConfig } from "../utils/imports";
 import fs from "fs";
 import compileTypeScriptModule from "../utils/compile";
@@ -11,6 +11,8 @@ import axios from "axios";
 import makeRequest, { EP } from "../utils/request";
 import cWrap from "../utils/logging";
 import { execSync } from "child_process";
+import { Keys } from "../commands/key";
+import localConfigService from "./auth/svc";
 
 const cleanPath = (path: string): string => {
   return path.replace(/[^a-zA-Z0-9]/g, "_");
@@ -95,7 +97,6 @@ const createClient = async () => {
         const destPath = path.join(schemaDir, file);
         const tsCode = fs.readFileSync(filePath, "utf8");
         const target = path.join(schemaDir, file.replace(".ts", ".js"));
-        const description = `Compiled ${file}`;
         compileTypeScriptModule(tsCode, target);
         fs.copyFileSync(filePath, destPath);
 
@@ -104,8 +105,21 @@ const createClient = async () => {
     )
   ).filter((x): x is { config: any; file: string } => !!x);
 
-  const response = await makeRequest(EP.ENDPOINT_ALL, { method: "GET" });
-  const username = response.data.data.username;
+  const apiKey = localConfigService.getValue(Keys.FORGE);
+
+  let username = "jakezegil";
+
+  if (!apiKey) {
+    console.log(
+      cWrap.fy("Warning: ") +
+        "You're not logged in, so the client will generate a dummy client. You can login or signup with '" +
+        cWrap.fg(config.bin + " auth") +
+        "' and try again.\n"
+    );
+  } else { 
+    const response = await makeRequest(EP.ENDPOINT_ALL, { method: "GET" });
+    username = response.data.data.username;
+  }
 
   return buildClient(username, configs);
 };
@@ -135,7 +149,7 @@ export const generate = async () => {
   console.log(
     "Client code re-generated and installed as " +
       cWrap.fg("@forge-ml/client") +
-      ". You may need to 'reload window' on your IDE to refresh type-completion."
+      ". You may need to 'reload window' on your IDE to refresh type-completion.\n"
   );
   // write the package.json
   fs.writeFileSync(
