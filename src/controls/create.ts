@@ -12,11 +12,8 @@ import { selectOptionBinary, selectOption } from "../utils/optionSelect";
 import { error } from "console";
 
 //TODO: ADD CACHING OPTIONS
-
-enum SchemaType {
-  AI = "AI Generated",
-  MANUAL = "Manual Creation",
-}
+//TODO: VALIDATION FOR FORGE FILE PATH
+//TODO BACKLOG: Manual schema creation
 
 enum PathPrivacy {
   PUBLIC = "public",
@@ -37,78 +34,102 @@ const askQuestion = (
 //VALIDATION CREATE SHOULD ONLY BE CALLED AFTER INIT?
 
 const create = async () => {
-  //get schema type from user
-  console.log("How should we create your schema?");
-  const schemaType = await selectOption([SchemaType.AI, SchemaType.MANUAL]);
+  //AI generated schema creation
+  const questions: string[] = [
+    "What do you want the path of your schema to be? (required, must be one lowercase word, no special characters)\n",
+    "Is this a public path?\n", // not used
+    "What do you want the name of your endpoint to be? (optional)\n",
+    "What do you want the description of your endpoint to be? (optional)\n",
+    "Enter a prompt for your schema? (ex. Generate a Person schema with attributes like a job, name, age, etc.)\n",
+  ];
 
-  if (schemaType === SchemaType.MANUAL) {
-    console.log(cWrap.fm("\nThis hasn't been implemented yet"));
-    return;
-  } else {
-    //COULD REMOVE OPTIONAL QUESTIONS AND IMPROVISE ANSWERS
-    const questions: string[] = [
-      "What do you want the path of your schema to be? (required, must be one word, no special characters)\n",
-      "Is this a public path?\n", // not used
-      "What do you want the name of your endpoint to be? (optional)\n",
-      "What do you want the description of your endpoint to be? (optional)\n",
-      "Enter a prompt for your schema? (ex. Generate a Person schema with attributes like a job, name, age, etc.)\n",
-    ];
+  const answers: string[] = [];
+  const optionalQuestions = [2, 3];
 
-    const answers: string[] = [];
-    const optionalQuestions = [2, 3];
+  console.log(cWrap.fb("Let's build your schema:"));
 
-    console.log(cWrap.fb("\n\nLet's build your schema:"));
-
-    for (let i = 0; i < questions.length; i++) {
+  for (let i = 0; i < questions.length; i++) {
+    if (i === 1) {
+      console.log(cWrap.fm("Is this a public or private path?"));
+      const privacy = await selectOptionBinary([
+        PathPrivacy.PUBLIC,
+        PathPrivacy.PRIVATE,
+      ]);
+      answers.push(privacy);
+    } else {
+      //TO FIX: when readline is in else statement public and private disappear on user input
+      //when readline is on outside the user can type during public/private input
       const rl = readline.createInterface({ input, output }); // open and closing within loop because rl doesn't work with select option
-      if (i === 1) {
-        console.log(cWrap.fm("Is this a public or private path?"));
-        const privacy = await selectOption([
-          PathPrivacy.PUBLIC,
-          PathPrivacy.PRIVATE,
-        ]);
-        answers.push(privacy);
-      } else {
-        const answer = await askQuestion(rl, questions[i]);
-        if (answer) {
-          answers.push(answer);
-        } else if (
-          optionalQuestions.includes(i) &&
-          (!answer || answer.trim() === "")
-        ) {
-          //if user doesn't want to add a response, just add an empty string - FOR OPTIONAL QUESTIONS
-          answers.push("");
-        } else if (!answer || answer.trim() === "") {
-          console.log(cWrap.br("Error: you need to add a response"));
-          return;
+      const answer = await askQuestion(rl, questions[i]);
+      if (answer) {
+        //validate that path is all lowercase and contains no special characters
+        if (i === 0 && !/^[a-z0-9]+$/.test(answer)) {
+          console.log(
+            cWrap.br(
+              "Error: path must be all lowercase and contain no special characters"
+            )
+          );
+          process.exit(0);
         }
+
+        answers.push(answer);
+      } else if (
+        optionalQuestions.includes(i) &&
+        (!answer || answer.trim() === "")
+      ) {
+        //if user doesn't want to add a response, just add an empty string - FOR OPTIONAL QUESTIONS
+        answers.push("");
+      } else if (!answer || answer.trim() === "") {
+        console.log(cWrap.br("Error: you need to add a response"));
+        rl.close();
+        process.exit(0);
       }
       rl.close();
     }
+  }
 
-    //VALIDATE ANSWERS - make sure all answers have correct content (ex. path can't be empty and must be one word, etc.)
+  //create an object that matches questions to answers
+  const promptAnswers = {
+    path: answers[0],
+    public: answers[1],
+    endpointName: answers[2],
+    endpointDescription: answers[3],
+    schemaPrompt: answers[4],
+  };
 
-    //create an object that matches questions to answers
-    const promptAnswers = {
-      path: answers[0],
-      public: answers[1],
-      endpointName: answers[2],
-      endpointDescription: answers[3],
-      schemaPrompt: answers[4],
-    };
+  console.log(cWrap.fm("\nCreating schema..."));
 
-    //VALIDATE OPENAI KEY
-
-    console.log(cWrap.fm("\nCreating schema..."));
+  try {
     const response = await makeRequest(EP.CREATE, {
       method: "POST",
-      data: { promptAnswers },
+      data: promptAnswers,
     });
 
+    if (response.message === "OpenAI provider key is required") {
+      console.log(
+        cWrap.fr(
+          "You have not set up an OpenAI key. Please set up an OpenAI key by running `forge key set`"
+        )
+      );
+      process.exit(1);
+    }
+
     if (response.error) {
-      console.log(cWrap.br("Error creating schema"));
-      console.log(cWrap.fr(response?.message as string));
-      return;
+      //FIX THIS - BACKEND IS WRAPPING ERRORS IN ERRORS?
+      if (
+        response.error.response.data &&
+        response.error.response.data ===
+          "Invalid API key provided. Please check your API key and try again."
+      ) {
+        console.log(
+          cWrap.fr(
+            "There was an OpenAI invalid key error when testing your schema: Please verify if you have an active OpenAI key set up in your account.\nIf not, you can set your OpenAI key by running `forge key set`"
+          )
+        );
+        process.exit(1);
+      }
+      console.log(cWrap.fr("Error generating schema"));
+      process.exit(1);
     }
 
     //on healthy response, offer to write to file in forge folder
@@ -121,6 +142,7 @@ const create = async () => {
       //DOUBLE CHECK THAT THIS IS THE CORRECT FILE PATH
       //DOUBLE CHECK NAMING CONVENTION FOR SCHEMA FILE
       const destinationDir = path.join(process.cwd(), "forge");
+      const forgeFilePath = "forge/" + promptAnswers.path + ".ts";
 
       //filename uses endpoint path - CHECK IF SHOULD HAVE schema.ts
       const destinationFilePath =
@@ -128,7 +150,14 @@ const create = async () => {
 
       console.log(cWrap.fm("\nDestination file path:"), destinationFilePath);
 
-      //VALIDATION - check if file exists - notify user and ask to overwrite
+      //check if directory exists
+      const directoryExists = fs.existsSync(destinationDir);
+      if (!directoryExists) {
+        console.log(cWrap.fm("Forge directory does not exist. Creating..."));
+        fs.mkdirSync(destinationDir);
+      }
+
+      //check if file exists - notify user and ask to overwrite
       if (fs.existsSync(destinationFilePath)) {
         console.log(
           cWrap.fm("File already exists. Do you want to overwrite it?")
@@ -149,11 +178,14 @@ const create = async () => {
         try {
           console.log(cWrap.fm("\nWriting to file..."));
           fs.writeFileSync(destinationFilePath, response.data);
+          console.log(cWrap.fm("File has been overwritten"));
           console.log(
-            cWrap.fm(
-              "File has been overwritten. You can deploy your file by running:"
-            ),
-            cWrap.fg("forge deploy all") //maybe change this forge deploy <path> <= where path is hard coded
+            cWrap.fm("You can deploy your file by running:"),
+            cWrap.fg("forge deploy " + forgeFilePath) // check if this is correct
+          );
+          console.log(
+            cWrap.fm("You can test your file by running:"),
+            cWrap.fg("forge test " + forgeFilePath)
           );
         } catch (error) {
           console.error(cWrap.fr("Failed to write file:"), error);
@@ -164,11 +196,14 @@ const create = async () => {
           console.log(cWrap.fm("\nWriting to file..."));
           fs.writeFileSync(destinationFilePath, response.data);
 
+          console.log(cWrap.fm("File has been written"));
           console.log(
-            cWrap.fm(
-              "File has been written. You can deploy your file by running:"
-            ),
-            cWrap.fg("forge deploy all")
+            cWrap.fm("You can deploy your file by running:"),
+            cWrap.fg("forge deploy " + forgeFilePath) // check if this is correct
+          );
+          console.log(
+            cWrap.fm("You can test your file by running:"),
+            cWrap.fg("forge test " + forgeFilePath)
           );
         } catch (error) {
           console.error(cWrap.fr("\nFailed to write file:"), error);
@@ -182,6 +217,9 @@ const create = async () => {
     }
 
     return response;
+  } catch (error) {
+    console.error(cWrap.fr("Failed to create schema:"));
+    process.exit(1);
   }
 };
 

@@ -9,6 +9,7 @@ const createCommand = (cli: Argv) =>
   cli.command(
     "create",
     `${cWrap.fm("Create a new simple schema.")}`,
+    () => {},
     async (args) => {
       authGate();
       await create();

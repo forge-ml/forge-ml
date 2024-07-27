@@ -10,13 +10,14 @@ function selectFromOptions(
   options: string[],
   useCursor?: boolean,
   paddingLength?: number,
-  leftToRight?: boolean
+  leftToRight?: boolean,
+  cursor?: string
 ): Promise<string> {
   return new Promise((resolve) => {
     const selectOption = {
       selectIndex: 0, // index of selected option
       options: options, // array of options
-      selector: ">", // selector for selected option
+      selector: cursor || ">", // selector for selected option
       isFirstTimeShowMenu: true, // flag to check if it's the first time the menu is shown
       createOptionMenu: (): void => {}, // function to create the option menu
       getPadding: (length: number): string => "", // function to get the padding for the option menu
@@ -143,13 +144,15 @@ async function selectOptionBinary(
   options: string[],
   useCursor: boolean = true,
   paddingLength: number = 0,
-  leftToRight: boolean = true
+  leftToRight: boolean = true,
+  cursor: string = "*"
 ) {
   const selectedOption = await selectFromOptions(
     options,
     useCursor,
     paddingLength,
-    leftToRight
+    leftToRight,
+    cursor
   );
   return selectedOption;
 }
@@ -159,12 +162,16 @@ async function selectOptionBinary(
 async function selectOption(
   options: string[],
   useCursor: boolean = true,
-  paddingLength: number = 0
+  paddingLength: number = 0,
+  leftToRight: boolean = false,
+  cursor: string = ">"
 ) {
   const selectedOption = await selectFromOptions(
     options,
     useCursor,
-    paddingLength
+    paddingLength,
+    leftToRight,
+    cursor
   );
   return selectedOption;
 }
