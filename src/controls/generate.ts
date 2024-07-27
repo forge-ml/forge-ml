@@ -10,6 +10,7 @@ import loadBoilerplateFile from "../utils/boilerplate";
 import axios from "axios";
 import makeRequest, { EP } from "../utils/request";
 import cWrap from "../utils/logging";
+import { execSync } from "child_process";
 
 const cleanPath = (path: string): string => {
   return path.replace(/[^a-zA-Z0-9]/g, "_");
@@ -47,7 +48,7 @@ const buildImports = (configs: { config: any; file: string }[]) => {
       (config) =>
         `import ${cleanPath(
           config.config.path
-        )}_${type_prefix} from "../schema/${config.file}"`
+        )}_${type_prefix} from "./schema/${config.file}"`
     )
     .join("\n");
 };
@@ -84,15 +85,16 @@ const createClient = async () => {
           return;
         }
 
-        const dir = path.join(
+        const schemaDir = path.join(
           process.cwd(),
           "node_modules",
-          "@forge",
+          "@forge-ml",
+          "client",
           "schema"
         );
-        const destPath = path.join(dir, file);
+        const destPath = path.join(schemaDir, file);
         const tsCode = fs.readFileSync(filePath, "utf8");
-        const target = path.join(dir, file.replace(".ts", ".js"));
+        const target = path.join(schemaDir, file.replace(".ts", ".js"));
         const description = `Compiled ${file}`;
         compileTypeScriptModule(tsCode, target);
         fs.copyFileSync(filePath, destPath);
@@ -108,9 +110,15 @@ const createClient = async () => {
   return buildClient(username, configs);
 };
 
+const installClient = async () => {
+  execSync("npm install @forge-ml/client");
+};
+
 export const generate = async () => {
   const boilerplate = loadBoilerplateFile("generated_client.ts.txt");
   const packageJson = loadBoilerplateFile("package.json.txt");
+
+  await installClient();
 
   const clientCode = await createClient();
 
@@ -122,11 +130,11 @@ export const generate = async () => {
   // write the generated client
   compileTypeScriptModule(
     variable_declarations + boilerplate + clientCode,
-    path.join(process.cwd(), "node_modules", "@forge", "client", "index.js")
+    path.join(process.cwd(), "node_modules", "@forge-ml", "client", "index.js")
   );
   console.log(
     "Client code re-generated and installed as " +
-      cWrap.fg("@forge/client") +
+      cWrap.fg("@forge-ml/client") +
       ". You may need to 'reload window' on your IDE to refresh type-completion."
   );
   // write the package.json
@@ -134,7 +142,7 @@ export const generate = async () => {
     path.join(
       process.cwd(),
       "node_modules",
-      "@forge",
+      "@forge-ml",
       "client",
       "package.json"
     ),

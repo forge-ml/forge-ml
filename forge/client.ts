@@ -1,4 +1,4 @@
-import Forge from "@forge/client";
+import Forge from "@forge-ml/client";
 
 const keyGuard = () => {
   throw new Error("set FORGE_KEY in your .env");

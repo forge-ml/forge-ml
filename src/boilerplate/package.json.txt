@@ -1,6 +1,6 @@
 // --- START -- //
 {
-  "name": "@forge/client",
+  "name": "@forge-ml/client",
   "main": "./index.js",
   "module": "./index.js",
   "type": "module",
