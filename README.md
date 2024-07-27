@@ -88,8 +88,10 @@ export default z
 export const config: EndpointConfig = {
   // "path" determines the url path for the endpoint you'll deploy
   path: "my-schema", // one word, no special characters
+  public: true || false, // determines if the endpoint is available for public access
   name: "My Schema", // name of the endpoint
   description: "My schema description",
+  cache: "Individual" || "Common" || "None", // cache determines how the schema is cached. "Individual" - cache is unique to each user, "Common" - cache is shared amongst all users, "None" - no caching
 };
 ```
 
@@ -191,6 +193,8 @@ Your api keys live in `~/.forge/key.json`. You can manage them using some of the
      name: "Person",
      /** description of the endpoint */
      description: "A person in history or the present day",
+     /** cache setting **/
+     cache: "Individual",
    };
    ```
 
@@ -222,10 +226,11 @@ Your api keys live in `~/.forge/key.json`. You can manage them using some of the
      "sources": ["https://en.wikipedia.org/wiki/Mark_Twain"],
      "_meta": {
        "usage": {
-         "prompt_tokens": 75,
-         "completion_tokens": 79,
-         "total_tokens": 154
-       }
+         "prompt_tokens": 211,
+         "completion_tokens": 257,
+         "total_tokens": 468
+       },
+       "cacheHit": false
      }
    }
    ```
@@ -247,7 +252,7 @@ Your api keys live in `~/.forge/key.json`. You can manage them using some of the
 
    ```bash
    # Make a request to your endpoint
-   curl -X POST https://api.forge-ml.com/q/your_username/the_path -H "Authorization: Bearer <your-forge-key>" -d '{"q": "Who is Mark Twain?"}'
+   curl -X POST https://api.forge-ml.com/q/your_username/the_path  -H "cache-behavior: <your-cache-behavior-value>" -H "Authorization: Bearer <your-forge-key>" -d '{"q": "Who is Mark Twain?"}'
    ```
 
 ## ⚙️ Endpoint Config
@@ -267,6 +272,12 @@ export type EndpointConfig = {
   name?: string;
   /** description of the endpoint */
   description?: string;
+  /** cache setting
+   * Individual - cache is unique to each user
+   * Common - cache is shared amongst all users
+   * None - no caching
+   * **/
+  cache: "Individual" || "Common" || "None";
 };
 
 export const config: EndpointConfig = {
