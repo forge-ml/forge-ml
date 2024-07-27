@@ -143,12 +143,12 @@ Your api keys live in `~/.forge/key.json`. You can manage them using some of the
 
 ## 🔨 Building your Schemas
 
-You can create a new schema with `forge create`. After using the command, you'll be met with a series of prompts to set up your [endpoint config](#-⚙️-endpoint-config). Finally you'll be asked for a prompt to generate a schema:
+You can create a new schema with `forge create`. After using the command, you'll be met with a series of prompts to set up your [endpoint config](#endpoint-config). Finally you'll be asked for a prompt to generate a schema:
 
 ```bash
 Enter a prompt for your schema? (ex. Generate a Person schema with attributes like a job, name, age, etc.)
 
-_Generate a superhero schema with attributes like name, sidekick, and abilities, etc. Add a lot of attributes and be very detailed._
+Generate a superhero schema with attributes like name, sidekick, and abilities, etc. Add a lot of attributes and be very detailed.
 
 Creating schema...
 ```
