@@ -159,7 +159,7 @@ Once the schema is generated, a new forge schema file `<endpoint-path>.ts` will 
 
 ## 🤖 Using the Forge SDK
 
-`forge init` and `forge deploy all` will generate a client for you. allowing you to interact with your endpoints programatically.
+`forge init` and `forge deploy all` will generate a client for you, allowing you to interact with your endpoints programatically.
 
 Lets walk through an example of how to use the Forge SDK
 
