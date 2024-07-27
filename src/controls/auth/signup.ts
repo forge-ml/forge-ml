@@ -9,7 +9,7 @@ const signup = async () => {
   const password = prompt().hide("Enter your password: ");
   const userName = prompt()("Enter your username: ");
   const apiKey = prompt().hide(
-    `Enter your OpenAI API key (this is used for ${config.bin} test and deployed schemas): `
+    `Enter your OpenAI API key (this is used for ${config.bin} test and deployed schemas) [https://platform.openai.com/api-keys]: `
   );
 
   try {

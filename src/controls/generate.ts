@@ -30,7 +30,7 @@ ${cleanPath(path)}: {
           path: "${path}",
         })(prompt, {
           token: opts?.token || forgeKey,
-          // cache: opts?.cache,
+          cache: opts?.cache,
         });
       },
 },`;

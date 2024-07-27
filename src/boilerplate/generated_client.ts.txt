@@ -1,4 +1,5 @@
 
+const serverUrl = process.env.FORGE_LOCAL_SERVER || "https://api.forge.ai";
 
 // Any code above this line will be ignored by a file loading boilerplate
 // --- START -- //
@@ -13,7 +14,7 @@ type ClientOptions = {
 type RequestOptions = {
   token?: string;
   // model: string;
-  // cache?: "Bust" | "Evade" // (only if cache setting)
+  cache?: "Bust" | "Evade" // (@TODO: only if cache setting)
 };
 
 // Options that will be set at generation time
@@ -32,6 +33,9 @@ export const createRequest = (params: GeneratedOptions) => {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${opts.token}`,
+            ...(opts.cache && {
+              "Cache-Behavior": opts.cache,
+            }),
           },
           body: JSON.stringify({
             q: query,

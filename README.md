@@ -9,7 +9,7 @@
 #### Forge is the fastest way to deploy extraction and structured output from LLMs
 
 [Installation](#-installation) •
-[Getting Started](#-getting-started) •
+[Quickstart](#-quickstart) •
 [Creating Your First Endpoint](#%EF%B8%8F-creating-your-first-endpoint)
 
 </div>
@@ -22,17 +22,13 @@ Install Forge globally:
 npm install -g forge-ml
 ```
 
-Initialize your forge project
-
-```bash
-forge init
-```
-
 And you're live!
 
 ```bash
 forge --help
 ```
+
+[Get started now ->](#-quickstart)
 
 ## 🛠️ What is Forge?
 
@@ -66,19 +62,25 @@ forge deploy all
 
 ```
 
-## 📈 Getting Started
+## 📈 Quickstart
 
 ```bash
 # Sign up for a forge account
 forge auth signup
 
-## Create an example zod schema
+## Install zod
+npm install zod
+
+## Initialize your forge project
 forge init
 
-# Test your endpoint
-forge test ./forge/schema/my_schema.ts
+## Create a forge schema
+forge create
 
-# Deploy your endpoints
+# Test your endpoint
+forge test ./forge/schema/<your_schema>.ts
+
+# Deploy your schema as an endpoint
 forge deploy all
 ```
 

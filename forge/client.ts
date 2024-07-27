@@ -1,6 +1,7 @@
 
 import Forge from "@forge-ml/client";
 
+// run `forge key copy forge` to copy your local key to the clipboard 
 const keyGuard = () => {
   throw new Error("set FORGE_KEY in your .env");
 };
