@@ -10,7 +10,7 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "postinstall": "curl -fsSL https://bun.sh/install | bash && bun upgrade"
+    "postinstall": "curl -fsSL https://bun.sh/install | bash"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
