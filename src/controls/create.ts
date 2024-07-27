@@ -67,6 +67,7 @@ const create = async () => {
         CacheType.INDIVIDUAL,
       ]);
       answers.push(cache);
+      output.write("\n");
     } else {
       //TO FIX: when readline is in else statement public and private disappear on user input
       //when readline is on outside the user can type during public/private input
