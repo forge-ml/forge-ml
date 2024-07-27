@@ -10,7 +10,7 @@
 
 [Installation](#-installation) •
 [Getting Started](#-getting-started) •
-[Creating Your First Endpoint](#-creating-your-first-endpoint)
+[Creating Your First Endpoint](#%EF%B8%8F-creating-your-first-endpoint)
 
 </div>
 
