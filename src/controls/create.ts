@@ -4,12 +4,9 @@ import path from "path";
 import makeRequest, { EP } from "../utils/request";
 import fs from "fs";
 import { cWrap } from "../utils/logging";
-import { config as cfg } from "../config/config";
-import { SchemaConfig } from "../utils/config";
 import readline from "node:readline";
 import { stdin as input, stdout as output } from "node:process";
 import { selectOptionBinary, selectOption } from "../utils/optionSelect";
-import { error } from "console";
 
 //TODO: ADD CACHING OPTIONS
 //TODO: VALIDATION FOR FORGE FILE PATH
@@ -18,6 +15,12 @@ import { error } from "console";
 enum PathPrivacy {
   PUBLIC = "public",
   PRIVATE = "private",
+}
+
+enum CacheType {
+  COMMON = "Common",
+  NONE = "None",
+  INDIVIDUAL = "Individual",
 }
 
 const askQuestion = (
@@ -38,13 +41,14 @@ const create = async () => {
   const questions: string[] = [
     "What do you want the path of your schema to be? (required, must be one lowercase word, no special characters)\n",
     "Is this a public path?\n", // not used
+    "Would you like to cache your schema? (None - no caching, Common - cache is shared amongst all users, Individual - cache is unique to each user)\n",
     "What do you want the name of your endpoint to be? (optional)\n",
     "What do you want the description of your endpoint to be? (optional)\n",
     "Enter a prompt for your schema? (ex. Generate a Person schema with attributes like a job, name, age, etc.)\n",
   ];
 
   const answers: string[] = [];
-  const optionalQuestions = [2, 3];
+  const optionalQuestions = [3, 4];
 
   console.log(cWrap.fb("Let's build your schema:"));
 
@@ -56,6 +60,14 @@ const create = async () => {
         PathPrivacy.PRIVATE,
       ]);
       answers.push(privacy);
+    } else if (i === 2) {
+      console.log(cWrap.fm("\nWould you like to cache your schema?"));
+      const cache = await selectOptionBinary([
+        CacheType.NONE,
+        CacheType.COMMON,
+        CacheType.INDIVIDUAL,
+      ]);
+      answers.push(cache);
     } else {
       //TO FIX: when readline is in else statement public and private disappear on user input
       //when readline is on outside the user can type during public/private input
@@ -92,9 +104,10 @@ const create = async () => {
   const promptAnswers = {
     path: answers[0],
     public: answers[1],
-    endpointName: answers[2],
-    endpointDescription: answers[3],
-    schemaPrompt: answers[4],
+    cache: answers[2],
+    endpointName: answers[3],
+    endpointDescription: answers[4],
+    schemaPrompt: answers[5],
   };
 
   console.log(cWrap.fm("\nCreating schema..."));
