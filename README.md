@@ -141,6 +141,20 @@ Your api keys live in `~/.forge/key.json`. You can manage them using some of the
   forge key set <API_KEY> --provider <provider>
 ```
 
+## 🔨 Building your Schemas
+
+You can create a new schema with `forge create`. After using the command, you'll be met with a series of prompts to set up your [endpoint config](#-⚙️-endpoint-config). Finally you'll be asked for a prompt to generate a schema:
+
+```bash
+Enter a prompt for your schema? (ex. Generate a Person schema with attributes like a job, name, age, etc.)
+
+_Generate a superhero schema with attributes like name, sidekick, and abilities, etc. Add a lot of attributes and be very detailed._
+
+Creating schema...
+```
+
+Once the schema is generated, a new forge schema file `<endpoint-name>.ts` will be created in `./forge/schema` for you to test and deploy.
+
 ## 🤖 Using the Forge SDK
 
 `forge init` and `forge deploy all` will generate a client for you. allowing you to interact with your endpoints programatically.
