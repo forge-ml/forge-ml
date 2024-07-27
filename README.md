@@ -22,6 +22,12 @@ Install Forge globally:
 npm install -g forge-ml
 ```
 
+Initialize your forge project
+
+```bash
+forge init
+```
+
 And you're live!
 
 ```bash
@@ -45,7 +51,7 @@ const whois = z.object({
 
 ```bash
 # deploy
-forge deploy whois.ts
+forge deploy all
 ```
 
 ```ts
@@ -70,10 +76,10 @@ forge auth signup
 forge init
 
 # Test your endpoint
-forge test ./forge/my_schema.ts
+forge test ./forge/schema/my_schema.ts
 
-# Deploy your endpoint
-forge deploy ./forge/my_schema.ts
+# Deploy your endpoints
+forge deploy all
 ```
 
 _❗️ Note ❗️ In order to deploy, your schema file must have a zod object as the default export and a named `config` export containing the `path`._
@@ -88,8 +94,10 @@ export default z
 export const config: EndpointConfig = {
   // "path" determines the url path for the endpoint you'll deploy
   path: "my-schema", // one word, no special characters
+  public: true || false, // determines if the endpoint is available for public access
   name: "My Schema", // name of the endpoint
   description: "My schema description",
+  cache: "Individual" | "Common" | "None", // cache determines how the schema is cached.
 };
 ```
 
@@ -133,12 +141,79 @@ Your api keys live in `~/.forge/key.json`. You can manage them using some of the
   forge key set <API_KEY> --provider <provider>
 ```
 
+## 🤖 Using the Forge SDK
+
+`forge init` and `forge deploy all` will generate a client for you. allowing you to interact with your endpoints programatically.
+
+Lets walk through an example of how to use the Forge SDK
+
+After `forge init` you'll have a `client.ts` file in your `forge` folder that looks like this:
+
+```ts
+import Forge from "@forge-ml/client";
+
+const keyGuard = () => {
+  throw new Error("set FORGE_KEY in your .env");
+};
+
+const forgeKey = process.env.FORGE_KEY || keyGuard();
+
+const forge = Forge({
+  forgeKey: forgeKey,
+});
+
+export default forge;
+```
+
+Feel free to edit this, it's only regenerated when you run `forge init`.
+
+In the root of your project add a `.env` file with your forge key. You can get your forge key after logging in by running `forge key copy forge`.
+
+```bash
+FORGE_KEY=your-forge-key
+```
+
+Then, import your forge client and make a request:
+
+```ts
+import forge from "./forge/client";
+
+const response = await forge.person.get({
+  q: "Who is Mark Twain?",
+});
+
+// a typesafe response!
+const firstName = response.name.firstName; // "Mark"
+console.log(firstName);
+```
+
+And you'll get a typesafe response from your endpoint:
+
+```json
+{
+  "name": {
+    "full": "Mark Twain",
+    "firstName": "Mark",
+    "lastName": "Twain"
+  },
+  ...
+  "_meta": {
+    "usage": {
+      "prompt_tokens": 211,
+      "completion_tokens": 220,
+      "total_tokens": 431
+    },
+    "cacheHit": false
+  }
+}
+```
+
 ## ⚡️ Creating your first endpoint
 
 2. Create a typescript file with a zod schema as the default export
 
    ```ts
-   // ./forge/endpointSchema.ts
+   // ./forge/schema/endpointSchema.ts
    import z from "zod";
 
    const PersonCategory = z.enum([
@@ -176,7 +251,7 @@ Your api keys live in `~/.forge/key.json`. You can manage them using some of the
 
    ```ts
    /*
-    *   forge/endpointSchema.ts
+    *   forge/schema/endpointSchema.ts
     */
 
    export const config: EndpointConfig = {
@@ -191,13 +266,15 @@ Your api keys live in `~/.forge/key.json`. You can manage them using some of the
      name: "Person",
      /** description of the endpoint */
      description: "A person in history or the present day",
+     /** cache setting **/
+     cache: "Individual", // this means it's set to be unique to each user
    };
    ```
 
 4. Test the endpoint
 
    ```bash
-   forge test ./forge/endpointSchema.ts
+   forge test ./forge/schema/endpointSchema.ts
 
    ## Enter your prompt: Who is Mark Twain?
    ```
@@ -233,7 +310,7 @@ Your api keys live in `~/.forge/key.json`. You can manage them using some of the
 5. Deploy the endpoint, and check it out in your swagger docs
 
    ```bash
-   forge deploy ./forge/endpointSchema.ts    ## Deploy the endpoint
+   forge deploy all   ## Deploy your endpoints
    forge docs    ## Check out your swagger docs
    ```
 
@@ -247,7 +324,8 @@ Your api keys live in `~/.forge/key.json`. You can manage them using some of the
 
    ```bash
    # Make a request to your endpoint
-   curl -X POST https://api.forge-ml.com/q/your_username/the_path -H "Authorization: Bearer <your-forge-key>" -d '{"q": "Who is Mark Twain?"}'
+   # If this seems like a lot, just use your forge client!
+   curl -X POST https://api.forge-ml.com/q/your_username/the_path  -H "cache-behavior: <bust | evade | none>" -H "Authorization: Bearer <your-forge-key>" -d '{"q": "Who is Mark Twain?"}'
    ```
 
 ## ⚙️ Endpoint Config
@@ -267,6 +345,12 @@ export type EndpointConfig = {
   name?: string;
   /** description of the endpoint */
   description?: string;
+  /** cache setting
+   * Individual - cache is unique to each user
+   * Common - cache is shared amongst all users
+   * None - no caching
+   * **/
+  cache: "Individual" | "Common" | "None";
 };
 
 export const config: EndpointConfig = {
