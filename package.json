@@ -14,14 +14,15 @@
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/prompt-sync": "^4.2.3",
-    "@types/yargs": "^17.0.32",
-    "typescript": "^5.5.4"
+    "@types/yargs": "^17.0.32"
   },
   "dependencies": {
+    "@forge-ml/client": "^0.1.10",
     "axios": "^1.7.2",
     "bun": "^1.1.18",
     "json-schema-to-zod": "^2.3.0",
     "prompt-sync": "^4.2.0",
+    "typescript": "^5.5.4",
     "yargs": "^17.7.2",
     "zod-to-json-schema": "^3.23.1"
   },
