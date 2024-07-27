@@ -143,7 +143,7 @@ Your api keys live in `~/.forge/key.json`. You can manage them using some of the
 
 ## 🤖 Using the Forge SDK
 
-`forge init` and `forge deploy all` will generate or re-generate a client for you. allowing you to interact with your endpoints programatically.
+`forge init` and `forge deploy all` will generate a client for you. allowing you to interact with your endpoints programatically.
 
 Lets walk through an example of how to use the Forge SDK
 
@@ -183,7 +183,7 @@ const response = await forge.person.get({
 });
 
 // a typesafe response!
-const firstName = response.name.firstName; // { full: "Mark Twain", firstName: "Mark", lastName: "Twain" }
+const firstName = response.name.firstName; // "Mark"
 console.log(firstName);
 ```
 
