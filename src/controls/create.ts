@@ -8,7 +8,6 @@ import readline from "node:readline";
 import { stdin as input, stdout as output } from "node:process";
 import { selectOptionBinary, selectOption } from "../utils/optionSelect";
 
-//TODO: ADD CACHING OPTIONS
 //TODO: VALIDATION FOR FORGE FILE PATH
 //TODO BACKLOG: Manual schema creation
 
@@ -128,7 +127,7 @@ const create = async () => {
     }
 
     if (response.error) {
-      //FIX THIS - BACKEND IS WRAPPING ERRORS IN ERRORS?
+      //This error handling work but backend shouldn't be wrapping errors in errors - fix
       if (
         response.error.response.data &&
         response.error.response.data ===
@@ -194,7 +193,7 @@ const create = async () => {
           console.log(cWrap.fm("File has been overwritten"));
           console.log(
             cWrap.fm("You can deploy your file by running:"),
-            cWrap.fg("forge deploy " + forgeFilePath) // check if this is correct
+            cWrap.fg("forge deploy " + forgeFilePath) // check if this is correct - does it work when someone is not in forge cli directory
           );
           console.log(
             cWrap.fm("You can test your file by running:"),
@@ -212,7 +211,7 @@ const create = async () => {
           console.log(cWrap.fm("File has been written"));
           console.log(
             cWrap.fm("You can deploy your file by running:"),
-            cWrap.fg("forge deploy " + forgeFilePath) // check if this is correct
+            cWrap.fg("forge deploy " + forgeFilePath) // check if this is correct - does it work when someone is not in forge cli directory
           );
           console.log(
             cWrap.fm("You can test your file by running:"),
