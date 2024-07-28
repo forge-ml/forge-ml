@@ -1,12 +1,10 @@
-import { importConfig, importZod } from "../utils/imports";
-import { toJSON } from "../utils/toJSON";
 import path from "path";
 import makeRequest, { EP } from "../utils/request";
 import fs from "fs";
 import { cWrap } from "../utils/logging";
 import readline from "node:readline";
 import { stdin as input, stdout as output } from "node:process";
-import { selectOptionBinary, selectOption } from "../utils/optionSelect";
+import { selectOptionBinary} from "../utils/optionSelect";
 import { config } from "../config/config";
 
 //TODO: VALIDATION FOR FORGE FILE PATH
@@ -108,7 +106,7 @@ const create = async () => {
     cache: answers[2],
     endpointName: answers[3],
     endpointDescription: answers[4],
-    schemaPrompt: answers[5],
+    schemaPrompt: "Be generous about adding .describe for mini-prompting." + answers[5],
   };
 
   console.log(cWrap.fm("\nCreating schema..."));

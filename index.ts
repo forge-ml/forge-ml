@@ -7,6 +7,7 @@ import init from "./src/commands/init";
 import keys from "./src/commands/key";
 import test from "./src/commands/test";
 import create from "./src/commands/create";
+import edit from "./src/commands/edit";
 import generate from "./src/commands/generate";
 import { config } from "./src/config/config";
 import cWrap from "./src/utils/logging";
@@ -22,6 +23,7 @@ init(cli);
 keys(cli);
 test(cli);
 create(cli);
+edit(cli);
 generate(cli);
 // transform(cli);
 
