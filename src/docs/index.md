@@ -1,4 +1,4 @@
-Forge-ml is a powerful tool designed to streamline the process of creating and deploying structured data extraction endpoints for Large Language Models (LLMs).
+Forge ML is a powerful tool designed to streamline the process of creating and deploying structured data extraction endpoints for Large Language Models (LLMs).
 
 ## Overview
 
@@ -75,7 +75,7 @@ Forge-ml is a powerful tool designed to streamline the process of creating and d
 <br>
 <br>
 
-Forge-ml uses a combination of tools like Zod and Instructor to create and deploy endpoints that can be used to extract structured data from LLMs. It's a dead simple way to create custom LLM endpoints for your applications.
+Forge ML uses a combination of tools like Zod and Instructor to create and deploy endpoints that can be used to extract structured data from LLMs. It's a dead simple way to create custom LLM endpoints for your applications.
 
 You define a Zod schema, test it locally, and then deploy it to the cloud. From there you can access it from any application that can make HTTP requests, and it's guaranteed to have the expected response structure.
 

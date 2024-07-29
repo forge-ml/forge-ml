@@ -1,6 +1,6 @@
 # Build and Deploy
 
-Integrate these steps into your build configuration to leverage Forge-ml in production.
+Integrate these steps into your build configuration to leverage Forge ML in production.
 
 ##### - Confirm that both of your keys are set: `$ forge key list`
 

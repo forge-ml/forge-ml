@@ -1,6 +1,6 @@
 # Security
 
-Guidelines for essential tasks like signing up, logging in, updating credentials, and handling API keys to maintain a robust security framework for Forge-ml services.
+Guidelines for essential tasks like signing up, logging in, updating credentials, and handling API keys to maintain a robust security framework for Forge ML services.
 
 ## Authentication
 

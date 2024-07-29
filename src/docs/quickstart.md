@@ -20,7 +20,7 @@ $ forge --help
 
 ## 2. Sign Up
 
-Authentication in Forge-ml is essential for securing access to your endpoints and managing API keys. It ensures that only you can deploy and interact with your custom LLM extraction services, while also enabling personalized features like usage tracking and resource allocation.
+Authentication in Forge ML is essential for securing access to your endpoints and managing API keys. It ensures that only you can deploy and interact with your custom LLM extraction services, while also enabling personalized features like usage tracking and resource allocation.
 
 ```Text CLI
 $ forge auth signup
@@ -32,7 +32,7 @@ $ forge auth signup
 
 ## 3. Install Zod
 
-Zod is the schema validation library that Forge-ml uses for defining the structure and constraints of extracted data.
+Zod is the schema validation library that Forge ML uses for defining the structure and constraints of extracted data.
 
 ```Text CLI
 $ npm install zod
@@ -42,7 +42,7 @@ $ npm install zod
 
 ## 4. Initialize Forge
 
-Initialization prepares the project environment for creating and deploying endpoints with Forge-ml by generating the Forge folder in the root of your project. This folder contains the Forge client and houses all your schemas.
+Initialization prepares the project environment for creating and deploying endpoints with Forge ML by generating the Forge folder in the root of your project. This folder contains the Forge client and houses all your schemas.
 
 ```Text CLI
 $ forge init
