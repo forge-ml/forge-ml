@@ -10,7 +10,6 @@ export enum EP {
   GET_DOCS_URL,
   SET_OPENAI_KEY,
   UPDATE_USERNAME,
-  CREATE,
 }
 
 const rootURL = config.serverUrl;
@@ -22,7 +21,6 @@ const EPS = {
   [EP.GET_DOCS_URL]: "/docs/url",
   [EP.SET_OPENAI_KEY]: "/cli/key",
   [EP.UPDATE_USERNAME]: "/cli/updateUsername",
-  [EP.CREATE]: "/create",
 };
 
 type Options = {
@@ -31,8 +29,10 @@ type Options = {
   data?: {};
 };
 
+const token = process.env.FORGE_LOCAL_SERVER &&  process.env.FORGE_KEY;
+
 const makeRequest = async (action: EP, { method, headers, data }: Options) => {
-  const apiKey = localConfigService.getValue(Keys.FORGE);
+  const apiKey = token || localConfigService.getValue(Keys.FORGE);
 
   try {
     const response = await axios.request({

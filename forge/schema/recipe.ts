@@ -10,4 +10,4 @@ const Recipe = z.object({
 
 export default Recipe;
 
-export const config = { path: "recipe", public: false };
+export const config = { path: "recipe", public: false, cache: "Common", contentType: "image" };

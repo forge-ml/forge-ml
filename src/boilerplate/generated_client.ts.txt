@@ -1,4 +1,3 @@
-
 const serverUrl = process.env.FORGE_LOCAL_SERVER || "https://api.forge.ai";
 
 // Any code above this line will be ignored by a file loading boilerplate
@@ -14,20 +13,39 @@ type ClientOptions = {
 type RequestOptions = {
   token?: string;
   // model: string;
-  cache?: "Bust" | "Evade" // (@TODO: only if cache setting)
+  cache?: "Bust" | "Evade"; // (@TODO: only if cache setting)
 };
 
 // Options that will be set at generation time
-type GeneratedOptions = {
-  username: string;
-  path: string;
-};
+type GeneratedOptions =
+  | {
+      username: string;
+      path: string;
+      contentType?: "text";
+    }
+  | {
+      username: string;
+      path: string;
+      contentType: "image";
+    };
+
+type ImageQuery = { imageUrl: string; prompt: string };
+
+type QueryType = string | ImageQuery;
 
 export const createRequest = (params: GeneratedOptions) => {
-  return async (query: string, opts: RequestOptions) => {
+  return async (query: QueryType, opts: RequestOptions) => {
+    const baseController = (() => {
+      switch (params.contentType) {
+        case "image":
+          return "image";
+        default:
+          return "q";
+      }
+    })();
     try {
       const response = await fetch(
-        `${serverUrl}/q/${params.username}/${params.path}`,
+        `${serverUrl}/${baseController}/${params.username}/${params.path}`,
         {
           method: "POST",
           headers: {
@@ -66,11 +84,26 @@ export default Forge;
 
 const generatedClient = (forgeKey: string) => {
   return {
-    user: {
+    text: {
       query: (prompt: string, opts?: RequestOptions) => {
         return createRequest({
           username: "${username}",
           path: "${path}",
+        })(prompt, {
+          token: opts?.token || forgeKey,
+          // cache: opts?.cache,
+        });
+      },
+    },
+    image: {
+      queryImage: (
+        prompt: { imageUrl: string; prompt: string },
+        opts?: RequestOptions
+      ) => {
+        return createRequest({
+          username: "${username}",
+          path: "${path}",
+          contentType: "image",
         })(prompt, {
           token: opts?.token || forgeKey,
           // cache: opts?.cache,

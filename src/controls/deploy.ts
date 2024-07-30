@@ -26,6 +26,7 @@ const deploy = async (
       path: endpoint,
       public: config.public,
       cacheSetting: config.cache || CacheType.NONE,
+      contentType: config.contentType,
     },
   });
 

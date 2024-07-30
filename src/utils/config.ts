@@ -10,4 +10,5 @@ export type SchemaConfig = {
   description?: string;
   public?: boolean;
   cache?: CacheType;
+  contentType?: "text" | "image";
 };

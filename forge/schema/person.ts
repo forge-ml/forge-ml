@@ -46,6 +46,13 @@ type EndpointConfig = {
    * the cache config - "None", "Common", "Individual"
    */
   cache?: "None" | "Common" | "Individual";
+
+  /**
+   * the content type of the endpoint (defaults to text)
+   *
+   * "text" | "image"
+   */
+  contentType?: "text" | "image";
 };
 
 export const config: EndpointConfig = {
@@ -54,4 +61,5 @@ export const config: EndpointConfig = {
   name: "Person",
   description: "A person in history or the present day",
   cache: "Common",
+  contentType: "image",
 };
