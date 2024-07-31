@@ -29,7 +29,7 @@ type Options = {
   data?: {};
 };
 
-const token = process.env.FORGE_LOCAL_SERVER &&  process.env.FORGE_KEY;
+const token = process.env.FORGE_KEY;
 
 const makeRequest = async (action: EP, { method, headers, data }: Options) => {
   const apiKey = token || localConfigService.getValue(Keys.FORGE);
