@@ -126,7 +126,7 @@ const createClient = async () => {
     )
   ).filter((x): x is { config: any; file: string } => !!x);
 
-  const apiKey = localConfigService.getValue(Keys.FORGE);
+  const apiKey = process.env.FORGE_KEY || localConfigService.getValue(Keys.FORGE);
 
   let username = "jakezegil";
 
