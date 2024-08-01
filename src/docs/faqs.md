@@ -1,7 +1,5 @@
 # FAQs
 
-Sometimes things don't add up - we hope this helps.
-
 ## 1. Why do I need an OpenAI API key?
 
 Forge ML operates by making requests to OpenAI's language models to process and generate structured data based on user-defined schemas. The API key acts as an authentication mechanism, ensuring that each user's interactions with OpenAI's services are secure and tracked. By requiring an individual OpenAI API key, Forge ML ensures that users are billed for their specific usage and not for others' usage of their deployed endpoints. This approach also allows users to manage their own API usage limits and billing directly through OpenAI.
