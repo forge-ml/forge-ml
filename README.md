@@ -10,7 +10,7 @@
 
 [Installation](#-installation) •
 [Quickstart](#-quickstart) •
-[Creating Your First Endpoint](#-creating-your-first-endpoint)
+[Creating Your First Endpoint](#%EF%B8%8F-creating-your-first-endpoint)
 
 </div>
 
@@ -143,9 +143,23 @@ Your api keys live in `~/.forge/key.json`. You can manage them using some of the
   forge key set <API_KEY> --provider <provider>
 ```
 
+## 🔨 Building your Schemas
+
+Forge can create new schemas for you using `forge create`. After using the command, you'll be met with a series of prompts to set up your [endpoint configuration](#%EF%B8%8F-endpoint-config). Finally you'll be asked for a prompt to generate a schema:
+
+```bash
+forge> Enter a prompt for your schema? (ex. Generate a Person schema with attributes like a job, name, age, etc.)
+
+user> Make me a superhero schema with attributes like name, sidekick, and abilities, etc. Add a lot of attributes and be very detailed.
+
+forge> Creating schema...
+```
+
+Once the schema is generated, a new forge schema file `<endpoint-path>.ts` will be created in `./forge/schema` for you to test and deploy.
+
 ## 🤖 Using the Forge SDK
 
-`forge init` and `forge deploy all` will generate a client for you. allowing you to interact with your endpoints programatically.
+`forge init` and `forge deploy all` will generate a client for you, allowing you to interact with your endpoints programatically.
 
 Lets walk through an example of how to use the Forge SDK
 

@@ -13,6 +13,7 @@ import cWrap from "../utils/logging";
 import { execSync } from "child_process";
 import { Keys } from "../commands/key";
 import localConfigService from "./auth/svc";
+import { SchemaConfig } from "../utils/config";
 
 const cleanPath = (path: string): string => {
   return path.replace(/[^a-zA-Z0-9]/g, "_");
@@ -35,12 +36,32 @@ ${cleanPath(path)}: {
       },
 },`;
 
+const imageFunctionTemplate = (username: string, path: string) => `
+${cleanPath(path)}: {
+    queryImage: (prompt: { imageUrl: string, prompt: string }, opts?: RequestOptions): Promise<Zod.infer<typeof ${cleanPath(
+      path
+    )}_${type_prefix}>> => {
+        return createRequest({
+          username: "${username}",
+          path: "${path}",
+          contentType: "image"
+        })(prompt, {
+          token: opts?.token || forgeKey,
+          cache: opts?.cache,
+        });
+      },
+},`;
+
 const buildFunctions = (
   username: string,
-  configs: { config: any; file: string }[]
+  configs: { config: Required<SchemaConfig>; file: string }[]
 ) => {
   return configs
-    .map((config) => functionTemplate(username, config.config.path))
+    .map((config) =>
+      config.config.contentType === "image"
+        ? imageFunctionTemplate(username, config.config.path)
+        : functionTemplate(username, config.config.path)
+    )
     .join("\n");
 };
 
@@ -105,7 +126,7 @@ const createClient = async () => {
     )
   ).filter((x): x is { config: any; file: string } => !!x);
 
-  const apiKey = localConfigService.getValue(Keys.FORGE);
+  const apiKey = process.env.FORGE_KEY || localConfigService.getValue(Keys.FORGE);
 
   let username = "jakezegil";
 
@@ -116,7 +137,7 @@ const createClient = async () => {
         cWrap.fg(config.bin + " auth") +
         "' and try again.\n"
     );
-  } else { 
+  } else {
     const response = await makeRequest(EP.ENDPOINT_ALL, { method: "GET" });
     username = response.data.data.username;
   }

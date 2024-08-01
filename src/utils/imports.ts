@@ -1,5 +1,4 @@
-import fs from "fs";
-import { toJSON } from "./toJSON";
+import { CacheType } from "./config";
 
 export const importZod = (from: string) => {
   return import(from).then((module) => {
@@ -15,8 +14,16 @@ export const importZod = (from: string) => {
   });
 };
 
+type Config = {
+  path?: string;
+  public?: boolean;
+  cache?: CacheType;
+  name?: string;
+  description?: string;
+};
+
 export const importConfig = (from: string) => {
   return import(from).then((module) => {
-    return module.config as { path?: string };
+    return module.config as Config;
   });
 };

@@ -1,6 +1,6 @@
 {
   "name": "forge-ml",
-  "version": "0.1.10",
+  "version": "0.1.17",
   "description": "A CLI tool for schema validation and deployment",
   "main": "index.js",
   "bin": {
@@ -10,7 +10,8 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "postinstall": "curl -fsSL https://bun.sh/install | bash"
+    "postinstall": "curl -fsSL https://bun.sh/install | bash && bun upgrade",
+    "build": "echo 'build' && npx forge generate"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

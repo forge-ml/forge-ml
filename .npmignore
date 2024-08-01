@@ -5,3 +5,5 @@ tsconfig.json
 .env
 
 bin/**/*
+example.ts
+out
