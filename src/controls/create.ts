@@ -4,8 +4,9 @@ import fs from "fs";
 import { cWrap } from "../utils/logging";
 import readline from "node:readline";
 import { stdin as input, stdout as output } from "node:process";
-import { selectOptionBinary} from "../utils/optionSelect";
+import { selectOption, selectOptionBinary } from "../utils/optionSelect";
 import { config } from "../config/config";
+import { ModelType } from "../utils/config";
 
 //TODO: VALIDATION FOR FORGE FILE PATH
 //TODO BACKLOG: Manual schema creation
@@ -40,13 +41,14 @@ const create = async () => {
     "What do you want the path of your schema to be? (required, must be one lowercase word, no special characters)\n",
     "Is this a public path?\n", // not used
     "Would you like to cache your schema? (None - no caching, Common - cache is shared amongst all users, Individual - cache is unique to each user)\n",
+    "Which model would you like to use?\n",
     "What do you want the name of your endpoint to be? (optional)\n",
     "What do you want the description of your endpoint to be? (optional)\n",
     "Enter a prompt for your schema? (ex. Generate a Person schema with attributes like a job, name, age, etc.)\n",
   ];
 
   const answers: string[] = [];
-  const optionalQuestions = [3, 4];
+  const optionalQuestions = [4, 5];
 
   console.log(cWrap.fb("Let's build your schema:"));
 
@@ -60,12 +62,22 @@ const create = async () => {
       answers.push(privacy);
     } else if (i === 2) {
       console.log(cWrap.fm("\nWould you like to cache your schema?"));
-      const cache = await selectOptionBinary([
+      const cache = await selectOption([
         CacheType.NONE,
         CacheType.COMMON,
         CacheType.INDIVIDUAL,
       ]);
       answers.push(cache);
+    } else if (i === 3) {
+      console.log(cWrap.fm("\nWhich model would you like to use?"));
+      const model = await selectOption([
+        ModelType.GPT4oMini,
+        ModelType.GPT4Turbo,
+        ModelType.GPT4o,
+        ModelType.GPT4oTurbo,
+        ModelType.GPT3_5Turbo,
+      ]);
+      answers.push(model);
       output.write("\n");
     } else {
       //TO FIX: when readline is in else statement public and private disappear on user input
@@ -104,9 +116,11 @@ const create = async () => {
     path: answers[0],
     public: answers[1],
     cache: answers[2],
-    endpointName: answers[3],
-    endpointDescription: answers[4],
-    schemaPrompt: "Be generous about adding .describe for mini-prompting." + answers[5],
+    model: answers[3],
+    endpointName: answers[4],
+    endpointDescription: answers[5],
+    schemaPrompt:
+      "Be generous about adding .describe for mini-prompting. " + answers[6],
   };
 
   console.log(cWrap.fm("\nCreating schema..."));
@@ -196,9 +210,7 @@ const create = async () => {
           );
           console.log(
             cWrap.fm("You can test your file by running:"),
-            cWrap.fg(
-              "forge test " + config.schemaPath + "/" + filePath
-            )
+            cWrap.fg("forge test " + config.schemaPath + "/" + filePath)
           );
         } catch (error) {
           console.error(cWrap.fr("Failed to write file:"), error);
@@ -216,9 +228,7 @@ const create = async () => {
           );
           console.log(
             cWrap.fm("You can test your file by running:"),
-            cWrap.fg(
-              "forge test " + config.schemaPath + "/" + filePath
-            )
+            cWrap.fg("forge test " + config.schemaPath + "/" + filePath)
           );
         } catch (error) {
           console.error(cWrap.fr("\nFailed to write file:"), error);

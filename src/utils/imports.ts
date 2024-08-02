@@ -1,4 +1,4 @@
-import { CacheType } from "./config";
+import { CacheType, ModelType } from "./config";
 
 export const importZod = (from: string) => {
   return import(from).then((module) => {
@@ -6,7 +6,7 @@ export const importZod = (from: string) => {
       throw Error(
         "Friend! The default export is not a zod schema. What were you thinking?" +
           `\n` +
-          "Update your default export and try again.",
+          "Update your default export and try again."
       );
     }
 
@@ -20,6 +20,7 @@ type Config = {
   cache?: CacheType;
   name?: string;
   description?: string;
+  model?: ModelType;
 };
 
 export const importConfig = (from: string) => {

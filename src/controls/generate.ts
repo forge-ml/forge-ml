@@ -32,6 +32,7 @@ ${cleanPath(path)}: {
         })(prompt, {
           token: opts?.token || forgeKey,
           cache: opts?.cache,
+          model: opts?.model,
         });
       },
 },`;
@@ -48,6 +49,7 @@ ${cleanPath(path)}: {
         })(prompt, {
           token: opts?.token || forgeKey,
           cache: opts?.cache,
+          model: opts?.model,
         });
       },
 },`;
@@ -126,7 +128,8 @@ const createClient = async () => {
     )
   ).filter((x): x is { config: any; file: string } => !!x);
 
-  const apiKey = process.env.FORGE_KEY || localConfigService.getValue(Keys.FORGE);
+  const apiKey =
+    process.env.FORGE_KEY || localConfigService.getValue(Keys.FORGE);
 
   let username = "jakezegil";
 

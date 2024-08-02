@@ -4,7 +4,7 @@ import path from "path";
 import makeRequest, { EP } from "../utils/request";
 import { cWrap } from "../utils/logging";
 import { config as cfg } from "../config/config";
-import { CacheType, SchemaConfig } from "../utils/config";
+import { CacheType, ModelType, SchemaConfig } from "../utils/config";
 import { loadDirectoryFiles } from "../utils/directory";
 import { generate } from "./generate";
 
@@ -27,6 +27,7 @@ const deploy = async (
       public: config.public,
       cacheSetting: config.cache || CacheType.NONE,
       contentType: config.contentType,
+      modelSetting: config.model || ModelType.GPT4oMini,
     },
   });
 

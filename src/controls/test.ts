@@ -1,4 +1,4 @@
-import { importZod } from "../utils/imports";
+import { importConfig, importZod } from "../utils/imports";
 import { toJSON } from "../utils/toJSON";
 import path from "path";
 import makeRequest, { EP } from "../utils/request";
@@ -9,10 +9,11 @@ import getErrorMessage from "./auth/errors.util";
 
 const test = async (inFile: string) => {
   const filePath = path.join(process.cwd(), inFile);
-
   const zod = await importZod(filePath);
   const json = toJSON(zod);
 
+  const config = await importConfig(filePath);
+  const modelSetting = config.model || "GPT4oMini";
   const rl = readline.createInterface({ input, output });
 
   rl.question("Enter a prompt to test your schema: ", async (prompt) => {
@@ -21,6 +22,7 @@ const test = async (inFile: string) => {
       data: {
         schema: JSON.stringify(json),
         prompt,
+        modelSetting,
       },
     });
 

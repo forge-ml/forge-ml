@@ -164,7 +164,7 @@ async function selectOption(
   useCursor: boolean = true,
   paddingLength: number = 0,
   leftToRight: boolean = false,
-  cursor: string = ">"
+  cursor: string = "*"
 ) {
   const selectedOption = await selectFromOptions(
     options,

@@ -12,7 +12,13 @@ type ClientOptions = {
 
 type RequestOptions = {
   token?: string;
-  // model: string;
+  model?:
+    | "GPT4oMini"
+    | "GPT4"
+    | "GPT4Turbo"
+    | "GPT4o"
+    | "GPT4oTurbo"
+    | "GPT3_5Turbo";
   cache?: "Bust" | "Evade"; // (@TODO: only if cache setting)
 };
 
@@ -53,6 +59,7 @@ export const createRequest = (params: GeneratedOptions) => {
             Authorization: `Bearer ${opts.token}`,
             ...(opts.cache && {
               "Cache-Behavior": opts.cache,
+              Model: opts.model || "gpt-4o-mini",
             }),
           },
           body: JSON.stringify({
