@@ -13,7 +13,7 @@ const test = async (inFile: string) => {
   const json = toJSON(zod);
 
   const config = await importConfig(filePath);
-  const modelSetting = config.model || "GPT4oMini";
+  const modelSetting = config.model || "gpt-4o-mini";
   const rl = readline.createInterface({ input, output });
 
   rl.question("Enter a prompt to test your schema: ", async (prompt) => {

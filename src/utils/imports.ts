@@ -1,4 +1,4 @@
-import { CacheType, ModelType } from "./config";
+import { CacheType } from "./config";
 
 export const importZod = (from: string) => {
   return import(from).then((module) => {
@@ -20,7 +20,7 @@ type Config = {
   cache?: CacheType;
   name?: string;
   description?: string;
-  model?: ModelType;
+  model?: string;
 };
 
 export const importConfig = (from: string) => {

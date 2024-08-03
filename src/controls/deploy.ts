@@ -4,7 +4,7 @@ import path from "path";
 import makeRequest, { EP } from "../utils/request";
 import { cWrap } from "../utils/logging";
 import { config as cfg } from "../config/config";
-import { CacheType, ModelType, SchemaConfig } from "../utils/config";
+import { CacheType, SchemaConfig } from "../utils/config";
 import { loadDirectoryFiles } from "../utils/directory";
 import { generate } from "./generate";
 
@@ -27,11 +27,19 @@ const deploy = async (
       public: config.public,
       cacheSetting: config.cache || CacheType.NONE,
       contentType: config.contentType,
-      modelSetting: config.model || ModelType.GPT4oMini,
+      modelSetting: config.model || "gpt-4o-mini", //change this to defaultModel
     },
   });
 
   if (response.error) {
+    if (response.message === "Model does not support images") {
+      //used to handle error gracefully
+      return {
+        error: true,
+        message: response.message,
+      };
+    }
+
     console.log(cWrap.br("Error deploying"));
     console.log(cWrap.fr(response?.message as string));
   }
@@ -61,6 +69,20 @@ const deployAll = async () => {
     try {
       const response = await deploy(filePath, config.path, config);
       if (response.error) {
+        if (response.message === "Model does not support images") {
+          console.log(
+            "- " +
+              cWrap.fr(
+                "Error deploying endpoint: " +
+                  config.path +
+                  ". '" +
+                  config.model +
+                  "' does not support images"
+              )
+          );
+          continue; // check if should be return
+        }
+
         console.log(
           `- ${cWrap.fr("Error deploying")} ${cWrap.fm(
             file

@@ -10,7 +10,7 @@ export enum EP {
   GET_DOCS_URL,
   SET_OPENAI_KEY,
   UPDATE_USERNAME,
-  CREATE
+  CREATE,
 }
 
 const rootURL = config.serverUrl;
@@ -53,7 +53,7 @@ const makeRequest = async (action: EP, { method, headers, data }: Options) => {
     });
     return { data: response.data, error: null, message: null };
   } catch (error) {
-    console.log(JSON.stringify((error as any).response.data, null, 2));
+    //console.log(JSON.stringify((error as any).response.data, null, 2));
     return {
       error,
       message: (error as any).response.data.message,
