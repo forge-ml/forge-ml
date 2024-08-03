@@ -10,4 +10,18 @@ export type EndpointConfig = {
   name?: string;
   /** description of the endpoint */
   description?: string;
+  /**
+   * the cache config - "None", "Common", "Individual"
+   */
+  cache?: "None" | "Common" | "Individual";
+
+  /**
+   * the content type of the endpoint (defaults to text)
+   *
+   * "text" | "image"
+   */
+  contentType?: "text" | "image";
+
+  /** the model type to use for the endpoint */
+  model?: string;
 };
