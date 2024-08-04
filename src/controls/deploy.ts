@@ -32,7 +32,6 @@ async function checkVersionAndWarnUser() {
     const version = packageJson.dependencies["forge-ml"];
     if (version === undefined) {
       //checks if  forge-ml is it package.json dependencies - used to avoid errors in dev
-      console.log("forge-ml is not listed in package.json dependencies");
       return;
     }
     const currentVersion = version.replace(/^\^/, ""); // removes carrot from version string
