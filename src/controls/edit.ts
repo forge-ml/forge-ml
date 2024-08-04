@@ -3,7 +3,7 @@ import makeRequest, { EP } from "../utils/request";
 import fs, { readFileSync } from "fs";
 import { cWrap } from "../utils/logging";
 import readline from "node:readline";
-import { selectOptionBinary } from "../utils/optionSelect";
+import { selectOption, selectOptionBinary } from "../utils/optionSelect";
 import { config } from "../config/config";
 import { importConfig, importZod } from "../utils/imports";
 import { loadDirectoryFiles } from "../utils/directory";
@@ -19,11 +19,14 @@ const edit = async () => {
     cWrap.fb("Let's edit your schema! Which file would you like to edit?")
   );
 
-  const rl = readline.createInterface({ input, output }); // open and closing within loop because rl doesn't work with select option
-  const fileName = await selectOptionBinary(files);
+  const rl = readline.createInterface({ input, output });
+  const fileName =
+    files.length > 2
+      ? await selectOption(files)
+      : await selectOptionBinary(files);
 
   const prompt = require("prompt-sync")();
-  const answer = prompt(cWrap.fm("What edits would you like to make? "));
+  const answer = prompt(cWrap.fm("What edits would you like to make?"));
 
   const schemaConfig = await importConfig(
     path.join(process.cwd(), config.schemaPath, fileName)
@@ -38,8 +41,10 @@ const edit = async () => {
     path: schemaConfig.path,
     public: schemaConfig.public === false ? "private" : "public",
     cache: schemaConfig.cache || "None",
+    contentType: schemaConfig.contentType || "text",
     endpointName: schemaConfig.name,
     endpointDescription: schemaConfig.description,
+    model: schemaConfig.model || "gpt-4o-mini",
     schemaPrompt:
       "Please edit the following schema. It should be the base schema, only modify or remove values as needed. Be generous about adding .describe for mini-prompting. \n\n SCHEMA TO EDIT:" +
       schemaZod +
@@ -89,10 +94,10 @@ const edit = async () => {
     //DOUBLE CHECK THAT THIS IS THE CORRECT FILE PATH
     //DOUBLE CHECK NAMING CONVENTION FOR SCHEMA FILE
     const schemaDir = path.join(process.cwd(), config.schemaPath);
-    const filePath = promptAnswers.path + ".ts";
+    //const filePath = promptAnswers.path + ".ts";
 
     //filename uses endpoint path - CHECK IF SHOULD HAVE schema.ts
-    const destinationFilePath = path.join(schemaDir, filePath);
+    const destinationFilePath = path.join(schemaDir, fileName);
 
     //check if file exists - notify user and ask to overwrite
     if (fs.existsSync(destinationFilePath)) {
@@ -118,7 +123,7 @@ const edit = async () => {
         );
         console.log(
           cWrap.fm("You can test your file by running:"),
-          cWrap.fg("forge test " + config.schemaPath + "/" + filePath)
+          cWrap.fg("forge test " + config.schemaPath + "/" + fileName)
         );
       } catch (error) {
         console.error(cWrap.fr("Failed to write file:"), error);
@@ -136,7 +141,7 @@ const edit = async () => {
         );
         console.log(
           cWrap.fm("You can test your file by running:"),
-          cWrap.fg("forge test " + config.schemaPath + "/" + filePath)
+          cWrap.fg("forge test " + config.schemaPath + "/" + fileName)
         );
       } catch (error) {
         console.error(cWrap.fr("\nFailed to write file:"), error);
