@@ -6,13 +6,13 @@ const output = process.stdout;
 //Padding on cursor on is broken - cursor stays left (unpadded) but text gets padded to right
 //see if there is a way to remove the terminal cursor when user is selecting
 
-function selectFromOptions(
-  options: string[],
+function selectFromOptions<T extends string>(
+  options: T[],
   useCursor?: boolean,
   paddingLength?: number,
   leftToRight?: boolean,
   cursor?: string
-): Promise<string> {
+): Promise<T> {
   return new Promise((resolve) => {
     const selectOption = {
       selectIndex: 0, // index of selected option
@@ -159,13 +159,13 @@ async function selectOptionBinary(
 
 //usage example - uses async/await
 //defaults to no cursor can be changed to true
-async function selectOption(
-  options: string[],
+async function selectOption<T extends string>(
+  options: T[],
   useCursor: boolean = true,
   paddingLength: number = 0,
   leftToRight: boolean = false,
   cursor: string = ">"
-) {
+): Promise<T> {
   const selectedOption = await selectFromOptions(
     options,
     useCursor,

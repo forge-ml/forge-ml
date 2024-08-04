@@ -7,3 +7,4 @@ tsconfig.json
 bin/**/*
 example.ts
 out
+notes.txt
