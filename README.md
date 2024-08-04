@@ -81,7 +81,7 @@ forge create
 forge test ./forge/schema/<your_schema>.ts
 
 # Deploy your schema as an endpoint
-forge deploy all
+forge deploy
 ```
 
 _❗️ Note ❗️ In order to deploy, your schema file must have a zod object as the default export and a named `config` export containing the `path`._
