@@ -4,7 +4,7 @@ import fs from "fs";
 import { cWrap } from "../utils/logging";
 import readline from "node:readline";
 import { stdin as input, stdout as output } from "node:process";
-import { selectOptionBinary} from "../utils/optionSelect";
+import { selectOptionBinary } from "../utils/optionSelect";
 import { config } from "../config/config";
 
 //TODO: VALIDATION FOR FORGE FILE PATH
@@ -106,7 +106,8 @@ const create = async () => {
     cache: answers[2],
     endpointName: answers[3],
     endpointDescription: answers[4],
-    schemaPrompt: "Be generous about adding .describe for mini-prompting." + answers[5],
+    schemaPrompt:
+      "Be generous about adding .describe for mini-prompting." + answers[5],
   };
 
   console.log(cWrap.fm("\nCreating schema..."));
@@ -192,13 +193,11 @@ const create = async () => {
           console.log(cWrap.fm("File has been overwritten"));
           console.log(
             cWrap.fm("You can deploy your file by running:"),
-            cWrap.fg("forge deploy all") // check if this is correct - does it work when someone is not in forge cli directory
+            cWrap.fg("forge deploy")
           );
           console.log(
             cWrap.fm("You can test your file by running:"),
-            cWrap.fg(
-              "forge test " + config.schemaPath + "/" + filePath
-            )
+            cWrap.fg("forge test " + config.schemaPath + "/" + filePath)
           );
         } catch (error) {
           console.error(cWrap.fr("Failed to write file:"), error);
@@ -212,13 +211,11 @@ const create = async () => {
           console.log(cWrap.fm("File has been written"));
           console.log(
             cWrap.fm("You can deploy your file by running:"),
-            cWrap.fg("forge deploy all") // check if this is correct - does it work when someone is not in forge cli directory
+            cWrap.fg("forge deploy")
           );
           console.log(
             cWrap.fm("You can test your file by running:"),
-            cWrap.fg(
-              "forge test " + config.schemaPath + "/" + filePath
-            )
+            cWrap.fg("forge test " + config.schemaPath + "/" + filePath)
           );
         } catch (error) {
           console.error(cWrap.fr("\nFailed to write file:"), error);

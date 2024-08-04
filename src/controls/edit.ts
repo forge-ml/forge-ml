@@ -119,7 +119,7 @@ const edit = async () => {
         console.log(cWrap.fm("File has been overwritten"));
         console.log(
           cWrap.fm("You can deploy your file by running:"),
-          cWrap.fg("forge deploy all") // check if this is correct - does it work when someone is not in forge cli directory
+          cWrap.fg("forge deploy")
         );
         console.log(
           cWrap.fm("You can test your file by running:"),
@@ -137,7 +137,7 @@ const edit = async () => {
         console.log(cWrap.fm("File has been written"));
         console.log(
           cWrap.fm("You can deploy your file by running:"),
-          cWrap.fg("forge deploy all") // check if this is correct - does it work when someone is not in forge cli directory
+          cWrap.fg("forge deploy")
         );
         console.log(
           cWrap.fm("You can test your file by running:"),

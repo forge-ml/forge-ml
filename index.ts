@@ -12,7 +12,6 @@ import generate from "./src/commands/generate";
 import { config } from "./src/config/config";
 import cWrap from "./src/utils/logging";
 
-
 // wrap(null) removes the default 80 character limit
 const cli = yargs(hideBin(process.argv)).scriptName("forge").wrap(null);
 // commands
@@ -33,7 +32,7 @@ const defaultCommand: CommandModule = {
   handler: () => {
     console.log(
       `Welcome to Forge! Try running ${cWrap.fg(
-        config.bin + " auth signup"
+        config.bin + " signup"
       )} or ${cWrap.fg(config.bin + " --help")} to get started.`
     );
   },
