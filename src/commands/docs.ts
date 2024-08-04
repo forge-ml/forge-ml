@@ -12,7 +12,7 @@ function getForgeKey() {
     console.log(`${cWrap.br("Error")} copying key.`);
     return;
   }
-  // ONLY WORKS ON MACOS
+
   const proc = require("child_process").spawn("pbcopy");
   proc.stdin.write(`Bearer ${key}`);
   proc.stdin.end();
@@ -48,7 +48,6 @@ const docsCommand = (cli: Argv) =>
             ? "open"
             : "xdg-open";
         exec(`${command} ${url}`, (err) => {
-          // SHOUlD HAVE AN YES OR NO OPTION TO OPEN THE URL IN THE BROWSER
           if (err) {
             console.error("Failed to open the docs in the browser:", err);
           } else {
