@@ -20,6 +20,7 @@ type Config = {
   cache?: CacheType;
   name?: string;
   description?: string;
+  contentType?: "text" | "image";
   model?: string;
 };
 

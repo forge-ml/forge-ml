@@ -38,6 +38,8 @@ const edit = async () => {
     path: schemaConfig.path,
     public: schemaConfig.public === false ? "private" : "public",
     cache: schemaConfig.cache || "None",
+    contentType: schemaConfig.contentType || "text",
+    model: schemaConfig.model || "gpt-4o-mini",
     endpointName: schemaConfig.name,
     endpointDescription: schemaConfig.description,
     schemaPrompt:
