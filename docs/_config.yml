@@ -1,55 +1,65 @@
 # Site settings
-title: Forge ML
-author: Jake Zegil
+title: "Forge ML"
+author: "Jake Zegil"
 baseurl: ""
 url: "https://forge-ml.com"
-date_format: "%b %-d, %Y"
+date_format: "%B %-d, %Y"
 
-# Optional features
-show_related_posts: True
-show_post_footers: True
-show_subscribe_cta: True
-show_social_icons: True
-ajaxify_contact_form: false
-enable_mathjax: false
-extended_fonts: false
-enable_anchorjs: true
+# Features
+features:
+  related_posts: true
+  post_footers: true
+  subscribe_cta: true
+  social_icons: true
+  contact_form:
+    ajaxify: false
+  mathjax: false
+  extended_fonts: false
+  anchorjs: true
 
-# Social icons
-github_username: forge-ml
-stackoverflow_id:
-twitter_username: ml_forge
+# Social media
+social:
+  github: "forge-ml"
+  twitter: "ml_forge"
 
+# Localization
 text:
   pagination:
-    newer: "Newer"
-    older: "Older"
+    newer: "← Newer"
+    older: "Older →"
   post:
-    updated: "Updated"
-    minute_read: "minute read"
-    related_posts: "More to read"
+    updated: "Last updated"
+    reading_time: "minute read"
+    related: "You might also enjoy"
   index:
-    coming_soon: "Coming soon..."
-  og_locale: "en_US"
+    coming_soon: "Exciting content coming soon..."
+  locale: "en_US"
 
-# Build settings
+# Build configuration
 markdown: kramdown
 redcarpet:
   extensions: ["smart", "tables", "with_toc_data", "footnotes"]
 permalink: pretty
 paginate: 12
-paginate_path: "/blog/:num/"
+paginate_path: "/blog/page/:num/"
 sass:
-  compressed: true
+  style: compressed
 plugins:
   - jekyll-paginate
   - jekyll-sitemap
-# https://github.com/jekyll/jekyll/issues/2938
-exclude: [vendor]
+exclude: 
+  - vendor
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - README.md
 
+# Content collections
 collections_dir: collections
 collections:
   reviews:
     output: true
+    permalink: /reviews/:name/
   portfolio:
     output: true
+    permalink: /portfolio/:name/

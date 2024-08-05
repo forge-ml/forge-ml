@@ -1,21 +1,29 @@
 # Build and Deploy
 
-Integrate these steps into your build configuration to leverage Forge ML in production.
+Integrate these steps into your build configuration to leverage Forge ML in production:
 
-##### - Confirm that both of your keys are set: `$ forge key list`
+1. Confirm that both of your keys are set:
+   ```
+   $ forge key list
+   ```
 
-##### - Confirm that your Forge key is listed in your .env file
+2. Confirm that your Forge key is listed in your `.env` file
 
-1. `npm install`
-2. Your build command
-3. `npx forge generate` // generates client for production environment
+3. Install dependencies:
+   ```
+   npm install
+   ```
 
-<br>
+4. Run your build command
+
+5. Generate the client for production environment:
+   ```
+   npx forge generate
+   ```
 
 ---
 
-#### WHAT'S NEXT
+## What's Next
 
-### [FAQs]()
-
-### [Real-World Applications]()
+- [FAQs]({{ site.baseurl }}/faqs)
+- [Real-World Applications]({{ site.baseurl }}/applications)

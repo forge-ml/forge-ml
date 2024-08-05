@@ -1,6 +1,6 @@
 # Forge Client (SDK)
 
-The commands `$ forge init` and `$ forge deploy all` will generate a client for you, allowing you to interact with your endpoints programatically.
+The commands `$ forge init` and `$ forge deploy` will generate a client for you, allowing you to interact with your endpoints programatically.
 
 <br>
 
