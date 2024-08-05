@@ -72,7 +72,7 @@ const edit = async () => {
     if (response.error) {
       //This error handling work but backend shouldn't be wrapping errors in errors - fix
       if (
-        response.error.response.data &&
+        response.error?.response?.data &&
         response.error.response.data ===
           "Invalid API key provided. Please check your API key and try again."
       ) {

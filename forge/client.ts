@@ -1,5 +1,5 @@
 
-import Forge from "@forge-ml/client";
+import Forge from "./forge.lock/index.ts";
 
 // run `forge key copy forge` to copy your local key to the clipboard 
 const keyGuard = () => {

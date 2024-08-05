@@ -1,7 +1,6 @@
-const serverUrl = process.env.FORGE_LOCAL_SERVER || "https://api.forge.ai";
 
-// Any code above this line will be ignored by a file loading boilerplate
-// --- START -- //
+  const serverUrl = "https://api.forge-ml.com"
+  
 
 /** THIS IS A GENERATED FILE, EDITS WILL BE OVERWRITTEN */
 
@@ -82,37 +81,51 @@ const Forge = (options: ClientOptions) => {
 
 export default Forge;
 
-// --- END -- //
-// Any code below this line will be ignored by a file loading boilerplate
 
-const generatedClient = (forgeKey: string) => {
-  return {
-    text: {
-      query: (prompt: string, opts?: RequestOptions) => {
-        return createRequest({
-          username: "${username}",
-          path: "${path}",
+  import recipe_schema from "./recipe.generated.ts"
+import book_schema from "./book.generated.ts"
+import person_schema from "./person.generated.ts"
+
+  const generatedClient = (forgeKey: string) => {
+    return {
+      
+recipe: {
+    queryImage: (prompt: { imageUrl: string, prompt: string }, opts?: RequestOptions) => {
+        return createRequest<Zod.infer<typeof recipe_schema>>({
+          username: "jakezegil",
+          path: "recipe",
+          contentType: "image"
         })(prompt, {
           token: opts?.token || forgeKey,
           cache: opts?.cache,
-          model: opts?.model,
         });
       },
-    },
-    image: {
-      queryImage: (
-        prompt: { imageUrl: string; prompt: string },
-        opts?: RequestOptions
-      ) => {
-        return createRequest({
-          username: "${username}",
-          path: "${path}",
-          contentType: "image",
+},
+
+book: {
+    query: (prompt: string, opts?: RequestOptions) => {
+        return createRequest<Zod.infer<typeof book_schema>>({
+          username: "jakezegil",
+          path: "book",
         })(prompt, {
           token: opts?.token || forgeKey,
-          // cache: opts?.cache,
+          cache: opts?.cache,
         });
       },
-    },
+},
+
+person: {
+    queryImage: (prompt: { imageUrl: string, prompt: string }, opts?: RequestOptions) => {
+        return createRequest<Zod.infer<typeof person_schema>>({
+          username: "jakezegil",
+          path: "person",
+          contentType: "image"
+        })(prompt, {
+          token: opts?.token || forgeKey,
+          cache: opts?.cache,
+        });
+      },
+},
+    };
   };
-};
+  

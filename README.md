@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚒️ Forge: Dead Simple Structured Extraction for LLMs 🔩️
+# 🚅 Forge: The Fastest Way to Build Bulletproof AI Products 🏃💨
 
 [![npm version](https://img.shields.io/npm/v/forge-ml.svg?style=flat-square)](https://www.npmjs.com/package/forge-ml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
