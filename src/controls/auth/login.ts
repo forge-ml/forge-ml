@@ -8,6 +8,11 @@ const login = async () => {
   const email = prompt()("Enter your email: ");
   const password = prompt().hide("Enter your password: ");
 
+  if (!email || !password) {
+    console.error("Email and password are required.");
+    return;
+  }
+
   try {
     const response = await axios.post(`${config.serverUrl}/cli/login`, {
       email,

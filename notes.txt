@@ -1,0 +1,16 @@
+
+- Finish config.json
+- Finish js integration
+- Set username in config on init and deploy. If no username, fetch and set
+- Investigate: Unauthorized error should never have occurred if missing forge key
+
+Launch Platforms
+- Product Hunt
+- Reddit
+- Hacker News
+- Twitter
+
+
+- testing
+  - forge generate
+  - forge deploy
