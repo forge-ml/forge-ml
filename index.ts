@@ -11,19 +11,23 @@ import edit from "./src/commands/edit";
 import generate from "./src/commands/generate";
 import { config } from "./src/config/config";
 import cWrap from "./src/utils/logging";
+import update from "./src/commands/update";
+import { rootLoginSignup } from "./src/commands/auth";
 
 // wrap(null) removes the default 80 character limit
 const cli = yargs(hideBin(process.argv)).scriptName("forge").wrap(null);
 // commands
-auth(cli);
-deploy(cli);
-docs(cli);
+rootLoginSignup(cli);
 init(cli);
+create(cli);
+deploy(cli);
+edit(cli);
+docs(cli);
 keys(cli);
 test(cli);
-create(cli);
-edit(cli);
+update(cli);
 generate(cli);
+auth(cli);
 // transform(cli);
 
 const defaultCommand: CommandModule = {

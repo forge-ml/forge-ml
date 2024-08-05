@@ -44,7 +44,6 @@ const edit = async () => {
     contentType: schemaConfig.contentType || "text",
     endpointName: schemaConfig.name,
     endpointDescription: schemaConfig.description,
-    model: schemaConfig.model || "gpt-4o-mini",
     schemaPrompt:
       "Please edit the following schema. It should be the base schema, only modify or remove values as needed. Be generous about adding .describe for mini-prompting. \n\n SCHEMA TO EDIT:" +
       schemaZod +

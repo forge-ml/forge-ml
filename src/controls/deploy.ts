@@ -31,7 +31,7 @@ async function checkVersionAndWarnUser() {
     const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"));
     const version = packageJson.dependencies["forge-ml"];
     if (version === undefined) {
-      //checks if  forge-ml is it package.json dependencies - used to avoid errors in dev
+      //checks if forge-ml is it package.json dependencies 
       return;
     }
     const currentVersion = version.replace(/^\^/, ""); // removes carrot from version string
@@ -44,8 +44,7 @@ async function checkVersionAndWarnUser() {
         ) + cWrap.fg("npm install forge-ml@latest")
       );
     }
-  } catch (error) {
-    console.error("Error fetching version:", error);
+  } catch (e) {
   }
 }
 

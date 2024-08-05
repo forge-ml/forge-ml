@@ -66,8 +66,10 @@ ${cWrap.fb(
       }
     }
   );
+};
 
   //THE --help FOR THIS COMMAND SHOULD BE IN THE ASSOCIATED WITH AUTH COMMAND?
+export const rootLoginSignup = (cli: Argv) => {
   cli.command(
     "login",
     cWrap.fm("Sign in to an existing forge account"),

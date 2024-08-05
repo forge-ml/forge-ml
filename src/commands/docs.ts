@@ -20,7 +20,7 @@ function copyKey(provider: string) {
 
   copyToClipboard(`Bearer ${key}`);
 
-  console.log(`Key copied to clipboard for ${cWrap.fg(provider)}.`);
+  console.log(`Key with Bearer prefix copied to clipboard for ${cWrap.fg(provider)}.`);
 }
 
 const docsCommand = (cli: Argv) =>
@@ -44,17 +44,11 @@ const docsCommand = (cli: Argv) =>
         copyKey("forge");
 
         // Open the URL in the default browser
-        const command =
-          process.platform === "win32"
-            ? "start"
-            : process.platform === "darwin"
-            ? "open"
-            : "xdg-open";
+        const command = process.platform === "darwin" ? "open" : "xdg-open";
         exec(`${command} ${url}`, (err) => {
           if (err) {
-            console.error("Failed to open the docs in the browser:", err);
           } else {
-            console.log("Your docs have been opened in your default browser.");
+            console.log("\nYour docs have been opened in the browser.");
           }
         });
       }
