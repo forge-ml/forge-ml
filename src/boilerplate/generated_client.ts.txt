@@ -12,9 +12,9 @@ type ClientOptions = {
 
 type RequestOptions = {
   token?: string;
-  model?: string;
   cache?: "Bust" | "Evade"; // (@TODO: only if cache setting)
- };
+  model?: string;
+};
 
 // Options that will be set at generation time
 type GeneratedOptions =
@@ -53,6 +53,9 @@ export const createRequest = <T>(params: GeneratedOptions) => {
             Authorization: `Bearer ${opts.token}`,
             ...(opts.cache && {
               "Cache-Behavior": opts.cache,
+              ...(opts.model && {
+                Model: opts.model,
+              }),
             }),
             ...(opts.model && {
               "X-Custom-Model": opts.model,

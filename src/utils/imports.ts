@@ -21,6 +21,7 @@ type Config = {
   name?: string;
   description?: string;
   contentType?: "text" | "image";
+  model?: string;
 };
 
 export const importConfig = (from: string) => {

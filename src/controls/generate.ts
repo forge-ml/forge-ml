@@ -29,6 +29,7 @@ ${cleanPath(path)}: {
         })(prompt, {
           token: opts?.token || forgeKey,
           cache: opts?.cache,
+          model: opts?.model,
         });
       },
 },`;
@@ -45,6 +46,7 @@ ${cleanPath(path)}: {
         })(prompt, {
           token: opts?.token || forgeKey,
           cache: opts?.cache,
+          model: opts?.model,
         });
       },
 },`;

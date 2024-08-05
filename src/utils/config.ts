@@ -10,5 +10,6 @@ export type SchemaConfig = {
   description?: string;
   public?: boolean;
   cache?: CacheType;
+  model?: string; //change this to defaultModel
   contentType?: "text" | "image";
 };

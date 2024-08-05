@@ -31,7 +31,7 @@ async function checkVersionAndWarnUser() {
     const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"));
     const version = packageJson.dependencies["forge-ml"];
     if (version === undefined) {
-      //checks if forge-ml is it package.json dependencies 
+      //checks if forge-ml is it package.json dependencies
       return;
     }
     const currentVersion = version.replace(/^\^/, ""); // removes carrot from version string
@@ -45,6 +45,7 @@ async function checkVersionAndWarnUser() {
       );
     }
   } catch (e) {
+    console.log(cWrap.fr("Error checking for updates"));
   }
 }
 
@@ -67,10 +68,19 @@ const deploy = async (
       public: config.public,
       cacheSetting: config.cache || CacheType.NONE,
       contentType: config.contentType,
+      model: config.model,
     },
   });
 
   if (response.error) {
+    if (response.message === "Model does not support images") {
+      //used to handle error gracefully
+      return {
+        error: true,
+        message: response.message,
+      };
+    }
+
     console.log(cWrap.br("Error deploying"));
     console.log(cWrap.fr(response?.message as string));
   }
@@ -103,6 +113,20 @@ const deployAll = async () => {
     try {
       const response = await deploy(filePath, config.path, config);
       if (response.error) {
+        if (response.message === "Model does not support images") {
+          console.log(
+            "- " +
+              cWrap.fr(
+                "Error deploying endpoint: " +
+                  config.path +
+                  ". '" +
+                  config.model +
+                  "' does not support images"
+              )
+          );
+          continue; // check if should be return
+        }
+
         console.log(
           `- ${cWrap.fr("Error deploying")} ${cWrap.fm(
             file

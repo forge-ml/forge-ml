@@ -164,7 +164,7 @@ async function selectOption<T extends string>(
   useCursor: boolean = true,
   paddingLength: number = 0,
   leftToRight: boolean = false,
-  cursor: string = ">"
+  cursor: string = "*"
 ): Promise<T> {
   const selectedOption = await selectFromOptions(
     options,

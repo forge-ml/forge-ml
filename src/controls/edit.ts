@@ -42,6 +42,7 @@ const edit = async () => {
     public: schemaConfig.public === false ? "private" : "public",
     cache: schemaConfig.cache || "None",
     contentType: schemaConfig.contentType || "text",
+    model: schemaConfig.model,
     endpointName: schemaConfig.name,
     endpointDescription: schemaConfig.description,
     schemaPrompt:

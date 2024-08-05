@@ -4,7 +4,7 @@ import fs from "fs";
 import { cWrap } from "../utils/logging";
 import readline from "node:readline";
 import { stdin as input, stdout as output } from "node:process";
-import { selectOptionBinary } from "../utils/optionSelect";
+import { selectOption, selectOptionBinary } from "../utils/optionSelect";
 import { config } from "../config/config";
 
 //TODO: VALIDATION FOR FORGE FILE PATH
@@ -34,80 +34,114 @@ const askQuestion = (
 
 //VALIDATION CREATE SHOULD ONLY BE CALLED AFTER INIT?
 
+const questions = [
+  {
+    type: "input",
+    question:
+      "What do you want the path of your schema to be? (required, must be one lowercase word, no special characters)\n",
+    validate: (answer: string) => /^[a-z0-9]+$/.test(answer),
+    errorMessage:
+      "Error: path must be all lowercase and contain no special characters",
+    required: true,
+  },
+  {
+    type: "select",
+    question: "Is this a public or private path?\n",
+    options: [PathPrivacy.PUBLIC, PathPrivacy.PRIVATE],
+  },
+  {
+    type: "select",
+    question: "Would you like to cache your schema?\n",
+    options: [CacheType.NONE, CacheType.COMMON, CacheType.INDIVIDUAL],
+  },
+  {
+    type: "select",
+    question: "Which model would you like to use?\n",
+    options: ["gpt-4o-mini", "gpt-4o", "gpt-4", "gpt-3.5-turbo", "Custom"],
+  },
+  {
+    type: "input",
+    question:
+      "What's the id of your custom model? (required for custom models)\n",
+    conditional: (answers) => answers[answers.length - 1] === "Custom",
+    required: true,
+  },
+  {
+    type: "input",
+    question: "What do you want the name of your endpoint to be? (optional)\n",
+    optional: true,
+  },
+  {
+    type: "input",
+    question:
+      "What do you want the description of your endpoint to be? (optional)\n",
+    optional: true,
+  },
+  {
+    type: "input",
+    question:
+      "Enter a prompt for your schema? (ex. Generate a Person schema with attributes like a job, name, age, etc.)\n",
+    required: true,
+  },
+];
+
+const getAnswer = async (
+  question: any,
+  previousAnswers: string[]
+): Promise<string | null> => {
+  if (question.conditional && !question.conditional(previousAnswers)) {
+    return null;
+  }
+
+  if (question.type === "select") {
+    process.stdout.write(cWrap.fm(question.question)); //used process stdout to avoid new line
+    return question.options.length === 2
+      ? selectOptionBinary(question.options)
+      : selectOption(question.options);
+  } else if (question.type === "input") {
+    const rl = readline.createInterface({ input, output });
+    const answer = await askQuestion(rl, question.question);
+    rl.close();
+
+    if (!answer && !question.optional) {
+      console.log(cWrap.br("Error: you need to add a response"));
+      process.exit(0);
+    }
+
+    if (question.validate && !question.validate(answer)) {
+      console.log(cWrap.br(question.errorMessage));
+      process.exit(0);
+    }
+
+    return answer || "";
+  }
+
+  throw new Error("Unsupported question type");
+};
+
 const create = async () => {
-  //AI generated schema creation
-  const questions: string[] = [
-    "What do you want the path of your schema to be? (required, must be one lowercase word, no special characters)\n",
-    "Is this a public path?\n", // not used
-    "Would you like to cache your schema? (None - no caching, Common - cache is shared amongst all users, Individual - cache is unique to each user)\n",
-    "What do you want the name of your endpoint to be? (optional)\n",
-    "What do you want the description of your endpoint to be? (optional)\n",
-    "Enter a prompt for your schema? (ex. Generate a Person schema with attributes like a job, name, age, etc.)\n",
-  ];
-
-  const answers: string[] = [];
-  const optionalQuestions = [3, 4];
-
   console.log(cWrap.fb("Let's build your schema:"));
 
-  for (let i = 0; i < questions.length; i++) {
-    if (i === 1) {
-      console.log(cWrap.fm("Is this a public or private path?"));
-      const privacy = await selectOptionBinary([
-        PathPrivacy.PUBLIC,
-        PathPrivacy.PRIVATE,
-      ]);
-      answers.push(privacy);
-    } else if (i === 2) {
-      console.log(cWrap.fm("\nWould you like to cache your schema?"));
-      const cache = await selectOptionBinary([
-        CacheType.NONE,
-        CacheType.COMMON,
-        CacheType.INDIVIDUAL,
-      ]);
-      answers.push(cache);
-      output.write("\n");
-    } else {
-      //TO FIX: when readline is in else statement public and private disappear on user input
-      //when readline is on outside the user can type during public/private input
-      const rl = readline.createInterface({ input, output }); // open and closing within loop because rl doesn't work with select option
-      const answer = await askQuestion(rl, questions[i]);
-      if (answer) {
-        //validate that path is all lowercase and contains no special characters
-        if (i === 0 && !/^[a-z0-9]+$/.test(answer)) {
-          console.log(
-            cWrap.br(
-              "Error: path must be all lowercase and contain no special characters"
-            )
-          );
-          process.exit(0);
-        }
-
-        answers.push(answer);
-      } else if (
-        optionalQuestions.includes(i) &&
-        (!answer || answer.trim() === "")
-      ) {
-        //if user doesn't want to add a response, just add an empty string - FOR OPTIONAL QUESTIONS
-        answers.push("");
-      } else if (!answer || answer.trim() === "") {
-        console.log(cWrap.br("Error: you need to add a response"));
-        rl.close();
-        process.exit(0);
-      }
-      rl.close();
+  const answers = [];
+  for (const question of questions) {
+    const answer = await getAnswer(question, answers);
+    if (answer !== null) {
+      answers.push(answer);
+      if (question.type === "select") output.write("\n");
     }
   }
 
-  //create an object that matches questions to answers
+  //create an object that matches questions to answers - adjusted one question for custom model input
   const promptAnswers = {
     path: answers[0],
     public: answers[1],
     cache: answers[2],
-    endpointName: answers[3],
-    endpointDescription: answers[4],
+    model: answers[3] === "Custom" ? answers[4] : answers[3],
+    endpointName: answers[3] === "Custom" ? answers[5] : answers[4],
+    endpointDescription: answers[3] === "Custom" ? answers[6] : answers[5],
     schemaPrompt:
-      "Be generous about adding .describe for mini-prompting." + answers[5],
+      "Be generous about adding .describe for mini-prompting. " +
+      (answers[3] === "Custom" ? answers[7] : answers[6]),
   };
 
   console.log(cWrap.fm("\nCreating schema..."));
@@ -129,18 +163,24 @@ const create = async () => {
 
     if (response.error) {
       //This error handling work but backend shouldn't be wrapping errors in errors - fix
-      if (
-        response.error.response.data &&
-        response.error.response.data ===
+
+      if (response.error.response.data) {
+        if (
+          response.error.response.data ===
           "Invalid API key provided. Please check your API key and try again."
-      ) {
-        console.log(
-          cWrap.fr(
-            "There was an OpenAI invalid key error when testing your schema: Please verify if you have an active OpenAI key set up in your account.\nIf not, you can set your OpenAI key by running `forge key set`"
-          )
-        );
-        process.exit(1);
+        ) {
+          console.log(
+            cWrap.fr(
+              "There was an OpenAI invalid key error when testing your schema: Please verify if you have an active OpenAI key set up in your account.\nIf not, you can set your OpenAI key by running `forge key set`"
+            )
+          );
+          process.exit(1);
+        } else {
+          console.log(cWrap.fr(response.error.response.data));
+          process.exit(1);
+        }
       }
+
       console.log(cWrap.fr("Error generating schema"));
       process.exit(1);
     }
