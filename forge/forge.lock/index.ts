@@ -1,5 +1,5 @@
 
-  const serverUrl = "http://localhost:3009"
+  const serverUrl = "https://api.forge-ml.com"
   
 
 /** THIS IS A GENERATED FILE, EDITS WILL BE OVERWRITTEN */
