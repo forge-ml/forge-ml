@@ -63,3 +63,59 @@ collections:
   portfolio:
     output: true
     permalink: /portfolio/:name/
+
+# Custom CSS
+custom_css: |
+  body {
+    background-color: slate;
+    color: #00ff00;
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin: 20px 0;
+  }
+
+  .button, .disabled-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 220px;
+    height: 60px;
+    font-size: 18px;
+    color: #0f0f0f;
+    background-color: #00ff00;
+    border: 2px solid #00ff00;
+    border-radius: 12px;
+    text-decoration: none;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 6px 8px rgba(0, 255, 0, 0.15);
+    margin: 10px;
+  }
+
+  .button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 12px rgba(0, 255, 0, 0.25);
+    cursor: pointer;
+  }
+
+  .disabled-button {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 500px) {
+    .container {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .button, .disabled-button {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  }
