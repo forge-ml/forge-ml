@@ -65,11 +65,8 @@ Forge ML is a powerful tool designed to streamline the process of creating and d
 <br>
 
 <div class="container"> 
-    <a style="text-decoration: none;">
+    <a href="quickstart.html" style="text-decoration: none;">
         <button class="button">Quickstart</button>
-    </a>
-    <a style="text-decoration: none;">
-        <button class="disabled-button">Applications</button>
     </a>
 </div>
 <br>
