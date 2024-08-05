@@ -348,7 +348,9 @@ And you'll get a typesafe response from your endpoint:
    ```bash
    # Make a request to your endpoint
    # If this seems like a lot, just use your forge client!
-   curl -X POST https://api.forge-ml.com/q/your_username/the_path  -H "cache-behavior: <bust | evade | none>" -H "model: <model-id>" -H "Authorization: Bearer <your-forge-key>" -d '{"q": "Who is Mark Twain?"}'
+   # The only required header is `Authorization`
+   curl -X POST https://api.forge-ml.com/q/your_username/the_path   -H "Authorization: Bearer <your-forge-key>" -d '{"q": "Who is Mark Twain?"}'
+   # You can also pass -H "cache-behavior: <bust | evade | none>" and -H "model: <model-id>" to override the default behaviors
    ```
 
 ## ⚙️ Endpoint Config
