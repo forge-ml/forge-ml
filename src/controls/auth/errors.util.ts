@@ -6,7 +6,7 @@ const knownErrors = {
   "Error updating username":
     "Please run `forge auth update` with a different username.",
   "You don't belong. Who do you know here?":
-    "Please run `forge auth login` to login to your account.",
+    "Please run `forge login` to login to your account.",
 };
 
 const getErrorMessage = (error: string) => {

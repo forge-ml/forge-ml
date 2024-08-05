@@ -9,8 +9,13 @@ const signup = async () => {
   const password = prompt().hide("Enter your password: ");
   const userName = prompt()("Enter your username: ");
   const apiKey = prompt().hide(
-    `Enter your OpenAI API key (this is used for ${config.bin} test and deployed schemas) [https://platform.openai.com/api-keys]: `
+    `Enter your OpenAI API key (this is used for ${config.bin} test and your sdk) [https://platform.openai.com/api-keys]: `
   );
+
+  if (!email || !password || !userName || !apiKey) {
+    console.error("All fields are required.");
+    return;
+  }
 
   try {
     const response = await axios.post(`${config.serverUrl}/cli/signup`, {

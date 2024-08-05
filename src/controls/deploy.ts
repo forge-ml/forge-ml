@@ -7,6 +7,46 @@ import { config as cfg } from "../config/config";
 import { CacheType, SchemaConfig } from "../utils/config";
 import { loadDirectoryFiles } from "../utils/directory";
 import { generate } from "./generate";
+import fs from "fs";
+import axios from "axios";
+
+/**
+ * helper functions to check latest version of npm package
+ */
+
+async function getLatestVersion(packageName: string): Promise<string> {
+  try {
+    const response = await axios.get(
+      `https://registry.npmjs.org/${packageName}`
+    );
+    return response.data["dist-tags"].latest;
+  } catch (error) {
+    throw new Error(`Failed to fetch package info: ${error}`);
+  }
+}
+
+async function checkVersionAndWarnUser() {
+  try {
+    //gets current version in users project package.json and removes ^  -- needs to be tested in production
+    const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"));
+    const version = packageJson.dependencies["forge-ml"];
+    if (version === undefined) {
+      //checks if forge-ml is it package.json dependencies 
+      return;
+    }
+    const currentVersion = version.replace(/^\^/, ""); // removes carrot from version string
+    const latestVersion = await getLatestVersion("forge-ml");
+
+    if (currentVersion !== latestVersion) {
+      console.log(
+        cWrap.fm(
+          `You are using an outdated version of forge-ml. Please update to the latest version: ${latestVersion} by running:`
+        ) + cWrap.fg("npm install forge-ml@latest")
+      );
+    }
+  } catch (e) {
+  }
+}
 
 const deploy = async (
   inFile: string,
@@ -39,6 +79,9 @@ const deploy = async (
 };
 
 const deployAll = async () => {
+  //check for npm package updates and inform user - WORKS IN DEV TEST IN PRODUCTION
+  await checkVersionAndWarnUser();
+
   const files = loadDirectoryFiles();
 
   for (const file of files) {

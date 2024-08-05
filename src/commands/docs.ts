@@ -2,6 +2,26 @@ import type { Argv } from "yargs";
 import authGate from "../utils/authGate";
 import cWrap from "../utils/logging";
 import makeRequest, { EP } from "../utils/request";
+import { exec } from "node:child_process";
+import localConfigService from "../controls/auth/svc";
+
+const copyToClipboard = (text: string) => {
+  const proc = require("child_process").spawn("pbcopy");
+  proc.stdin.write(text);
+  proc.stdin.end();
+};
+
+function copyKey(provider: string) {
+  const key = localConfigService.getValue(provider);
+  if (!key) {
+    console.log(`${cWrap.br("Error")} copying key.`);
+    return;
+  }
+
+  copyToClipboard(`Bearer ${key}`);
+
+  console.log(`Key with Bearer prefix copied to clipboard for ${cWrap.fg(provider)}.`);
+}
 
 const docsCommand = (cli: Argv) =>
   cli.command(
@@ -17,9 +37,20 @@ const docsCommand = (cli: Argv) =>
         console.log(`${cWrap.br("Error")} fetching docs url.`);
         return;
       } else {
-        console.log(
-          `Your docs are available at: ${cWrap.fg(response.data.url)}`
-        );
+        const url = response.data.url;
+        console.log(`Your docs are available at: ${cWrap.fg(url)}`);
+
+        //copy forge key to clipboard
+        copyKey("forge");
+
+        // Open the URL in the default browser
+        const command = process.platform === "darwin" ? "open" : "xdg-open";
+        exec(`${command} ${url}`, (err) => {
+          if (err) {
+          } else {
+            console.log("\nYour docs have been opened in the browser.");
+          }
+        });
       }
     }
   );

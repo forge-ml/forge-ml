@@ -5,7 +5,7 @@ import signup from "../controls/auth/signup";
 import update from "../controls/auth/update";
 import cWrap from "../utils/logging";
 
-const authCommand = (cli: Argv) =>
+const authCommand = (cli: Argv) => {
   cli.command(
     "auth <action>",
     `${cWrap.fm("Manage authentication state with actions:")}
@@ -66,5 +66,29 @@ ${cWrap.fb(
       }
     }
   );
+};
+
+  //THE --help FOR THIS COMMAND SHOULD BE IN THE ASSOCIATED WITH AUTH COMMAND?
+export const rootLoginSignup = (cli: Argv) => {
+  cli.command(
+    "login",
+    cWrap.fm("Sign in to an existing forge account"),
+    {},
+    async () => {
+      console.log(cWrap.fg("Log in to your existing forge account!"));
+      await login();
+    }
+  );
+
+  cli.command(
+    "signup",
+    cWrap.fm("Sign up for a new forge account"),
+    {},
+    async () => {
+      console.log(cWrap.fg("Sign up for a new forge account!"));
+      await signup();
+    }
+  );
+};
 
 export default authCommand;
