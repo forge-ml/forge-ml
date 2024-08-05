@@ -1,7 +1,6 @@
 # Site settings
 title: "Forge ML"
 author: "Jake Zegil"
-baseurl: ""
 url: "https://forge-ml.com"
 date_format: "%B %-d, %Y"
 
