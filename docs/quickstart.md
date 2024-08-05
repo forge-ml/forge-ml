@@ -98,6 +98,6 @@ $ forge docs
 
 Learn how to use the Forge Client.
 
-### [Forge Client (SDK)]()
+### [Forge Client (SDK)]({{ site.baseurl }}/forge-client)
 
 <br>

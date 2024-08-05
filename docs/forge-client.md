@@ -8,7 +8,8 @@ The commands `$ forge init` and `$ forge deploy` will generate a client for you,
 
 After running `$ forge init` you'll have a client.ts file in your forge folder.
 
-```client.ts
+```Text
+## client.ts
 import Forge from "@forge-ml/client";
 
 const keyGuard = () => {
@@ -32,7 +33,8 @@ export default forge;
 
 In the root of your project create a .env file and add your forge key.
 
-```Text .env
+```Text
+## .env
 FORGE_KEY=your-forge-key
 ```
 
@@ -42,7 +44,8 @@ FORGE_KEY=your-forge-key
 
 Import your forge client into any file in your project and make a request.
 
-```<any_file>.ts
+```Text
+## <any_file>.ts
 import forge from "./forge/client";
 
 const response = await forge.person.query("Who is Mark Twain?");
@@ -79,8 +82,8 @@ Volia! You now have a type-safe response from your endpoint
 
 #### WHAT'S NEXT
 
-### [Schema Creation]()
+### [Schema Creation]({{ site.baseurl }}/schema-creation)
 
-### [Security]()
+### [Security]({{ site.baseurl }}/security)
 
 <br>
