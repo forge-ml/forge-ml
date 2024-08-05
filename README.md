@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚒️ Forge: Dead Simple Structured Extraction for LLMs 🔩️
+# 🚅 Forge: The Fastest Way to Build Bulletproof AI Products 🏃💨
 
 [![npm version](https://img.shields.io/npm/v/forge-ml.svg?style=flat-square)](https://www.npmjs.com/package/forge-ml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -47,7 +47,7 @@ const whois = z.object({
 
 ```bash
 # deploy
-forge deploy all
+forge deploy
 ```
 
 ```ts
@@ -66,7 +66,7 @@ forge deploy all
 
 ```bash
 # Sign up for a forge account
-forge auth signup
+forge signup
 
 ## Install zod
 npm install zod
@@ -81,7 +81,7 @@ forge create
 forge test ./forge/schema/<your_schema>.ts
 
 # Deploy your schema as an endpoint
-forge deploy all
+forge deploy
 ```
 
 _❗️ Note ❗️ In order to deploy, your schema file must have a zod object as the default export and a named `config` export containing the `path`._
@@ -100,6 +100,9 @@ export const config: EndpointConfig = {
   name: "My Schema", // name of the endpoint
   description: "My schema description",
   cache: "Individual" | "Common" | "None", // cache determines how the schema is cached.
+  contentType: "text" | "image", // contentType determines the type of content the endpoint will receive
+  model:
+    "gpt-4o-mini" | "gpt-4o" | "gpt-4" | "gpt-3.5-turbo" | "<custom-model-id>", // model determines the model used to generate and query the endpoint
 };
 ```
 
@@ -116,10 +119,12 @@ You can see [my openAPI spec here](https://api.forge-ml.com/docs/jakezegil).
 Auth lives at `forge auth`. When you log in or sign up, you'll get a fresh api key (this will not invalidate your old key). Your credentials are stored at `~/.forge/key.json`.
 
 ```bash
-forge auth signup    # Sign up for a forge account
-forge auth signin    # Sign in to your account
-forge auth logout    # Log out of your account
+forge auth signup         # Sign up for a forge account
+forge auth login          # Log in to your account
+forge auth logout         # Log out of your account
 ```
+
+For simplicity you can also just use `forge login` and `forge signup` to login and signup.
 
 If you don't like your username, you can always update it, but beware! It will also update your deployed endpoints. Your swagger docs are dynamic, and will reflect your latest username and endpoints.
 
@@ -284,6 +289,8 @@ And you'll get a typesafe response from your endpoint:
      description: "A person in history or the present day",
      /** cache setting **/
      cache: "Individual", // this means it's set to be unique to each user
+     contentType: "text", // this means the endpoint will process text
+     model: "gpt-4o-mini", // this means the endpoint will use the gpt-4o-mini model
    };
    ```
 
@@ -326,7 +333,7 @@ And you'll get a typesafe response from your endpoint:
 5. Deploy the endpoint, and check it out in your swagger docs
 
    ```bash
-   forge deploy all   ## Deploy your endpoints
+   forge deploy  ## Deploy your endpoints
    forge docs    ## Check out your swagger docs
    ```
 
@@ -341,7 +348,9 @@ And you'll get a typesafe response from your endpoint:
    ```bash
    # Make a request to your endpoint
    # If this seems like a lot, just use your forge client!
-   curl -X POST https://api.forge-ml.com/q/your_username/the_path  -H "cache-behavior: <bust | evade | none>" -H "Authorization: Bearer <your-forge-key>" -d '{"q": "Who is Mark Twain?"}'
+   # The only required header is `Authorization`
+   curl -X POST https://api.forge-ml.com/q/your_username/the_path   -H "Authorization: Bearer <your-forge-key>" -d '{"q": "Who is Mark Twain?"}'
+   # You can also pass -H "cache-behavior: <bust | evade | none>" and -H "model: <model-id>" to override the default behaviors
    ```
 
 ## ⚙️ Endpoint Config
@@ -367,11 +376,41 @@ export type EndpointConfig = {
    * None - no caching
    * **/
   cache: "Individual" | "Common" | "None";
+  /** contentType setting
+   * text - the endpoint will process text
+   * image - the endpoint will process images
+   * **/
+  contentType: "text" | "image";
+  /** model setting
+   * gpt-4o-mini - the endpoint will use the gpt-4o-mini model
+   * gpt-4o - the endpoint will use the gpt-4o model
+   * gpt-4 - the endpoint will use the gpt-4 model
+   * gpt-3.5-turbo - the endpoint will use the gpt-3.5-turbo model
+   * <custom-model-id> - the endpoint will use a OpenAI custom model id - as of right now we only support OPENAI as a model provider
+   * if no model is included we use gpt-4o-mini by default
+   * **/
+  model: "gpt-4o-mini" | "gpt-4o" | "gpt-4" | "gpt-3.5-turbo" | "<custom-model-id>";
 };
 
 export const config: EndpointConfig = {
   ...
 }
+```
+
+## 📝 Editing a schema
+
+You can edit a schema by running `forge edit`. You will then be prompted for a schema to edit and the changes you would like to make.
+
+```bash
+forge> Let's edit your schema! Which file would you like to edit?
+
+user>   superhero.ts    student.ts    recipe.ts  * book.ts    example.ts    test.ts    vegetables.ts
+
+forge> What edits would you like to make?
+
+user> Make genre an array and add a new attribute "pageCount"
+
+forge> Editing schema...
 ```
 
 ## 🧪 Testing an endpoint
@@ -386,9 +425,8 @@ forge test <path-to-schema>
 
 Example schemas can be found in the `./forge/schema` folder of this project.
 
-`forge deploy all` deploys all schemas in the `./forge/schema` folder by default. Files with a .ignore.ts extension are ignored.
+`forge deploy` deploys all schemas in the `./forge/schema` folder by default. Files with a .ignore.ts extension are ignored.
 
 ```bash
-forge deploy <.path-to-schema>    ## Deploy a single schema
-forge deploy all    ## Deploy all schemas in the ./forge folder
+forge deploy    ## Deploy all schemas in the ./forge folder
 ```
