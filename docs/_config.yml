@@ -1,0 +1,120 @@
+# Site settings
+title: "Forge ML"
+author: "Jake Zegil"
+url: "https://forge-ml.github.io"
+date_format: "%B %-d, %Y"
+
+# Features
+features:
+  related_posts: true
+  post_footers: true
+  subscribe_cta: true
+  social_icons: true
+  contact_form:
+    ajaxify: false
+  mathjax: false
+  extended_fonts: false
+  anchorjs: true
+
+# Social media
+social:
+  github: "forge-ml"
+  twitter: "ml_forge"
+
+# Localization
+text:
+  pagination:
+    newer: "← Newer"
+    older: "Older →"
+  post:
+    updated: "Last updated"
+    reading_time: "minute read"
+    related: "You might also enjoy"
+  index:
+    coming_soon: "Exciting content coming soon..."
+  locale: "en_US"
+
+# Build configuration
+markdown: kramdown
+redcarpet:
+  extensions: ["smart", "tables", "with_toc_data", "footnotes"]
+permalink: pretty
+paginate: 12
+paginate_path: "/blog/page/:num/"
+sass:
+  style: compressed
+plugins:
+  - jekyll-paginate
+  - jekyll-sitemap
+exclude: 
+  - vendor
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - README.md
+
+# Content collections
+collections_dir: collections
+collections:
+  reviews:
+    output: true
+    permalink: /reviews/:name/
+  portfolio:
+    output: true
+    permalink: /portfolio/:name/
+
+# Custom CSS
+custom_css: |
+  body {
+    background-color: slate;
+    color: #00ff00;
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin: 20px 0;
+  }
+
+  .button, .disabled-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 220px;
+    height: 60px;
+    font-size: 18px;
+    color: #0f0f0f;
+    background-color: #00ff00;
+    border: 2px solid #00ff00;
+    border-radius: 12px;
+    text-decoration: none;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 6px 8px rgba(0, 255, 0, 0.15);
+    margin: 10px;
+  }
+
+  .button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 12px rgba(0, 255, 0, 0.25);
+    cursor: pointer;
+  }
+
+  .disabled-button {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 500px) {
+    .container {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .button, .disabled-button {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  }
