@@ -68,7 +68,7 @@ const deploy = async (
       public: config.public,
       cacheSetting: config.cache || CacheType.NONE,
       contentType: config.contentType,
-      modelSetting: config.model,
+      model: config.model,
     },
   });
 

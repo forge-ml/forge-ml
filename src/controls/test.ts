@@ -13,7 +13,7 @@ const test = async (inFile: string) => {
   const json = toJSON(zod);
 
   const config = await importConfig(filePath);
-  const modelSetting = config.model;
+  const model = config.model;
   const rl = readline.createInterface({ input, output });
 
   rl.question("Enter a prompt to test your schema: ", async (prompt) => {
@@ -22,7 +22,7 @@ const test = async (inFile: string) => {
       data: {
         schema: JSON.stringify(json),
         prompt,
-        modelSetting,
+        model,
       },
     });
 
