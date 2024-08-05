@@ -3,50 +3,61 @@ Forge ML is a powerful tool designed to streamline the process of creating and d
 ## Overview
 
 <style>
-  .container {
-    display: flex;
+    .container {
+  	display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
-    margin: 20px 0;
+		justify-content: space-evenly;
   }
-
-  .button, .disabled-button {
+  
+  .disabled-button {
     display: flex;
+    opacity: 50%;
+    cursor: default;
     justify-content: center;
     align-items: center;
-    width: 220px;
-    height: 60px;
-    font-size: 18px;
+    width: 200px;
+    height: 80px;
+    font-size: 20px;
     color: #fff;
     background-color: #007bff;
     border: none;
-    border-radius: 12px;
+    border-radius: 10px;
     text-decoration: none;
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-    margin: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+   .button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 80px;
+    font-size: 20px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 10px;
+    text-decoration: none;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
   .button:hover {
-    transform: scale(1.1);
-    box-shadow: 0 10px 12px rgba(0, 0, 0, 0.25);
+    transform: scale(1.05);
+    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.2);
     cursor: pointer;
   }
-
-  .disabled-button {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
+  
   @media (max-width: 500px) {
     .container {
       flex-direction: column;
       align-items: center;
     }
 
-    .button, .disabled-button {
-      width: 100%;
+    .button {
       margin-bottom: 20px;
     }
   }
@@ -54,8 +65,12 @@ Forge ML is a powerful tool designed to streamline the process of creating and d
 <br>
 
 <div class="container"> 
-    <a href="#" class="button">Quickstart</a>
-    <a href="#" class="disabled-button">Applications</a>
+    <a style="text-decoration: none;">
+        <button class="button">Quickstart</button>
+    </a>
+    <a style="text-decoration: none;">
+        <button class="disabled-button">Applications</button>
+    </a>
 </div>
 <br>
 <br>
