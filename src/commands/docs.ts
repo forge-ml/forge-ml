@@ -5,17 +5,20 @@ import makeRequest, { EP } from "../utils/request";
 import { exec } from "node:child_process";
 import localConfigService from "../controls/auth/svc";
 
-function getForgeKey() {
-  const provider = "forge";
+const copyToClipboard = (text: string) => {
+  const proc = require("child_process").spawn("pbcopy");
+  proc.stdin.write(text);
+  proc.stdin.end();
+};
+
+function copyKey(provider: string) {
   const key = localConfigService.getValue(provider);
   if (!key) {
     console.log(`${cWrap.br("Error")} copying key.`);
     return;
   }
 
-  const proc = require("child_process").spawn("pbcopy");
-  proc.stdin.write(`Bearer ${key}`);
-  proc.stdin.end();
+  copyToClipboard(`Bearer ${key}`);
 
   console.log(`Key copied to clipboard for ${cWrap.fg(provider)}.`);
 }
@@ -38,7 +41,7 @@ const docsCommand = (cli: Argv) =>
         console.log(`Your docs are available at: ${cWrap.fg(url)}`);
 
         //copy forge key to clipboard
-        getForgeKey();
+        copyKey("forge");
 
         // Open the URL in the default browser
         const command =

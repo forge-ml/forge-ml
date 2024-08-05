@@ -1,8 +1,6 @@
-import path from "path";
 import type { Argv } from "yargs";
 import { deployAll } from "../controls/deploy";
 import authGate from "../utils/authGate";
-import { importConfig } from "../utils/imports";
 import cWrap from "../utils/logging";
 
 const deployCommand = (cli: Argv) =>
