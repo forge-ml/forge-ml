@@ -11,7 +11,6 @@ const deployCommand = (cli: Argv) =>
     cWrap.fm("Deploy all schemas to the Forge API."),
     (yargs) => {
       // used for --help example may not be needs since deploy takes no arguments
-      yargs.strict(), // throws error if user doesn't follow exact command
         yargs
           .example(
             cWrap.fg("forge deploy"),
