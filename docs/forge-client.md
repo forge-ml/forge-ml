@@ -8,7 +8,7 @@ The commands `$ forge init` and `$ forge deploy` will generate a client for you,
 
 After running `$ forge init` you'll have a client.ts file in your forge folder.
 
-```Text
+```ts
 ## client.ts
 import Forge from "@forge-ml/client";
 
@@ -33,7 +33,7 @@ export default forge;
 
 In the root of your project create a .env file and add your forge key.
 
-```Text
+```sh
 ## .env
 FORGE_KEY=your-forge-key
 ```
@@ -44,7 +44,7 @@ FORGE_KEY=your-forge-key
 
 Import your forge client into any file in your project and make a request.
 
-```Text
+```ts
 ## <any_file>.ts
 import forge from "./forge/client";
 
@@ -57,7 +57,7 @@ console.log(firstName); // "Mark"
 
 Volia! You now have a type-safe response from your endpoint
 
-```JSON
+```json
 {
   "name": {
     "full": "Mark Twain",

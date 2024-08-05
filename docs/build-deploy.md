@@ -3,23 +3,17 @@
 Integrate these steps into your build configuration to leverage Forge ML in production:
 
 1. Confirm that both of your keys are set:
-   ```
+```sh
    $ forge key list
-   ```
+```
 
 2. Confirm that your Forge key is listed in your `.env` file
 
-3. Install dependencies:
-   ```
-   npm install
-   ```
 
-4. Run your build command
 
-5. Generate the client for production environment:
-   ```
-   npx forge generate
-   ```
+
+
+
 
 ---
 

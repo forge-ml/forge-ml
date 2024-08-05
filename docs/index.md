@@ -65,7 +65,7 @@ Forge ML is a powerful tool designed to streamline the process of creating and d
 <br>
 
 <div class="container"> 
-    <a href="quickstart.html" style="text-decoration: none;">
+    <a href="quickstart" style="text-decoration: none;">
         <button class="button">Quickstart</button>
     </a>
 </div>
@@ -78,7 +78,7 @@ You define a Zod schema, test it locally, and then deploy it to the cloud. From 
 
 ## Define your schema
 
-```TypeScript
+```ts
 const whois = z.object({
   name: z.string(),
   occupation: z.string(),
@@ -88,7 +88,7 @@ const whois = z.object({
 
 ### Deploy it
 
-```CLI
+```sh
 $ forge deploy all
 ```
 
@@ -111,6 +111,6 @@ $ forge deploy all
 
 Start with the quickstart guide.
 
-### [Quickstart](quickstart.html)
+### [Quickstart](quickstart)
 
 <br>
