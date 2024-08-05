@@ -99,53 +99,51 @@ Forge ML is the fastest way to build bulletproof AI products.
   <a href="applications">Real-World Applications</a>
 </div>
 
-<div class="content">
   <div class="container"> 
       <a href="quickstart" style="text-decoration: none;">
           <button class="button">Quickstart</button>
       </a>
   </div>
 
-  Forge ML uses a combination of tools like Zod and Instructor to create and deploy endpoints that can be used to extract structured data from LLMs. It's a dead simple way to create custom LLM endpoints for your applications.
+Forge ML uses a combination of tools like Zod and Instructor to create and deploy endpoints that can be used to extract structured data from LLMs. It's a dead simple way to create custom LLM endpoints for your applications.
 
-  You define a Zod schema, test it locally, and then deploy it to the cloud. From there you can access it from any application that can make HTTP requests, and it's guaranteed to have the expected response structure.
+You define a Zod schema, test it locally, and then deploy it to the cloud. From there you can access it from any application that can make HTTP requests, and it's guaranteed to have the expected response structure.
 
-  ## Define your schema
+## Define your schema
 
-  ```ts
-  const whois = z.object({
-    name: z.string(),
-    occupation: z.string(),
-    hobbies: z.array(z.string()),
-  });
-  ```
+```ts
+const whois = z.object({
+  name: z.string(),
+  occupation: z.string(),
+  hobbies: z.array(z.string()),
+});
+```
 
-  ### Deploy it
+### Deploy it
 
-  ```sh
-  $ forge deploy 
-  ```
+```sh
+$ forge deploy
+```
 
-  ```json
-  // endpoint: <https://api.forge-ml.com/q/jakezegil/whois>
-  // prompt: Jake Zegil is a Software Engineer who likes ripping code and driving boats
-  // Your endpoint response -
-  {
-    "name": "Jake Zegil",
-    "occupation": "Software Engineer",
-    "hobbies": ["ripping code", "driving boats"],
-  }
-  ```
-
-  <br>
-
-  ---
-
-  #### WHAT'S NEXT
-
-  Start with the quickstart guide.
-
-  ### [Quickstart](quickstart)
+```json
+// endpoint: <https://api.forge-ml.com/q/jakezegil/whois>
+// prompt: Jake Zegil is a Software Engineer who likes ripping code and driving boats
+// Your endpoint response -
+{
+  "name": "Jake Zegil",
+  "occupation": "Software Engineer",
+  "hobbies": ["ripping code", "driving boats"]
+}
+```
 
   <br>
-</div>
+
+---
+
+#### WHAT'S NEXT
+
+Start with the quickstart guide.
+
+### [Quickstart](quickstart)
+
+  <br>
