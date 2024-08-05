@@ -4,7 +4,7 @@ Forge ML is a powerful tool designed to streamline the process of creating and d
 
 <style>
   body {
-    background-color: #0f0f0f;
+    background-color: slate;
     color: #00ff00;
     font-family: 'Courier New', Courier, monospace;
   }
