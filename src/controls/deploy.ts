@@ -31,7 +31,7 @@ async function checkVersionAndWarnUser() {
     const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"));
     const version = packageJson.dependencies["forge-ml"];
     if (version === undefined) {
-      //checks if forge-ml is it package.json dependencies 
+      //checks if forge-ml is it package.json dependencies
       return;
     }
     const currentVersion = version.replace(/^\^/, ""); // removes carrot from version string
@@ -45,6 +45,7 @@ async function checkVersionAndWarnUser() {
       );
     }
   } catch (e) {
+    console.log(cWrap.fr("Error checking for updates"));
   }
 }
 
@@ -67,7 +68,7 @@ const deploy = async (
       public: config.public,
       cacheSetting: config.cache || CacheType.NONE,
       contentType: config.contentType,
-      modelSetting: config.model || "gpt-4o-mini", //change this to defaultModel
+      modelSetting: config.model,
     },
   });
 
