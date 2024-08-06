@@ -1,7 +1,7 @@
 {
   "name": "forge-ml",
   "version": "0.1.19",
-  "description": "A CLI tool for schema validation and deployment",
+  "description": "The Fastest Way to Build Bulletproof AI Products",
   "main": "index.js",
   "bin": {
     "forge": "./index.js",
@@ -37,12 +37,12 @@
   ],
   "author": "Jake Zegil <jakezegil@gmail.com>",
   "license": "ISC",
-  "homepage": "https://github.com/jakezegil/forge-ml#readme",
+  "homepage": "https://github.com/forge-ml/forge-ml#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jakezegil/forge-ml.git"
+    "url": "https://github.com/forge-ml/forge-ml.git"
   },
   "bugs": {
-    "url": "https://github.com/jakezegil/forge-ml/issues"
+    "url": "https://github.com/forge-ml/forge-ml/issues"
   }
 }
