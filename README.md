@@ -64,6 +64,8 @@ forge deploy
 
 ## 📈 Quickstart
 
+To get started create a new project and run these commands, in terminal, in the root directory of your project:
+
 ```bash
 # Sign up for a forge account
 forge signup

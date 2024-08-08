@@ -51,6 +51,11 @@ const questions = [
   },
   {
     type: "select",
+    question: "What is the content type of your schema?\n",
+    options: ["text", "image"],
+  },
+  {
+    type: "select",
     question: "Would you like to cache your schema?\n",
     options: [CacheType.NONE, CacheType.COMMON, CacheType.INDIVIDUAL],
   },
@@ -135,13 +140,14 @@ const create = async () => {
   const promptAnswers = {
     path: answers[0],
     public: answers[1],
-    cache: answers[2],
-    model: answers[3] === "Custom" ? answers[4] : answers[3],
-    endpointName: answers[3] === "Custom" ? answers[5] : answers[4],
-    endpointDescription: answers[3] === "Custom" ? answers[6] : answers[5],
+    contentType: answers[2],
+    cache: answers[3],
+    model: answers[4] === "Custom" ? answers[5] : answers[4],
+    endpointName: answers[4] === "Custom" ? answers[6] : answers[5],
+    endpointDescription: answers[4] === "Custom" ? answers[7] : answers[6],
     schemaPrompt:
       "Be generous about adding .describe for mini-prompting. " +
-      (answers[3] === "Custom" ? answers[7] : answers[6]),
+      (answers[4] === "Custom" ? answers[8] : answers[7]),
   };
 
   console.log(cWrap.fm("\nCreating schema..."));
