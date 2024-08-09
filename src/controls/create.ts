@@ -205,6 +205,7 @@ const create = async () => {
     schemaPrompt:
       "Be generous about adding .describe for mini-prompting. " +
       answers["schemaPrompt"],
+    provider: answers["provider"],
   };
 
   console.log(cWrap.fm("\nCreating schema..."));
@@ -215,7 +216,7 @@ const create = async () => {
       data: promptAnswers,
     });
 
-    if (response.message.includes("key is required")) {
+    if (response.message && response.message.includes("key is required")) {
       console.log(
         cWrap.fr(
           "You have not set up a provider key. Please set up a provider key by running `forge key set`"

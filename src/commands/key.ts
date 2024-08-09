@@ -34,10 +34,14 @@ ${cWrap.fb("set")}\t\tset a key. defaults to setting your openAI key
               `Forge API Key      |   ${cWrap.fg(apiKey ? "Set" : "Not Set")}`
             );
             console.log(
-              `OpenAI API Key     |   ${cWrap.fg(openAiKey ? "Set" : "Not Set")}`
+              `OpenAI API Key     |   ${cWrap.fg(
+                openAiKey ? "Set" : "Not Set"
+              )}`
             );
             console.log(
-              `Anthropic API Key |   ${cWrap.fg(anthropicKey ? "Set" : "Not Set")}`
+              `Anthropic API Key  |   ${cWrap.fg(
+                anthropicKey ? "Set" : "Not Set"
+              )}`
             );
           }
         )
@@ -110,7 +114,8 @@ ${cWrap.fb("set")}\t\tset a key. defaults to setting your openAI key
               ),
           async (args) => {
             const { key, provider } = args;
-            const keyToSet = provider || (await selectOption(Object.values(Keys)));
+            const keyToSet =
+              provider || (await selectOption(Object.values(Keys)));
 
             if ([Keys.OPENAI, Keys.ANTHROPIC].includes(keyToSet)) {
               const { data, error } = await makeRequest(EP.SET_PROVIDER_KEY, {
@@ -118,11 +123,16 @@ ${cWrap.fb("set")}\t\tset a key. defaults to setting your openAI key
                 method: "POST",
               });
               if (error) {
-                console.log(`\n\n${cWrap.br("Error")} setting key: `, error?.response?.data?.error);
+                console.log(
+                  `\n\n${cWrap.br("Error")} setting key: `,
+                  error?.response?.data?.error
+                );
                 return;
               }
               console.log(
-                `\n\nDeployment key successfully updated for ${cWrap.fg(keyToSet)}.`
+                `\n\nDeployment key successfully updated for ${cWrap.fg(
+                  keyToSet
+                )}.`
               );
             }
 
@@ -139,7 +149,9 @@ ${cWrap.fb("set")}\t\tset a key. defaults to setting your openAI key
         )
         .example(
           cWrap.fg("forge key set sk-abcxyz"),
-          cWrap.fc("sets your provider key. This will prompt you to select a provider (openAI, anthropic, forge).")
+          cWrap.fc(
+            "sets your provider key. This will prompt you to select a provider (openAI, anthropic, forge)."
+          )
         )
         .example(
           cWrap.fg("forge key copy forge"),
