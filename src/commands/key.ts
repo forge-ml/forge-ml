@@ -37,7 +37,7 @@ ${cWrap.fb("set")}\t\tset a key. defaults to setting your openAI key
               `OpenAI API Key     |   ${cWrap.fg(openAiKey ? "Set" : "Not Set")}`
             );
             console.log(
-              `Anthropic API Key |   ${cWrap.fg(anthropicKey ? "Set" : "Not Set")}`
+              `Anthropic API Key  |   ${cWrap.fg(anthropicKey ? "Set" : "Not Set")}`
             );
           }
         )
