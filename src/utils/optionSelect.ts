@@ -3,70 +3,58 @@ import cWrap from "./logging";
 const input = process.stdin;
 const output = process.stdout;
 
+type Option<T extends string> = {
+  label: string;
+  value: T;
+}
+
 //Padding on cursor on is broken - cursor stays left (unpadded) but text gets padded to right
 //see if there is a way to remove the terminal cursor when user is selecting
-
 function selectFromOptions<T extends string>(
-  options: T[],
-  useCursor?: boolean,
-  paddingLength?: number,
-  leftToRight?: boolean,
-  cursor?: string
+  options: Option<T>[],
+  useCursor: boolean = true,
+  paddingLength: number = 0,
+  leftToRight: boolean = false,
+  cursor: string = ">"
 ): Promise<T> {
   return new Promise((resolve) => {
     const selectOption = {
-      selectIndex: 0, // index of selected option
-      options: options, // array of options
-      selector: cursor || ">", // selector for selected option
-      isFirstTimeShowMenu: true, // flag to check if it's the first time the menu is shown
-      createOptionMenu: (): void => {}, // function to create the option menu
-      getPadding: (length: number): string => "", // function to get the padding for the option menu
-      close: (): void => {}, // function to close the option menu
+      selectIndex: 0,
+      options: options,
+      selector: cursor,
+      isFirstTimeShowMenu: true,
+      createOptionMenu: (): void => {},
+      getPadding: (length: number): string => " ".repeat(length),
+      close: (): void => {
+        output.write("\nExiting...\n");
+        process.exit(0);
+      },
     };
 
     selectOption.createOptionMenu = (): void => {
       const optionLength = selectOption.options.length;
-      if (selectOption.isFirstTimeShowMenu) {
-        selectOption.isFirstTimeShowMenu = false;
-      } else {
+      if (!selectOption.isFirstTimeShowMenu) {
         output.write(ansiEraseLines(leftToRight ? 1 : optionLength));
       }
-      //adds left side padding to options
-      const padding = selectOption.getPadding(paddingLength || 0);
+      selectOption.isFirstTimeShowMenu = false;
+
+      const padding = selectOption.getPadding(paddingLength);
       const cursorColor = ansiColors(selectOption.selector, "green");
 
-      let menu = "";
-      for (let i = 0; i < optionLength; i++) {
-        let selectedOption: string;
-        if (i === selectOption.selectIndex) {
-          if (useCursor) {
-            selectedOption = `${cursorColor} ${cWrap.fg(
-              `${padding}${selectOption.options[i]}`
-            )}`;
+      const menu = selectOption.options
+        .map((option, i) => {
+          if (i === selectOption.selectIndex) {
+            return useCursor
+              ? `${cursorColor} ${cWrap.fg(`${padding}${option.label}`)}`
+              : `${padding}${ansiColors(option.label, "green")}`;
           } else {
-            selectedOption = `${padding}${ansiColors(
-              selectOption.options[i],
-              "green"
-            )}`;
+            const extraSpace = useCursor ? " ".repeat(2) : "";
+            return `${padding}${extraSpace}${option.label}`;
           }
-        } else {
-          const extraSpace = useCursor ? " ".repeat(2) : "";
-          selectedOption = `${padding}${extraSpace}${selectOption.options[i]}`;
-        }
-        menu +=
-          selectedOption +
-          (i < optionLength - 1 ? (leftToRight ? "  " : "\n") : "");
-      }
+        })
+        .join(leftToRight ? "  " : "\n");
+
       output.write(menu);
-    };
-
-    selectOption.getPadding = (length: number): string => {
-      return " ".repeat(length);
-    };
-
-    selectOption.close = (): void => {
-      output.write("\nExiting...\n");
-      process.exit(0);
     };
 
     const keyPressedHandler = (
@@ -78,24 +66,23 @@ function selectFromOptions<T extends string>(
         if (leftToRight) {
           if (key.name === "right" && selectOption.selectIndex < optionLength) {
             selectOption.selectIndex += 1;
-            selectOption.createOptionMenu();
           } else if (key.name === "left" && selectOption.selectIndex > 0) {
             selectOption.selectIndex -= 1;
-            selectOption.createOptionMenu();
           }
         } else {
           if (key.name === "down" && selectOption.selectIndex < optionLength) {
             selectOption.selectIndex += 1;
-            selectOption.createOptionMenu();
           } else if (key.name === "up" && selectOption.selectIndex > 0) {
             selectOption.selectIndex -= 1;
-            selectOption.createOptionMenu();
           }
         }
-        if (key.name === "return") {
+        if ((leftToRight && ["right", "left"].includes(key.name)) || (!leftToRight && ["down", "up"].includes(key.name))) {
+          selectOption.createOptionMenu();
+        } else if (key.name === "return") {
           input.setRawMode(false);
           input.pause();
-          resolve(selectOption.options[selectOption.selectIndex]);
+          input.removeListener("keypress", keyPressedHandler);
+          resolve(selectOption.options[selectOption.selectIndex].value);
         } else if (key.name === "escape" || (key.name === "c" && key.ctrl)) {
           selectOption.close();
         }
@@ -108,17 +95,9 @@ function selectFromOptions<T extends string>(
       const cursorUp = (count = 1): string => ESC + count + "A";
       const cursorLeft = ESC + "G";
 
-      let clear = "";
-
-      for (let i = 0; i < count; i++) {
-        clear += eraseLine + (i < count - 1 ? cursorUp() : "");
-      }
-
-      if (count) {
-        clear += cursorLeft;
-      }
-
-      return clear;
+      return Array.from({ length: count }, (_, i) =>
+        eraseLine + (i < count - 1 ? cursorUp() : "")
+      ).join("") + cursorLeft;
     };
 
     const ansiColors = (text: string, color: string): string => {
@@ -140,46 +119,28 @@ function selectFromOptions<T extends string>(
   });
 }
 
-async function selectOptionBinary(
-  options: string[],
+
+async function selectOptionBinaryRaw<T extends string>(
+  options: Option<T>[],
   useCursor: boolean = true,
   paddingLength: number = 0,
   leftToRight: boolean = true,
   cursor: string = "*"
-) {
-  const selectedOption = await selectFromOptions(
-    options,
-    useCursor,
-    paddingLength,
-    leftToRight,
-    cursor
-  );
-  return selectedOption;
+): Promise<string> {
+  return selectFromOptions(options, useCursor, paddingLength, leftToRight, cursor);
 }
 
-//usage example - uses async/await
-//defaults to no cursor can be changed to true
-async function selectOption<T extends string>(
-  options: T[],
+async function selectOptionRaw<T extends string>(
+  options: Option<T>[],
   useCursor: boolean = true,
   paddingLength: number = 0,
   leftToRight: boolean = false,
   cursor: string = "*"
 ): Promise<T> {
-  const selectedOption = await selectFromOptions(
-    options,
-    useCursor,
-    paddingLength,
-    leftToRight,
-    cursor
-  );
-  return selectedOption;
+  return selectFromOptions(options, useCursor, paddingLength, leftToRight, cursor);
 }
 
-export { selectOption, selectOptionBinary };
-// // Usage example - uses .then
-// selectFromOptions(["mango", "banana", "apple", "orange"]).then(
-//   (selectedOption) => {
-//     console.log(`\nYou selected: ${selectedOption}`);
-//   }
-// );
+const selectOption = <T extends string>(options: T[]): Promise<T> => selectOptionRaw(options.map(option => ({ label: option, value: option })));
+const selectOptionBinary = (options: string[]) => selectOptionBinaryRaw(options.map(option => ({ label: option, value: option })));
+
+export { selectOption, selectOptionBinary, selectOptionRaw, selectOptionBinaryRaw };

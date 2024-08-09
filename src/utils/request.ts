@@ -8,7 +8,7 @@ export enum EP {
   DEPLOY,
   ENDPOINT_ALL,
   GET_DOCS_URL,
-  SET_OPENAI_KEY,
+  SET_PROVIDER_KEY,
   UPDATE_USERNAME,
   CREATE,
 }
@@ -20,7 +20,7 @@ const EPS = {
   [EP.DEPLOY]: "/endpoint",
   [EP.ENDPOINT_ALL]: "/endpoint/all",
   [EP.GET_DOCS_URL]: "/docs/url",
-  [EP.SET_OPENAI_KEY]: "/cli/key",
+  [EP.SET_PROVIDER_KEY]: "/cli/key",
   [EP.UPDATE_USERNAME]: "/cli/updateUsername",
   [EP.CREATE]: "/create",
 };

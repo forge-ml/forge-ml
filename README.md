@@ -64,6 +64,8 @@ forge deploy
 
 ## 📈 Quickstart
 
+Run the following commands in the root directory of your project.
+
 ```bash
 # Sign up for a forge account
 forge signup
@@ -361,11 +363,6 @@ The exported config is used for deployment. It _must_ be a `const config` export
 export type EndpointConfig = {
   /** path to the endpoint. one word, no special characters */
   path: string;
-  /**
-   * determines if the endpoint is available for public access
-   * users must use their own OpenAI API key
-   */
-  public: boolean;
   /** name of the endpoint */
   name?: string;
   /** description of the endpoint */
@@ -399,7 +396,7 @@ export const config: EndpointConfig = {
 
 ## 📝 Editing a schema
 
-You can edit a schema by running `forge edit`. You will then be prompted for a schema to edit and the changes you would like to make.
+You can edit a schema by running `forge edit` in root directory of your project. You will then be prompted for a schema to edit and the changes you would like to make.
 
 ```bash
 forge> Let's edit your schema! Which file would you like to edit?

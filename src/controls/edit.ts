@@ -1,5 +1,4 @@
 import path from "path";
-import makeRequest, { EP } from "../utils/request";
 import fs, { readFileSync } from "fs";
 import { cWrap } from "../utils/logging";
 import readline from "node:readline";
@@ -9,6 +8,7 @@ import { importConfig, importZod } from "../utils/imports";
 import { loadDirectoryFiles } from "../utils/directory";
 
 import { stdin as input, stdout as output } from "node:process";
+import makeRequest, { EP } from "../utils/request";
 
 //VALIDATION CREATE SHOULD ONLY BE CALLED AFTER INIT?
 
@@ -26,7 +26,7 @@ const edit = async () => {
       : await selectOptionBinary(files);
 
   const prompt = require("prompt-sync")();
-  const answer = prompt(cWrap.fm("What edits would you like to make?"));
+  const answer = prompt(cWrap.fm("What edits would you like to make? "));
 
   const schemaConfig = await importConfig(
     path.join(process.cwd(), config.schemaPath, fileName)
@@ -43,6 +43,7 @@ const edit = async () => {
     cache: schemaConfig.cache || "None",
     contentType: schemaConfig.contentType || "text",
     model: schemaConfig.model,
+    provider: schemaConfig.provider,
     endpointName: schemaConfig.name,
     endpointDescription: schemaConfig.description,
     schemaPrompt:
@@ -84,7 +85,7 @@ const edit = async () => {
         );
         process.exit(1);
       }
-      console.log(cWrap.fr("Error generating schema"));
+      console.log(cWrap.fr("Error generating schema: "), response.error.response?.data);
       process.exit(1);
     }
 
