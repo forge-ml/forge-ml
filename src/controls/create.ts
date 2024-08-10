@@ -240,7 +240,7 @@ const create = async () => {
           );
           process.exit(1);
         } else {
-          console.log(cWrap.fr(response.error?.response?.data));
+          console.log(cWrap.fr(JSON.stringify(response.error?.response?.data)));
           process.exit(1);
         }
       }
