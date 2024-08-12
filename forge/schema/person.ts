@@ -66,6 +66,6 @@ export const config: EndpointConfig = {
   description: "A person in history or the present day",
   cache: "Common",
   contentType: "image",
-  model: "gpt-4o-mini",
-  provider: "openai",
+  model: "claude-3-5-sonnet-20240620",
+  provider: "anthropic",
 };
