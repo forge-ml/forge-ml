@@ -3,17 +3,30 @@ import prompt from "prompt-sync";
 import { Keys } from "../../commands/key";
 import { config } from "../../config/config";
 import localConfigService from "./svc";
+import PromptSyncPlus from "prompt-sync-plus";
+
+const c = {
+  echo: "* "
+} as Parameters<typeof PromptSyncPlus>[0];
 
 const signup = async () => {
   const email = prompt()("Enter your email: ");
-  const password = prompt().hide("Enter your password: ");
+  const password = prompt()({ ask: "Enter your password: ", echo: "* " });
   const userName = prompt()("Enter your username: ");
-  const apiKey = prompt().hide(
+  const openAIKey = PromptSyncPlus(c)(
     `Enter your OpenAI API key (this is used for ${config.bin} test and your sdk) [https://platform.openai.com/api-keys]: `
   );
+  const anthropicKey = PromptSyncPlus(c)(
+    `Enter your Anthropic API key (this is used for ${config.bin} test and your sdk) [https://console.anthropic.com/settings/keys]: `
+  );
 
-  if (!email || !password || !userName || !apiKey) {
+  if (!email || !password || !userName) {
     console.error("All fields are required.");
+    return;
+  }
+
+  if (!openAIKey && !anthropicKey) {
+    console.error("Please provide an API key for at least one LLM provider.");
     return;
   }
 
@@ -21,7 +34,8 @@ const signup = async () => {
     const response = await axios.post(`${config.serverUrl}/cli/signup`, {
       email,
       password,
-      apiKey,
+      openAIKey,
+      anthropicKey,
       userName,
     });
 
@@ -33,7 +47,8 @@ const signup = async () => {
 
       // Set the apiKey for future requests
       localConfigService.storeValue(Keys.FORGE, apiKey);
-      localConfigService.storeValue(Keys.OPENAI, apiKey);
+      localConfigService.storeValue(Keys.OPENAI, openAIKey);
+      localConfigService.storeValue(Keys.ANTHROPIC, anthropicKey);
 
       console.log(
         `Your ${config.bin} configuration is stored here: ${config.apiKeyFilePath}`

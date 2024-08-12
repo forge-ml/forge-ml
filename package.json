@@ -24,6 +24,7 @@
     "bun": "^1.1.18",
     "json-schema-to-zod": "^2.3.0",
     "prompt-sync": "^4.2.0",
+    "prompt-sync-plus": "^1.0.2",
     "typescript": "^5.5.4",
     "yargs": "^17.7.2",
     "zod": "^3.23.8",

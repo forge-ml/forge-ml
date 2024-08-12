@@ -62,10 +62,10 @@ const edit = async () => {
       data: promptAnswers,
     });
 
-    if (response.message === "OpenAI provider key is required") {
+    if (response.message?.includes("provider key is required")) {
       console.log(
         cWrap.fr(
-          "You have not set up an OpenAI key. Please set up an OpenAI key by running `forge key set`"
+          "You have not set up a provider key. Please set up a provider key by running `forge key set`"
         )
       );
       process.exit(1);

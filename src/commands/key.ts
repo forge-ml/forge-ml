@@ -17,7 +17,9 @@ const keyCommand = (cli: Argv) =>
     `${cWrap.fm("Manage your forge-associated keys with actions:")}
 ${cWrap.fb("copy")}\t\tcopy a key to your clipboard
 ${cWrap.fb("list")}\t\tlist the supported providers and key status
-${cWrap.fb("set")}\t\tset a key. defaults to setting your openAI key
+${cWrap.fb(
+  "set"
+)}\t\tset a key. If Provider is not specified, it will prompt you to select a provider.
 `,
     (yargs) =>
       yargs

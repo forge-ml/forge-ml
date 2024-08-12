@@ -216,7 +216,7 @@ const create = async () => {
       data: promptAnswers,
     });
 
-    if (response.message && response.message.includes("key is required")) {
+    if (response.message?.includes("key is required")) {
       console.log(
         cWrap.fr(
           "You have not set up a provider key. Please set up a provider key by running `forge key set`"
@@ -240,7 +240,7 @@ const create = async () => {
           );
           process.exit(1);
         } else {
-          console.log(cWrap.fr(response.error?.response?.data));
+          console.log(cWrap.fr(JSON.stringify(response.error?.response?.data)));
           process.exit(1);
         }
       }
