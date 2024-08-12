@@ -10,7 +10,7 @@
 
 [Installation](#-installation) •
 [Quickstart](#-quickstart) •
-[Creating Your First Endpoint](#%EF%B8%8F-creating-your-first-endpoint)
+[Forge Online](#-forge-online)
 
 </div>
 
@@ -162,9 +162,17 @@ forge> Creating schema...
 
 Once the schema is generated, a new forge schema file `<endpoint-path>.ts` will be created in `./forge/schema` for you to test and deploy.
 
+## 🛜 Using Live Data
+
+Forge partners with [lsd.so](https://lsd.so/#landing-dev-section) for live data from the web. 
+
+The LSD bicycle allows you to easily and precisely access structured data from the internet, fast. You can then pipe that data into your prompt context, which gives forge realtime access to any website when building structured AI workflows.
+
+Examples coming soon!
+
 ## 🤖 Using the Forge SDK
 
-`forge init` and `forge deploy all` will generate a client for you, allowing you to interact with your endpoints programatically.
+`forge init` and `forge deploy` will generate a client for you, allowing you to interact with your endpoints programatically.
 
 Lets walk through an example of how to use the Forge SDK
 
