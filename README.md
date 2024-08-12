@@ -162,7 +162,7 @@ forge> Creating schema...
 
 Once the schema is generated, a new forge schema file `<endpoint-path>.ts` will be created in `./forge/schema` for you to test and deploy.
 
-## 🛜 Using Live Data
+## 🛜 Forge Online
 
 Forge partners with [lsd.so](https://lsd.so/#landing-dev-section) for live data from the web. 
 
