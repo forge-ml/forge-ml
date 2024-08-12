@@ -141,7 +141,7 @@ ${cWrap.fb(
             try {
               localConfigService.storeValue(keyToSet, key);
               console.log(
-                `Local key successfully updated for ${cWrap.fg(keyToSet)}.`
+                `\nLocal key successfully updated for ${cWrap.fg(keyToSet)}.`
               );
             } catch (error) {
               console.log(`${cWrap.br("Error")} setting key.`);
