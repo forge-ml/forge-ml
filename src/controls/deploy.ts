@@ -34,12 +34,14 @@ async function checkVersionAndWarnUser() {
     }).trim();
 
     const latestVersion = await getLatestVersion("forge-ml");
-
     if (globalVersion !== latestVersion) {
       console.log(
-        cWrap.fm(
+        cWrap.fr(
           `You are using an outdated version of forge-ml (${globalVersion}). Please update to the latest version: ${latestVersion} by running:`
-        ) + cWrap.fg("\nnpm install -g forge-ml@latest")
+        ) +
+          cWrap.fy("\nnpm install -g forge-ml@latest ") +
+          "or " +
+          cWrap.fy("forge update\n")
       );
     }
   } catch (e) {
