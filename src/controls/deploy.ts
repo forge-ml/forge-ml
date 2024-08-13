@@ -9,6 +9,7 @@ import { loadDirectoryFiles } from "../utils/directory";
 import { generate } from "./generate";
 import fs from "fs";
 import axios from "axios";
+import { execSync } from "child_process";
 
 /**
  * helper functions to check latest version of npm package
@@ -27,21 +28,23 @@ async function getLatestVersion(packageName: string): Promise<string> {
 
 async function checkVersionAndWarnUser() {
   try {
-    //gets current version in users project package.json and removes ^  -- needs to be tested in production
-    const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"));
-    const version = packageJson.dependencies["forge-ml"];
-    if (version === undefined) {
-      //checks if forge-ml is it package.json dependencies
+    // Get the globally installed version
+    const globalVersion = execSync("npm list -g forge-ml --depth=0")
+      .toString()
+      .match(/forge-ml@([\d.]+)/)?.[1];
+
+    if (!globalVersion) {
+      console.log(cWrap.fm("forge-ml is not installed globally."));
       return;
     }
-    const currentVersion = version.replace(/^\^/, ""); // removes carrot from version string
+
     const latestVersion = await getLatestVersion("forge-ml");
 
-    if (currentVersion !== latestVersion) {
+    if (globalVersion !== latestVersion) {
       console.log(
         cWrap.fm(
-          `You are using an outdated version of forge-ml. Please update to the latest version: ${latestVersion} by running:`
-        ) + cWrap.fg("npm install forge-ml@latest")
+          `You are using an outdated version of forge-ml (${globalVersion}). Please update to the latest version: ${latestVersion} by running:`
+        ) + cWrap.fg("\nnpm install -g forge-ml@latest")
       );
     }
   } catch (e) {
@@ -56,7 +59,7 @@ const deploy = async (
 ) => {
   const zod = await importZod(inFile);
   const json = toJSON(zod);
-  
+
   const response = await makeRequest(EP.DEPLOY, {
     method: "POST",
     data: {
