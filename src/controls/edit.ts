@@ -1,5 +1,4 @@
 import path from "path";
-import makeRequest, { EP } from "../utils/request";
 import fs, { readFileSync } from "fs";
 import { cWrap } from "../utils/logging";
 import readline from "node:readline";
@@ -9,6 +8,7 @@ import { importConfig, importZod } from "../utils/imports";
 import { loadDirectoryFiles } from "../utils/directory";
 
 import { stdin as input, stdout as output } from "node:process";
+import makeRequest, { EP } from "../utils/request";
 
 //VALIDATION CREATE SHOULD ONLY BE CALLED AFTER INIT?
 
@@ -26,7 +26,7 @@ const edit = async () => {
       : await selectOptionBinary(files);
 
   const prompt = require("prompt-sync")();
-  const answer = prompt(cWrap.fm("What edits would you like to make?"));
+  const answer = prompt(cWrap.fm("What edits would you like to make? "));
 
   const schemaConfig = await importConfig(
     path.join(process.cwd(), config.schemaPath, fileName)
@@ -43,6 +43,7 @@ const edit = async () => {
     cache: schemaConfig.cache || "None",
     contentType: schemaConfig.contentType || "text",
     model: schemaConfig.model,
+    provider: schemaConfig.provider,
     endpointName: schemaConfig.name,
     endpointDescription: schemaConfig.description,
     schemaPrompt:
@@ -61,10 +62,10 @@ const edit = async () => {
       data: promptAnswers,
     });
 
-    if (response.message === "OpenAI provider key is required") {
+    if (response.message?.includes("provider key is required")) {
       console.log(
         cWrap.fr(
-          "You have not set up an OpenAI key. Please set up an OpenAI key by running `forge key set`"
+          "You have not set up a provider key. Please set up a provider key by running `forge key set`"
         )
       );
       process.exit(1);
@@ -84,7 +85,7 @@ const edit = async () => {
         );
         process.exit(1);
       }
-      console.log(cWrap.fr("Error generating schema"));
+      console.log(cWrap.fr("Error generating schema: "), response.error.response?.data);
       process.exit(1);
     }
 

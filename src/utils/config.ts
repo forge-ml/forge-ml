@@ -11,5 +11,6 @@ export type SchemaConfig = {
   public?: boolean;
   cache?: CacheType;
   model?: string; //change this to defaultModel
+  provider?: string;
   contentType?: "text" | "image";
 };

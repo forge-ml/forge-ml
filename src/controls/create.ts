@@ -4,7 +4,12 @@ import fs from "fs";
 import { cWrap } from "../utils/logging";
 import readline from "node:readline";
 import { stdin as input, stdout as output } from "node:process";
-import { selectOption, selectOptionBinary } from "../utils/optionSelect";
+import {
+  selectOption,
+  selectOptionBinary,
+  selectOptionBinaryRaw,
+  selectOptionRaw,
+} from "../utils/optionSelect";
 import { config } from "../config/config";
 
 //TODO: VALIDATION FOR FORGE FILE PATH
@@ -34,8 +39,44 @@ const askQuestion = (
 
 //VALIDATION CREATE SHOULD ONLY BE CALLED AFTER INIT?
 
-const questions = [
-  {
+type InputQuestion = {
+  type: "input";
+};
+
+type SelectQuestion = {
+  type: "select";
+  options:
+    | string[]
+    | ((answers: Record<string, string>) => { label: string; value: string }[]);
+};
+
+type Question = {
+  question: string;
+  conditional?: (answers: Record<string, string>) => boolean;
+  required?: boolean;
+  optional?: boolean;
+  validate?: (answer: string) => boolean;
+  errorMessage?: string;
+} & (InputQuestion | SelectQuestion);
+
+const modelOptions = {
+  openai: ["gpt-4o-mini", "gpt-4o", "gpt-4", "gpt-3.5-turbo", "Custom"],
+  anthropic: [
+    "claude-3-5-sonnet-20240620",
+    "claude-3-opus-20240229",
+    "claude-3-sonnet-20240307",
+    "claude-3-haiku-20240307",
+  ],
+};
+
+const withFirstAsDefault = (options: string[]) =>
+  options.map((option) => ({
+    label: option + (option === options[0] ? " (default)" : ""),
+    value: option,
+  }));
+
+const questions: Record<string, Question> = {
+  path: {
     type: "input",
     question:
       "What do you want the path of your schema to be? (required, must be one lowercase word, no special characters)\n",
@@ -44,60 +85,78 @@ const questions = [
       "Error: path must be all lowercase and contain no special characters",
     required: true,
   },
-  {
+  privacy: {
     type: "select",
     question: "Is this a public or private path?\n",
     options: [PathPrivacy.PUBLIC, PathPrivacy.PRIVATE],
   },
-  {
+  cache: {
     type: "select",
     question: "Would you like to cache your schema?\n",
     options: [CacheType.NONE, CacheType.COMMON, CacheType.INDIVIDUAL],
   },
-  {
+  provider: {
+    type: "select",
+    question: "Which provider would you like to use?\n",
+    options: ["openai", "anthropic"],
+  },
+  model: {
     type: "select",
     question: "Which model would you like to use?\n",
-    options: ["gpt-4o-mini", "gpt-4o", "gpt-4", "gpt-3.5-turbo", "Custom"],
+    options: (answers: Record<string, string>) =>
+      withFirstAsDefault(
+        modelOptions[answers["provider"] as keyof typeof modelOptions]
+      ),
   },
-  {
+  customModelId: {
     type: "input",
     question:
       "What's the id of your custom model? (required for custom models)\n",
-    conditional: (answers) => answers[answers.length - 1] === "Custom",
+    conditional: (answers: Record<string, string>) =>
+      answers["model"] === "Custom",
     required: true,
   },
-  {
+  endpointName: {
     type: "input",
     question: "What do you want the name of your endpoint to be? (optional)\n",
     optional: true,
   },
-  {
+  endpointDescription: {
     type: "input",
     question:
       "What do you want the description of your endpoint to be? (optional)\n",
     optional: true,
   },
-  {
+  schemaPrompt: {
     type: "input",
     question:
       "Enter a prompt for your schema? (ex. Generate a Person schema with attributes like a job, name, age, etc.)\n",
     required: true,
   },
-];
+} as const;
 
 const getAnswer = async (
-  question: any,
-  previousAnswers: string[]
+  question: (typeof questions)[keyof typeof questions],
+  previousAnswers: Record<string, string>
 ): Promise<string | null> => {
   if (question.conditional && !question.conditional(previousAnswers)) {
     return null;
   }
 
-  if (question.type === "select") {
+  if (question.type === "select" && question.options) {
     process.stdout.write(cWrap.fm(question.question)); //used process stdout to avoid new line
-    return question.options.length === 2
-      ? selectOptionBinary(question.options)
-      : selectOption(question.options);
+
+    if (typeof question.options === "function") {
+      const options = question.options(previousAnswers);
+      return question.options.length === 2
+        ? await selectOptionBinaryRaw(options)
+        : await selectOptionRaw(options);
+    } else {
+      const options = question.options;
+      return question.options.length === 2
+        ? await selectOptionBinary(options)
+        : await selectOption(options);
+    }
   } else if (question.type === "input") {
     const rl = readline.createInterface({ input, output });
     const answer = await askQuestion(rl, question.question);
@@ -108,8 +167,8 @@ const getAnswer = async (
       process.exit(0);
     }
 
-    if (question.validate && !question.validate(answer)) {
-      console.log(cWrap.br(question.errorMessage));
+    if (question.validate && !question.validate(answer || "")) {
+      console.log(cWrap.br(question.errorMessage || ""));
       process.exit(0);
     }
 
@@ -122,26 +181,31 @@ const getAnswer = async (
 const create = async () => {
   console.log(cWrap.fb("Let's build your schema:"));
 
-  const answers = [];
-  for (const question of questions) {
+  const answers: Record<string, string> = {};
+  for (const key in questions) {
+    const question = questions[key as keyof typeof questions];
     const answer = await getAnswer(question, answers);
     if (answer !== null) {
-      answers.push(answer);
+      answers[key as keyof typeof answers] = answer;
       if (question.type === "select") output.write("\n");
     }
   }
 
   //create an object that matches questions to answers - adjusted one question for custom model input
   const promptAnswers = {
-    path: answers[0],
-    public: answers[1],
-    cache: answers[2],
-    model: answers[3] === "Custom" ? answers[4] : answers[3],
-    endpointName: answers[3] === "Custom" ? answers[5] : answers[4],
-    endpointDescription: answers[3] === "Custom" ? answers[6] : answers[5],
+    path: answers["path"],
+    public: answers["privacy"],
+    cache: answers["cache"],
+    model:
+      answers["model"] === "Custom"
+        ? answers["customModelId"]
+        : answers["model"],
+    endpointName: answers["endpointName"],
+    endpointDescription: answers["endpointDescription"],
     schemaPrompt:
       "Be generous about adding .describe for mini-prompting. " +
-      (answers[3] === "Custom" ? answers[7] : answers[6]),
+      answers["schemaPrompt"],
+    provider: answers["provider"],
   };
 
   console.log(cWrap.fm("\nCreating schema..."));
@@ -152,10 +216,10 @@ const create = async () => {
       data: promptAnswers,
     });
 
-    if (response.message === "OpenAI provider key is required") {
+    if (response.message?.includes("key is required")) {
       console.log(
         cWrap.fr(
-          "You have not set up an OpenAI key. Please set up an OpenAI key by running `forge key set`"
+          "You have not set up a provider key. Please set up a provider key by running `forge key set`"
         )
       );
       process.exit(1);
@@ -164,19 +228,19 @@ const create = async () => {
     if (response.error) {
       //This error handling work but backend shouldn't be wrapping errors in errors - fix
 
-      if (response.error.response.data) {
+      if (response.error?.response?.data) {
         if (
-          response.error.response.data ===
+          response.error?.response?.data ===
           "Invalid API key provided. Please check your API key and try again."
         ) {
           console.log(
             cWrap.fr(
-              "There was an OpenAI invalid key error when testing your schema: Please verify if you have an active OpenAI key set up in your account.\nIf not, you can set your OpenAI key by running `forge key set`"
+              "There was an invalid key error when testing your schema: Please verify that you have an active provider key set up in your account.\nIf not, you can set your key by running `forge key set`"
             )
           );
           process.exit(1);
         } else {
-          console.log(cWrap.fr(response.error.response.data));
+          console.log(cWrap.fr(JSON.stringify(response.error?.response?.data)));
           process.exit(1);
         }
       }

@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Downloads](https://img.shields.io/npm/dt/forge-ml.svg?style=flat-square)](https://www.npmjs.com/package/forge-ml)
 
-#### Forge is the fastest way to deploy extraction and structured output from LLMs
+#### A developer toolkit for making AI product development easy and reliable, starting with structured data.
 
 [Installation](#-installation) •
 [Quickstart](#-quickstart) •
@@ -32,9 +32,19 @@ forge --help
 
 ## 🛠️ What is Forge?
 
-Forge uses a combination of tools like [Zod](https://github.com/colinhacks/zod) and [Instructor](https://github.com/instructor-ai/instructor-js) to create and deploy endpoints that can be used to extract structured data from LLMs. It's a dead simple way to create custom LLM endpoints for your applications.
 
-You define a [Zod](https://github.com/colinhacks/zod) schema, test it locally, and then deploy it to the cloud. From there you can access it from any application that can make HTTP requests, and it's guaranteed to have the expected response structure.
+Features
+- Fully typesafe Typescript SDK, auto-generated from your zod schemas
+- AI-powered schema creation and editing <span style="color:#43AA8B;">(save time and get better results with mini-prompts optimized for each key)</span>
+- Guaranteed response structure <span style="color:#43AA8B;">(no more parsing JSON)</span>
+- Auto-generated documentation for endpoints <span style="color:#43AA8B;">(get reliable structured responses in any language)</span>
+- Caching and cache-management for queries <span style="color:#43AA8B;">(don't burn tokens on repeat extractions)</span>
+- Multiple LLM Providers: Anthropic and OpenAI - Groq coming soon <span style="color:#43AA8B;">(avoid vendor lock-in)</span>
+
+
+Forge uses a combination of tools like [Zod](https://github.com/colinhacks/zod) and [Instructor](https://github.com/instructor-ai/instructor-js) to create and deploy endpoints that can be used to extract structured data from LLMs. It's the easiest way to build AI products.
+
+You define a [Zod](https://github.com/colinhacks/zod) schema, test it locally, and run `forge deploy`. From there you can access it from any application with a fetch request or the auto-generated SDK, and it's guaranteed to have the expected response structure.
 
 ```js
 // Define your schema
@@ -63,6 +73,8 @@ forge deploy
 ```
 
 ## 📈 Quickstart
+
+Run the following shell commands in the root directory of your project.
 
 ```bash
 # Sign up for a forge account
@@ -369,11 +381,6 @@ The exported config is used for deployment. It _must_ be a `const config` export
 export type EndpointConfig = {
   /** path to the endpoint. one word, no special characters */
   path: string;
-  /**
-   * determines if the endpoint is available for public access
-   * users must use their own OpenAI API key
-   */
-  public: boolean;
   /** name of the endpoint */
   name?: string;
   /** description of the endpoint */
@@ -407,7 +414,7 @@ export const config: EndpointConfig = {
 
 ## 📝 Editing a schema
 
-You can edit a schema by running `forge edit`. You will then be prompted for a schema to edit and the changes you would like to make.
+You can edit a schema by running `forge edit` in root directory of your project. You will then be prompted for a schema to edit and the changes you would like to make.
 
 ```bash
 forge> Let's edit your schema! Which file would you like to edit?

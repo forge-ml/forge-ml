@@ -2,10 +2,13 @@ import type { Argv } from "yargs";
 import localConfigService from "../controls/auth/svc";
 import cWrap from "../utils/logging";
 import makeRequest, { EP } from "../utils/request";
+import { selectOption } from "../utils/optionSelect";
+import { debug } from "util";
 
 export enum Keys {
   FORGE = "forge",
   OPENAI = "openAI",
+  ANTHROPIC = "anthropic",
 }
 
 const keyCommand = (cli: Argv) =>
@@ -14,7 +17,9 @@ const keyCommand = (cli: Argv) =>
     `${cWrap.fm("Manage your forge-associated keys with actions:")}
 ${cWrap.fb("copy")}\t\tcopy a key to your clipboard
 ${cWrap.fb("list")}\t\tlist the supported providers and key status
-${cWrap.fb("set")}\t\tset a key. defaults to setting your openAI key
+${cWrap.fb(
+  "set"
+)}\t\tset a key. If Provider is not specified, it will prompt you to select a provider.
 `,
     (yargs) =>
       yargs
@@ -24,13 +29,21 @@ ${cWrap.fb("set")}\t\tset a key. defaults to setting your openAI key
           async () => {
             const apiKey = localConfigService.getValue(Keys.FORGE);
             const openAiKey = localConfigService.getValue(Keys.OPENAI);
-            console.log("     Key       |     Status     ");
+            const anthropicKey = localConfigService.getValue(Keys.ANTHROPIC);
+            console.log("     Key           |     Status     ");
             console.log("--------------------------------");
             console.log(
-              `Forge API Key  |   ${cWrap.fg(apiKey ? "Set" : "Not Set")}`
+              `Forge API Key      |   ${cWrap.fg(apiKey ? "Set" : "Not Set")}`
             );
             console.log(
-              `OpenAI API Key |   ${cWrap.fg(openAiKey ? "Set" : "Not Set")}`
+              `OpenAI API Key     |   ${cWrap.fg(
+                openAiKey ? "Set" : "Not Set"
+              )}`
+            );
+            console.log(
+              `Anthropic API Key  |   ${cWrap.fg(
+                anthropicKey ? "Set" : "Not Set"
+              )}`
             );
           }
         )
@@ -52,6 +65,10 @@ ${cWrap.fb("set")}\t\tset a key. defaults to setting your openAI key
               .example(
                 cWrap.fg("forge key copy openAI"),
                 cWrap.fc("gets locally set OpenAI API Key")
+              )
+              .example(
+                cWrap.fg("forge key copy anthropic"),
+                cWrap.fc("gets locally set Anthropic API Key")
               ),
           async (args) => {
             const { provider } = args;
@@ -70,7 +87,7 @@ ${cWrap.fb("set")}\t\tset a key. defaults to setting your openAI key
         )
         .command(
           "set <key>",
-          "sets a key. defaults to setting your openAI key.",
+          "sets a key.",
           (yargs) =>
             yargs
               .positional("key", {
@@ -82,7 +99,6 @@ ${cWrap.fb("set")}\t\tset a key. defaults to setting your openAI key
                 type: "string",
                 description: "The provider to set the key for",
                 choices: Object.values(Keys),
-                default: Keys.OPENAI,
               })
               .fail((msg, err, yargs) => {
                 if (err) throw err;
@@ -96,30 +112,36 @@ ${cWrap.fb("set")}\t\tset a key. defaults to setting your openAI key
               })
               .example(
                 cWrap.fg("forge key set sk-abcxyz"),
-                cWrap.fc("sets your openAI key")
+                cWrap.fc("sets your provider key")
               ),
           async (args) => {
             const { key, provider } = args;
-            const keyToSet = provider || Keys.OPENAI;
+            const keyToSet =
+              provider || (await selectOption(Object.values(Keys)));
 
-            if (keyToSet === Keys.OPENAI) {
-              const { data, error } = await makeRequest(EP.SET_OPENAI_KEY, {
-                data: { apiKey: key },
+            if ([Keys.OPENAI, Keys.ANTHROPIC].includes(keyToSet)) {
+              const { data, error } = await makeRequest(EP.SET_PROVIDER_KEY, {
+                data: { apiKey: key, provider: keyToSet },
                 method: "POST",
               });
               if (error) {
-                console.log(`${cWrap.br("Error")} setting key.`);
+                console.log(
+                  `\n\n${cWrap.br("Error")} setting key: `,
+                  error?.response?.data?.error
+                );
                 return;
               }
               console.log(
-                `Deployment key successfully updated for ${cWrap.fg(keyToSet)}.`
+                `\n\nDeployment key successfully updated for ${cWrap.fg(
+                  keyToSet
+                )}.`
               );
             }
 
             try {
               localConfigService.storeValue(keyToSet, key);
               console.log(
-                `Local key successfully updated for ${cWrap.fg(keyToSet)}.`
+                `\nLocal key successfully updated for ${cWrap.fg(keyToSet)}.`
               );
             } catch (error) {
               console.log(`${cWrap.br("Error")} setting key.`);
@@ -129,7 +151,9 @@ ${cWrap.fb("set")}\t\tset a key. defaults to setting your openAI key
         )
         .example(
           cWrap.fg("forge key set sk-abcxyz"),
-          cWrap.fc("sets your openAI key")
+          cWrap.fc(
+            "sets your provider key. This will prompt you to select a provider (openAI, anthropic, forge)."
+          )
         )
         .example(
           cWrap.fg("forge key copy forge"),

@@ -53,6 +53,10 @@ type EndpointConfig = {
    * "text" | "image"
    */
   contentType?: "text" | "image";
+
+  model: string;
+
+  provider: "openai" | "anthropic";
 };
 
 export const config: EndpointConfig = {
@@ -62,4 +66,6 @@ export const config: EndpointConfig = {
   description: "A person in history or the present day",
   cache: "Common",
   contentType: "image",
+  model: "claude-3-5-sonnet-20240620",
+  provider: "anthropic",
 };

@@ -56,7 +56,7 @@ const deploy = async (
 ) => {
   const zod = await importZod(inFile);
   const json = toJSON(zod);
-
+  
   const response = await makeRequest(EP.DEPLOY, {
     method: "POST",
     data: {
@@ -69,6 +69,7 @@ const deploy = async (
       cacheSetting: config.cache || CacheType.NONE,
       contentType: config.contentType,
       model: config.model,
+      provider: config.provider,
     },
   });
 
@@ -126,7 +127,6 @@ const deployAll = async () => {
           );
           continue; // check if should be return
         }
-
         console.log(
           `- ${cWrap.fr("Error deploying")} ${cWrap.fm(
             file
