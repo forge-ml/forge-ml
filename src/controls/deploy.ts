@@ -9,6 +9,7 @@ import { loadDirectoryFiles } from "../utils/directory";
 import { generate } from "./generate";
 import fs from "fs";
 import axios from "axios";
+import { execSync } from "child_process";
 
 /**
  * helper functions to check latest version of npm package
@@ -27,25 +28,28 @@ async function getLatestVersion(packageName: string): Promise<string> {
 
 async function checkVersionAndWarnUser() {
   try {
-    //gets current version in users project package.json and removes ^  -- needs to be tested in production
-    const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"));
-    const version = packageJson.dependencies["forge-ml"];
-    if (version === undefined) {
-      //checks if forge-ml is it package.json dependencies
-      return;
-    }
-    const currentVersion = version.replace(/^\^/, ""); // removes carrot from version string
-    const latestVersion = await getLatestVersion("forge-ml");
+    // Get the globally installed version using forge --version
+    const globalVersion = execSync(`${cfg.bin} --version`, {
+      encoding: "utf8",
+    }).trim();
 
-    if (currentVersion !== latestVersion) {
+    const latestVersion = await getLatestVersion("forge-ml");
+    if (globalVersion !== latestVersion) {
       console.log(
-        cWrap.fm(
-          `You are using an outdated version of forge-ml. Please update to the latest version: ${latestVersion} by running:`
-        ) + cWrap.fg("npm install forge-ml@latest")
+        cWrap.fr(
+          `You are using an outdated version of forge-ml (${globalVersion}). Please update to the latest version ${latestVersion}, by running:`
+        ) +
+          cWrap.fy("\nnpm install -g forge-ml@latest ") +
+          "or " +
+          cWrap.fy("forge update\n")
       );
     }
   } catch (e) {
-    console.log(cWrap.fr("Error checking for updates"));
+    console.log(
+      cWrap.fr(
+        "Error checking for updates: forge-ml might not be installed globally."
+      )
+    );
   }
 }
 
@@ -56,7 +60,7 @@ const deploy = async (
 ) => {
   const zod = await importZod(inFile);
   const json = toJSON(zod);
-  
+
   const response = await makeRequest(EP.DEPLOY, {
     method: "POST",
     data: {
