@@ -29,7 +29,7 @@ async function getLatestVersion(packageName: string): Promise<string> {
 async function checkVersionAndWarnUser() {
   try {
     // Get the globally installed version using forge --version
-    const globalVersion = execSync("forge --version", {
+    const globalVersion = execSync(`${cfg.bin} --version`, {
       encoding: "utf8",
     }).trim();
 
