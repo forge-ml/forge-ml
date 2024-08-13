@@ -28,15 +28,10 @@ async function getLatestVersion(packageName: string): Promise<string> {
 
 async function checkVersionAndWarnUser() {
   try {
-    // Get the globally installed version
-    const globalVersion = execSync("npm list -g forge-ml --depth=0")
-      .toString()
-      .match(/forge-ml@([\d.]+)/)?.[1];
-
-    if (!globalVersion) {
-      console.log(cWrap.fm("forge-ml is not installed globally."));
-      return;
-    }
+    // Get the globally installed version using forge --version
+    const globalVersion = execSync("forge --version", {
+      encoding: "utf8",
+    }).trim();
 
     const latestVersion = await getLatestVersion("forge-ml");
 
@@ -48,7 +43,11 @@ async function checkVersionAndWarnUser() {
       );
     }
   } catch (e) {
-    console.log(cWrap.fr("Error checking for updates"));
+    console.log(
+      cWrap.fr(
+        "Error checking for updates: forge-ml might not be installed globally."
+      )
+    );
   }
 }
 
