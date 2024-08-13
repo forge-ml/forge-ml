@@ -37,7 +37,7 @@ async function checkVersionAndWarnUser() {
     if (globalVersion !== latestVersion) {
       console.log(
         cWrap.fr(
-          `You are using an outdated version of forge-ml (${globalVersion}). Please update to the latest version: ${latestVersion} by running:`
+          `You are using an outdated version of forge-ml (${globalVersion}). Please update to the latest version ${latestVersion}, by running:`
         ) +
           cWrap.fy("\nnpm install -g forge-ml@latest ") +
           "or " +
