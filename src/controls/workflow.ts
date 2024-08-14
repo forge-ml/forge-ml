@@ -46,13 +46,21 @@ const dummyWorkflow: workflowRequest = {
 
 const workflow = async () => {
   console.log(cWrap.fb("Sending workflow request"));
-  const res = await makeRequest(EP.WORKFLOW, {
-    method: "POST",
-    data: {
-      workflow: dummyWorkflow,
-    },
-  });
-  console.log(res);
+  try {
+    const res = await makeRequest(EP.WORKFLOW, {
+      method: "POST",
+      data: {
+        workflow: dummyWorkflow,
+      },
+    });
+
+    if (res.error) {
+      console.log(cWrap.fr(res.message));
+    }
+  } catch (err) {
+    console.log(err);
+    console.log(cWrap.fr("Error sending workflow request"));
+  }
 };
 
 export default workflow;
