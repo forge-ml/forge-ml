@@ -180,7 +180,11 @@ Forge partners with [lsd.so](https://lsd.so/#landing-dev-section) for live data 
 
 The LSD bicycle allows you to easily and precisely access structured data from the internet, fast. You can then pipe that data into your prompt context, which gives forge realtime access to any website when building structured AI workflows.
 
-Examples coming soon!
+As an example, we built an app that allows you to filter and sort live hacker news articles by vibes:
+
+- Demo: https://main--forge-lsd.netlify.app/
+- Code: https://github.com/forge-ml/example.forge-on-lsd
+
 
 ## 🤖 Using the Forge SDK
 
