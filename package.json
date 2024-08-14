@@ -1,6 +1,6 @@
 {
   "name": "forge-ml",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "The Fastest Way to Build Bulletproof AI Products",
   "main": "index.js",
   "bin": {
