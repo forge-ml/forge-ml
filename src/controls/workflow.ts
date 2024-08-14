@@ -1,7 +1,58 @@
 import cWrap from "../utils/logging";
+import makeRequest, { EP } from "../utils/request";
+
+type workflowRequest = {
+  //number of nodes in the workflow
+  nodeCount: number;
+  //what the user is building - will be used as context for prompting
+  context: string;
+  //the interfaces that will build the schemas/nodes - interfaces.length should equal nodeCount
+  interfaces: string[];
+};
+
+/*EXAMPLE REQUEST 
+type guesses = {
+  userGuess: string;
+  correctAnswer: string;
+};
+
+type location = {
+  city: string;
+  country: string;
+  lat: number;
+  lng: number;
+};
+
+type locations = {
+  userGuess: location;
+  correctAnswer: location;
+};
+
+type distance = {
+  distance: number;
+  unit: string;
+};
+*/
+
+const dummyWorkflow: workflowRequest = {
+  nodeCount: 3,
+  context: "We want to find the distance between two given locations",
+  interfaces: [
+    "type guesses = { userGuess: string; correctAnswer: string; };",
+    "type location = { city: string; country: string; lat: number; lng: number; }; type locations = { userGuess: location; correctAnswer: location; };",
+    "type distance = { distance: number; unit: string; };",
+  ],
+};
 
 const workflow = async () => {
-  console.log(cWrap.fb("Let's build your workflow:"));
+  console.log(cWrap.fb("Sending workflow request"));
+  const res = await makeRequest(EP.WORKFLOW, {
+    method: "POST",
+    data: {
+      workflow: dummyWorkflow,
+    },
+  });
+  console.log(res);
 };
 
 export default workflow;
