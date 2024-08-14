@@ -12,6 +12,7 @@ import generate from "./src/commands/generate";
 import { config } from "./src/config/config";
 import cWrap from "./src/utils/logging";
 import update from "./src/commands/update";
+import workflow from "./src/commands/workflow";
 import { rootLoginSignup } from "./src/commands/auth";
 
 // wrap(null) removes the default 80 character limit
@@ -28,6 +29,7 @@ test(cli);
 update(cli);
 generate(cli);
 auth(cli);
+workflow(cli);
 // transform(cli);
 
 const defaultCommand: CommandModule = {
