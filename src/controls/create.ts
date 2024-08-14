@@ -26,6 +26,11 @@ enum CacheType {
   INDIVIDUAL = "Individual",
 }
 
+enum ContentType {
+  TEXT = "text",
+  IMAGE = "image",
+}
+
 const askQuestion = (
   rl: readline.Interface,
   question: string
@@ -94,6 +99,11 @@ const questions: Record<string, Question> = {
     type: "select",
     question: "Would you like to cache your schema?\n",
     options: [CacheType.NONE, CacheType.COMMON, CacheType.INDIVIDUAL],
+  },
+  contentType: {
+    type: "select",
+    question: "What is the content type of your schema?\n",
+    options: [ContentType.TEXT, ContentType.IMAGE],
   },
   provider: {
     type: "select",
@@ -196,6 +206,7 @@ const create = async () => {
     path: answers["path"],
     public: answers["privacy"],
     cache: answers["cache"],
+    contentType: answers["contentType"],
     model:
       answers["model"] === "Custom"
         ? answers["customModelId"]
