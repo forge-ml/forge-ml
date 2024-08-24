@@ -67,6 +67,7 @@ const modelOptions = {
     "claude-3-sonnet-20240307",
     "claude-3-haiku-20240307",
   ],
+  groq: ["llama3-8b-8192", "llama3-70b-8192", "llama3-70b-4096"],
 };
 
 const withFirstAsDefault = (options: string[]) =>
@@ -98,7 +99,7 @@ const questions: Record<string, Question> = {
   provider: {
     type: "select",
     question: "Which provider would you like to use?\n",
-    options: ["openai", "anthropic"],
+    options: ["openai", "anthropic", "groq"],
   },
   model: {
     type: "select",

@@ -9,6 +9,7 @@ export enum Keys {
   FORGE = "forge",
   OPENAI = "openAI",
   ANTHROPIC = "anthropic",
+  GROQ = "groq",
 }
 
 const keyCommand = (cli: Argv) =>
@@ -30,6 +31,7 @@ ${cWrap.fb(
             const apiKey = localConfigService.getValue(Keys.FORGE);
             const openAiKey = localConfigService.getValue(Keys.OPENAI);
             const anthropicKey = localConfigService.getValue(Keys.ANTHROPIC);
+            const groqKey = localConfigService.getValue(Keys.GROQ);
             console.log("     Key           |     Status     ");
             console.log("--------------------------------");
             console.log(
@@ -43,6 +45,11 @@ ${cWrap.fb(
             console.log(
               `Anthropic API Key  |   ${cWrap.fg(
                 anthropicKey ? "Set" : "Not Set"
+              )}`
+            );
+            console.log(
+              `Groq API Key       |   ${cWrap.fg(
+                groqKey ? "Set" : "Not Set"
               )}`
             );
           }
@@ -69,6 +76,10 @@ ${cWrap.fb(
               .example(
                 cWrap.fg("forge key copy anthropic"),
                 cWrap.fc("gets locally set Anthropic API Key")
+              )
+              .example(
+                cWrap.fg("forge key copy groq"),
+                cWrap.fc("gets locally set Groq API Key")
               ),
           async (args) => {
             const { provider } = args;
@@ -119,7 +130,7 @@ ${cWrap.fb(
             const keyToSet =
               provider || (await selectOption(Object.values(Keys)));
 
-            if ([Keys.OPENAI, Keys.ANTHROPIC].includes(keyToSet)) {
+            if ([Keys.OPENAI, Keys.ANTHROPIC, Keys.GROQ].includes(keyToSet)) {
               const { data, error } = await makeRequest(EP.SET_PROVIDER_KEY, {
                 data: { apiKey: key, provider: keyToSet },
                 method: "POST",
@@ -152,7 +163,7 @@ ${cWrap.fb(
         .example(
           cWrap.fg("forge key set sk-abcxyz"),
           cWrap.fc(
-            "sets your provider key. This will prompt you to select a provider (openAI, anthropic, forge)."
+            "sets your provider key. This will prompt you to select a provider (openAI, anthropic, groq, forge)."
           )
         )
         .example(

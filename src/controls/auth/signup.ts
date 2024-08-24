@@ -4,20 +4,33 @@ import { Keys } from "../../commands/key";
 import { config } from "../../config/config";
 import localConfigService from "./svc";
 import PromptSyncPlus from "prompt-sync-plus";
+import cWrap from "../../utils/logging";
 
 const c = {
-  echo: "* "
+  echo: "* ",
 } as Parameters<typeof PromptSyncPlus>[0];
 
 const signup = async () => {
   const email = prompt()("Enter your email: ");
   const password = prompt()({ ask: "Enter your password: ", echo: "* " });
   const userName = prompt()("Enter your username: ");
+  console.log(
+    cWrap.fm(`
+We're going to ask for your API keys for OpenAI, Anthropic, and Groq.
+You can set up all of them, or just the one you most commonly use. Press enter to skip a key.
+
+These keys will be used whenever you use the generated forge sdk.
+
+`)
+  );
   const openAIKey = PromptSyncPlus(c)(
-    `Enter your OpenAI API key (this is used for ${config.bin} test and your sdk) [https://platform.openai.com/api-keys]: `
+    `Enter your OpenAI API key [https://platform.openai.com/api-keys]: `
   );
   const anthropicKey = PromptSyncPlus(c)(
-    `Enter your Anthropic API key (this is used for ${config.bin} test and your sdk) [https://console.anthropic.com/settings/keys]: `
+    `Enter your Anthropic API key [https://console.anthropic.com/settings/keys]: `
+  );
+  const groqKey = PromptSyncPlus(c)(
+    `Enter your Groq API key [https://console.groq.com/keys]: `
   );
 
   if (!email || !password || !userName) {
@@ -25,7 +38,7 @@ const signup = async () => {
     return;
   }
 
-  if (!openAIKey && !anthropicKey) {
+  if (!openAIKey && !anthropicKey && !groqKey) {
     console.error("Please provide an API key for at least one LLM provider.");
     return;
   }
