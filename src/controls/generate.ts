@@ -18,6 +18,17 @@ const cleanPath = (path: string): string => {
 
 const type_prefix = "schema";
 
+const buildRag = () => `
+$withContext: (prompt: string, opts: RAGRequestOptions) => {
+    return ragRequest(prompt, {
+      token: opts.token || forgeKey,
+      collectionId: opts.collectionId,
+      modelConfig: opts.modelConfig,
+      chunkCount: opts.chunkCount,
+    });
+  },
+`;
+
 const functionTemplate = (username: string, path: string) => `
 ${cleanPath(path)}: {
     query: (prompt: string, opts?: RequestOptions) => {
@@ -87,6 +98,7 @@ const buildClient = (
 
   const generatedClient = (forgeKey: string) => {
     return {
+      ${buildRag()}
       ${buildFunctions(username, configs)}
     };
   };
@@ -166,7 +178,7 @@ const clearForgeLock = () => {
       const filePath = path.join(forgeLockPath, file);
       fs.unlinkSync(filePath);
     });
-  } 
+  }
 };
 
 export const generate = async () => {

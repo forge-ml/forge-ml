@@ -74,6 +74,56 @@ export const createRequest = <T>(params: GeneratedOptions) => {
   };
 };
 
+enum Provider {
+  OpenAI = "openai",
+  Anthropic = "anthropic",
+  Groq = "groq",
+}
+
+type ModelConfig = {
+  model: string;
+  provider: Provider;
+};
+
+type RAGRequestOptions = {
+  collectionId: string;
+  token?: string;
+  modelConfig?: ModelConfig;
+  chunkCount?: number;
+};
+
+type Chunk = {
+  text: string;
+  score: number;
+};
+
+type RAGResponse = Promise<{
+  response: string;
+  context: Chunk[];
+}>;
+
+const ragRequest = async (
+  query: string,
+  opts: RAGRequestOptions
+): RAGResponse => {
+  const response = await fetch(`${serverUrl}/q/rag`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${opts.token}`,
+    },
+    body: JSON.stringify({
+      q: query,
+      collectionId: opts.collectionId,
+      model: opts.modelConfig?.model,
+      provider: opts.modelConfig?.provider,
+      chunkCount: opts.chunkCount,
+    }),
+  });
+
+  return response.json();
+};
+
 const Forge = (options: ClientOptions) => {
   const forgeKey = options.forgeKey;
   //   const defaultModel = options.defaultModel;
@@ -90,6 +140,14 @@ export default Forge;
 
 const generatedClient = (forgeKey: string) => {
   return {
+    $withContext: (prompt: string, opts: RAGRequestOptions) => {
+      return ragRequest(prompt, {
+        token: opts.token || forgeKey,
+        collectionId: opts.collectionId,
+        modelConfig: opts.modelConfig,
+        chunkCount: opts.chunkCount,
+      });
+    },
     text: {
       query: (prompt: string, opts?: RequestOptions) => {
         return createRequest({

@@ -1,5 +1,5 @@
 
-  const serverUrl = "https://api.forge-ml.com"
+  const serverUrl = "http://localhost:3009"
   
 
 /** THIS IS A GENERATED FILE, EDITS WILL BE OVERWRITTEN */
@@ -11,9 +11,9 @@ type ClientOptions = {
 
 type RequestOptions = {
   token?: string;
-  model?: string;
   cache?: "Bust" | "Evade"; // (@TODO: only if cache setting)
- };
+  model?: string;
+};
 
 // Options that will be set at generation time
 type GeneratedOptions =
@@ -52,6 +52,9 @@ export const createRequest = <T>(params: GeneratedOptions) => {
             Authorization: `Bearer ${opts.token}`,
             ...(opts.cache && {
               "Cache-Behavior": opts.cache,
+              ...(opts.model && {
+                Model: opts.model,
+              }),
             }),
             ...(opts.model && {
               "X-Custom-Model": opts.model,
@@ -70,6 +73,56 @@ export const createRequest = <T>(params: GeneratedOptions) => {
   };
 };
 
+enum Provider {
+  OpenAI = "openai",
+  Anthropic = "anthropic",
+  Groq = "groq",
+}
+
+type ModelConfig = {
+  model: string;
+  provider: Provider;
+};
+
+type RAGRequestOptions = {
+  collectionId: string;
+  token?: string;
+  modelConfig?: ModelConfig;
+  chunkCount?: number;
+};
+
+type Chunk = {
+  text: string;
+  score: number;
+};
+
+type RAGResponse = Promise<{
+  response: string;
+  context: Chunk[];
+}>;
+
+const ragRequest = async (
+  query: string,
+  opts: RAGRequestOptions
+): RAGResponse => {
+  const response = await fetch(`${serverUrl}/q/rag`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${opts.token}`,
+    },
+    body: JSON.stringify({
+      q: query,
+      collectionId: opts.collectionId,
+      model: opts.modelConfig?.model,
+      provider: opts.modelConfig?.provider,
+      chunkCount: opts.chunkCount,
+    }),
+  });
+
+  return response.json();
+};
+
 const Forge = (options: ClientOptions) => {
   const forgeKey = options.forgeKey;
   //   const defaultModel = options.defaultModel;
@@ -84,10 +137,21 @@ export default Forge;
 
   import recipe_schema from "./recipe.generated.ts"
 import book_schema from "./book.generated.ts"
+import message_schema from "./message.generated.ts"
 import person_schema from "./person.generated.ts"
 
   const generatedClient = (forgeKey: string) => {
     return {
+      
+$withContext: (prompt: string, opts: RAGRequestOptions) => {
+    return ragRequest(prompt, {
+      token: opts.token || forgeKey,
+      collectionId: opts.collectionId,
+      modelConfig: opts.modelConfig,
+      chunkCount: opts.chunkCount,
+    });
+  },
+
       
 recipe: {
     queryImage: (prompt: { imageUrl: string, prompt: string }, opts?: RequestOptions) => {
@@ -98,6 +162,7 @@ recipe: {
         })(prompt, {
           token: opts?.token || forgeKey,
           cache: opts?.cache,
+          model: opts?.model,
         });
       },
 },
@@ -110,19 +175,33 @@ book: {
         })(prompt, {
           token: opts?.token || forgeKey,
           cache: opts?.cache,
+          model: opts?.model,
+        });
+      },
+},
+
+message: {
+    query: (prompt: string, opts?: RequestOptions) => {
+        return createRequest<Zod.infer<typeof message_schema>>({
+          username: "jakezegil",
+          path: "message",
+        })(prompt, {
+          token: opts?.token || forgeKey,
+          cache: opts?.cache,
+          model: opts?.model,
         });
       },
 },
 
 person: {
-    queryImage: (prompt: { imageUrl: string, prompt: string }, opts?: RequestOptions) => {
+    query: (prompt: string, opts?: RequestOptions) => {
         return createRequest<Zod.infer<typeof person_schema>>({
           username: "jakezegil",
           path: "person",
-          contentType: "image"
         })(prompt, {
           token: opts?.token || forgeKey,
           cache: opts?.cache,
+          model: opts?.model,
         });
       },
 },
