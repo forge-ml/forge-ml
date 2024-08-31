@@ -4,7 +4,7 @@ import { cWrap } from "../utils/logging";
 import readline from "node:readline";
 import { selectOption, selectOptionBinary } from "../utils/optionSelect";
 import { config } from "../config/config";
-import { importConfig, importZod } from "../utils/imports";
+import { importConfig } from "../utils/imports";
 import { loadDirectoryFiles } from "../utils/directory";
 
 import { stdin as input, stdout as output } from "node:process";

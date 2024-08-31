@@ -56,16 +56,13 @@ type EndpointConfig = {
 
   model: string;
 
-  provider: "openai" | "anthropic";
+  provider: "openai" | "anthropic" | "groq";
 };
 
 export const config: EndpointConfig = {
   path: "person",
   public: false,
-  name: "Person",
-  description: "A person in history or the present day",
   cache: "Common",
-  contentType: "image",
-  model: "claude-3-5-sonnet-20240620",
-  provider: "anthropic",
+  model: "llama3-70b-8192",
+  provider: "groq",
 };
