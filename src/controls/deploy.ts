@@ -78,6 +78,34 @@ const deploy = async (
   });
 
   if (response.error) {
+    const error = response.error;
+
+    //used for handling zod type validation errors
+    if (error.isAxiosError && error.response && error.response.data) {
+      const errorData = error.response.data[0];
+      if (errorData && errorData.errors && errorData.errors.issues) {
+        const cacheSettingError = errorData.errors.issues.find(
+          (issue: { path: string[] }) => issue.path[0] === "cacheSetting"
+        );
+        const providerError = errorData.errors.issues.find(
+          (issue: { path: string[] }) => issue.path[0] === "provider"
+        );
+
+        if (cacheSettingError) {
+          console.log(
+            cWrap.br("Endpoint Setting Error For Path: " + config.path),
+            cWrap.fr(cacheSettingError.message)
+          );
+        }
+        if (providerError) {
+          console.log(
+            cWrap.br("Endpoint Setting Error For Path: " + config.path),
+            cWrap.fr(providerError.message)
+          );
+        }
+      }
+    }
+
     if (response.message === "Model does not support images") {
       //used to handle error gracefully
       return {
