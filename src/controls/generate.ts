@@ -29,6 +29,40 @@ $withContext: (prompt: string, opts: RAGRequestOptions) => {
   },
 `;
 
+const buildDocuments = () => `
+$documents: {
+   get: (id: string) => {
+    return getDocument(id, {forgeKey});
+   },
+   create: ({ name, text, collectionIds }: { name: string, text: string, collectionIds?: string[] }) => {
+    return createDocument({ name, text, collectionIds: collectionIds || [] }, {forgeKey});
+   },
+   delete: (id: string) => {
+    return deleteDocument(id, {forgeKey});
+   },
+   addToCollections: (id: string, collectionIds: string[]) => {
+    return addDocumentToCollections(id, collectionIds, {forgeKey});
+   },
+   removeFromCollections: (id: string, collectionIds: string[]) => {
+    return removeDocumentFromCollections(id, collectionIds, {forgeKey});
+   },
+},
+`;
+
+const buildCollections = () => `
+$collections: {
+   get: (id: string) => {
+    return getCollection(id, {forgeKey});
+   },
+   create: ({ name, documentIds }: { name: string, documentIds?: string[] }) => {
+    return createCollection({ name, documentIds: documentIds || [] }, {forgeKey});
+   },
+   delete: (id: string, options?: { deleteDocuments: boolean }) => {
+    return deleteCollection(id, { deleteDocuments: options?.deleteDocuments || false }, {forgeKey});
+   },
+},
+`;
+
 const functionTemplate = (username: string, path: string) => `
 ${cleanPath(path)}: {
     query: (prompt: string, opts?: RequestOptions) => {
@@ -98,6 +132,8 @@ const buildClient = (
 
   const generatedClient = (forgeKey: string) => {
     return {
+      ${buildDocuments()}
+      ${buildCollections()}
       ${buildRag()}
       ${buildFunctions(username, configs)}
     };
