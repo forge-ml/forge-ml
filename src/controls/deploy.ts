@@ -60,7 +60,6 @@ const deploy = async (
 ) => {
   const zod = await importZod(inFile);
   const json = toJSON(zod);
-
   const response = await makeRequest(EP.DEPLOY, {
     method: "POST",
     data: {
@@ -74,6 +73,7 @@ const deploy = async (
       contentType: config.contentType,
       model: config.model,
       provider: config.provider,
+      context: config.context,
     },
   });
 

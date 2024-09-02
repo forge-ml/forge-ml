@@ -13,4 +13,5 @@ export type SchemaConfig = {
   model?: string; //change this to defaultModel
   provider?: string;
   contentType?: "text" | "image";
+  context?: string; //the collection id to get data from
 };
