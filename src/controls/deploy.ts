@@ -10,7 +10,7 @@ import { generate } from "./generate";
 import fs from "fs";
 import axios from "axios";
 import { execSync } from "child_process";
-
+import { modelProviderOptions } from "../utils/config";
 /**
  * helper functions to check latest version of npm package
  */
@@ -96,11 +96,28 @@ const deploy = async (
             cWrap.br("Endpoint Setting Error For Path: " + config.path),
             cWrap.fr(cacheSettingError.message)
           );
+          console.log(
+            cWrap.fr("Please set the cache setting to ") +
+              cWrap.fy("'common', 'individual' or 'none'") +
+              cWrap.fr(" in the schema config of ") +
+              cWrap.fy(inFile)
+          );
         }
+
+        // @TODO: modelOptions is exported from create.ts we should move this out to shared location
+        const providers = Object.keys(modelProviderOptions);
         if (providerError) {
           console.log(
             cWrap.br("Endpoint Setting Error For Path: " + config.path),
             cWrap.fr(providerError.message)
+          );
+          console.log(
+            cWrap.fr(
+              "Please set the provider to one of the following: " +
+                cWrap.fy("[" + providers.join(", ") + "]") +
+                cWrap.fr(" in the schema config of ") +
+                cWrap.fy(inFile)
+            )
           );
         }
       }

@@ -11,9 +11,7 @@ import {
   selectOptionRaw,
 } from "../utils/optionSelect";
 import { config } from "../config/config";
-
-//TODO: VALIDATION FOR FORGE FILE PATH
-//TODO BACKLOG: Manual schema creation
+import { modelProviderOptions } from "../utils/config";
 
 enum PathPrivacy {
   PUBLIC = "public",
@@ -59,17 +57,6 @@ type Question = {
   errorMessage?: string;
 } & (InputQuestion | SelectQuestion);
 
-const modelOptions = {
-  openai: ["gpt-4o-mini", "gpt-4o", "gpt-4", "gpt-3.5-turbo", "Custom"],
-  anthropic: [
-    "claude-3-5-sonnet-20240620",
-    "claude-3-opus-20240229",
-    "claude-3-sonnet-20240307",
-    "claude-3-haiku-20240307",
-  ],
-  groq: ["llama3-8b-8192", "llama3-70b-8192", "llama3-70b-4096"],
-};
-
 const withFirstAsDefault = (options: string[]) =>
   options.map((option) => ({
     label: option + (option === options[0] ? " (default)" : ""),
@@ -106,7 +93,9 @@ const questions: Record<string, Question> = {
     question: "Which model would you like to use?\n",
     options: (answers: Record<string, string>) =>
       withFirstAsDefault(
-        modelOptions[answers["provider"] as keyof typeof modelOptions]
+        modelProviderOptions[
+          answers["provider"] as keyof typeof modelProviderOptions
+        ]
       ),
   },
   customModelId: {
