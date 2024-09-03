@@ -10,7 +10,7 @@ import { generate } from "./generate";
 import fs from "fs";
 import axios from "axios";
 import { execSync } from "child_process";
-
+import { modelProviderOptions } from "../utils/config";
 /**
  * helper functions to check latest version of npm package
  */
@@ -78,6 +78,51 @@ const deploy = async (
   });
 
   if (response.error) {
+    const error = response.error;
+
+    //used for handling zod type validation errors
+    if (error.isAxiosError && error.response && error.response.data) {
+      const errorData = error.response.data[0];
+      if (errorData && errorData.errors && errorData.errors.issues) {
+        const cacheSettingError = errorData.errors.issues.find(
+          (issue: { path: string[] }) => issue.path[0] === "cacheSetting"
+        );
+        const providerError = errorData.errors.issues.find(
+          (issue: { path: string[] }) => issue.path[0] === "provider"
+        );
+
+        if (cacheSettingError) {
+          console.log(
+            cWrap.br("Endpoint Setting Error For Path: " + config.path),
+            cWrap.fr(cacheSettingError.message)
+          );
+          console.log(
+            cWrap.fr("Please set the cache setting to ") +
+              cWrap.fy("'common', 'individual' or 'none'") +
+              cWrap.fr(" in the schema config of ") +
+              cWrap.fy(inFile)
+          );
+        }
+
+        // @TODO: modelOptions is exported from create.ts we should move this out to shared location
+        const providers = Object.keys(modelProviderOptions);
+        if (providerError) {
+          console.log(
+            cWrap.br("Endpoint Setting Error For Path: " + config.path),
+            cWrap.fr(providerError.message)
+          );
+          console.log(
+            cWrap.fr(
+              "Please set the provider to one of the following: " +
+                cWrap.fy("[" + providers.join(", ") + "]") +
+                cWrap.fr(" in the schema config of ") +
+                cWrap.fy(inFile)
+            )
+          );
+        }
+      }
+    }
+
     if (response.message === "Model does not support images") {
       //used to handle error gracefully
       return {
