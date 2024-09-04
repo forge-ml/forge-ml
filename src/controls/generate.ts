@@ -22,7 +22,7 @@ const buildRag = () => `
 $withContext: (prompt: string, opts: RAGRequestOptions) => {
     return ragRequest(prompt, {
       token: opts.token || forgeKey,
-      collectionId: opts.collectionId,
+      collectionKey: opts.collectionKey,
       modelConfig: opts.modelConfig,
       chunkCount: opts.chunkCount,
     });

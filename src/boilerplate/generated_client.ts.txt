@@ -88,7 +88,7 @@ type ModelConfig = {
 };
 
 type RAGRequestOptions = {
-  collectionId: string;
+  collectionKey: string;
   token?: string;
   modelConfig?: ModelConfig;
   chunkCount?: number;
@@ -116,7 +116,7 @@ const ragRequest = async (
     },
     body: JSON.stringify({
       q: query,
-      collectionId: opts.collectionId,
+      collectionKey: opts.collectionKey,
       model: opts.modelConfig?.model,
       provider: opts.modelConfig?.provider,
       chunkCount: opts.chunkCount,
@@ -227,10 +227,7 @@ const COLLECTION_REQS = {
   }),
 } satisfies Record<string, (...args: any[]) => ReqConfig<any, any>>;
 
-const generReq = <B, R>(
-  forgeKey: string,
-  reqConfig: ReqConfig<B, R>
-) => {
+const generReq = <B, R>(forgeKey: string, reqConfig: ReqConfig<B, R>) => {
   return async (body?: B): Promise<R> => {
     const headers: HeadersInit = {
       Authorization: `Bearer ${forgeKey}`,
@@ -288,8 +285,11 @@ const createCollection = (
   body: { name: string; documentIds: string[] },
   { forgeKey }: CollectionRequestOptions
 ) => generReq(forgeKey, COLLECTION_REQS.create())(body);
-const deleteCollection = (id: string, { deleteDocuments }: { deleteDocuments: boolean }, { forgeKey }: CollectionRequestOptions) =>
-  generReq(forgeKey, COLLECTION_REQS.delete(id))({ deleteDocuments });
+const deleteCollection = (
+  id: string,
+  { deleteDocuments }: { deleteDocuments: boolean },
+  { forgeKey }: CollectionRequestOptions
+) => generReq(forgeKey, COLLECTION_REQS.delete(id))({ deleteDocuments });
 
 const Forge = (options: ClientOptions) => {
   const forgeKey = options.forgeKey;
@@ -347,14 +347,18 @@ const generatedClient = (forgeKey: string) => {
         return createCollection({ name, documentIds }, { forgeKey });
       },
       delete: (id: string, options?: { deleteDocuments: boolean }) => {
-        return deleteCollection(id, { deleteDocuments: options?.deleteDocuments || false }, { forgeKey });
+        return deleteCollection(
+          id,
+          { deleteDocuments: options?.deleteDocuments || false },
+          { forgeKey }
+        );
       },
     },
 
     $withContext: (prompt: string, opts: RAGRequestOptions) => {
       return ragRequest(prompt, {
         token: opts.token || forgeKey,
-        collectionId: opts.collectionId,
+        collectionKey: opts.collectionKey,
         modelConfig: opts.modelConfig,
         chunkCount: opts.chunkCount,
       });
