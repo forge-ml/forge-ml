@@ -10,7 +10,8 @@
 
 [Installation](#-installation) •
 [Quickstart](#-quickstart) •
-[Forge Online](#-forge-online)
+[Forge Online](#-forge-online) •
+[Forge Docs](https://forge-ml.com/docs/home)
 
 </div>
 
@@ -32,15 +33,14 @@ forge --help
 
 ## 🛠️ What is Forge?
 
-
 Features
+
 - Fully typesafe Typescript SDK, auto-generated from your zod schemas
 - AI-powered schema creation and editing <span style="color:#43AA8B;">(save time and get better results with mini-prompts optimized for each key)</span>
 - Guaranteed response structure <span style="color:#43AA8B;">(no more parsing JSON)</span>
 - Auto-generated documentation for endpoints <span style="color:#43AA8B;">(get reliable structured responses in any language)</span>
 - Caching and cache-management for queries <span style="color:#43AA8B;">(don't burn tokens on repeat extractions)</span>
 - Multiple LLM Providers: Anthropic and OpenAI - Groq coming soon <span style="color:#43AA8B;">(avoid vendor lock-in)</span>
-
 
 Forge uses a combination of tools like [Zod](https://github.com/colinhacks/zod) and [Instructor](https://github.com/instructor-ai/instructor-js) to create and deploy endpoints that can be used to extract structured data from LLMs. It's the easiest way to build AI products.
 
@@ -71,6 +71,8 @@ forge deploy
 }
 
 ```
+
+For more information on Forge, checkout the [Forge Docs](https://forge-ml.com/docs/home).
 
 ## 📈 Quickstart
 
@@ -176,7 +178,7 @@ Once the schema is generated, a new forge schema file `<endpoint-path>.ts` will 
 
 ## 🛜 Forge Online
 
-Forge partners with [lsd.so](https://lsd.so/#landing-dev-section) for live data from the web. 
+Forge partners with [lsd.so](https://lsd.so/#landing-dev-section) for live data from the web.
 
 The LSD bicycle allows you to easily and precisely access structured data from the internet, fast. You can then pipe that data into your prompt context, which gives forge realtime access to any website when building structured AI workflows.
 
@@ -184,7 +186,6 @@ As an example, we built an app that allows you to filter and sort live hacker ne
 
 - Demo: https://main--forge-lsd.netlify.app/
 - Code: https://github.com/forge-ml/example.forge-on-lsd
-
 
 ## 🤖 Using the Forge SDK
 
@@ -253,9 +254,23 @@ And you'll get a typesafe response from your endpoint:
 }
 ```
 
+## 📄 RAG over your documents
+
+Forge allows you upload documents and query them using RAG. To get started, head over to forge-ml.com and sign in. Once you're logged in, upload your document and copy the key. You can now use the forge client to upload your documents.
+
+```ts
+import forge from "./forge/client";
+
+const response = await forge.$documents.upload({
+  collectionKey: "<your-key>",
+});
+```
+
+If you want query multiple documents, go to collections section and create a new collection with the documents you want to query. You can now use the collection key to query the documents.
+
 ## ⚡️ Creating your first endpoint
 
-2. Create a typescript file with a zod schema as the default export
+1. Create a typescript file with a zod schema as the default export
 
    ```ts
    // ./forge/schema/endpointSchema.ts
@@ -292,7 +307,7 @@ And you'll get a typesafe response from your endpoint:
    export default PersonSchema;
    ```
 
-3. Add a config export to the schema typescript file. The path for the endpoint should be one word with no special characters
+2. Add a config export to the schema typescript file. The path for the endpoint should be one word with no special characters
 
    ```ts
    /*
@@ -314,11 +329,12 @@ And you'll get a typesafe response from your endpoint:
      /** cache setting **/
      cache: "Individual", // this means it's set to be unique to each user
      contentType: "text", // this means the endpoint will process text
+     provider: "openai", // this means the endpoint will use the openai provider
      model: "gpt-4o-mini", // this means the endpoint will use the gpt-4o-mini model
    };
    ```
 
-4. Test the endpoint
+3. Test the endpoint
 
    ```bash
    forge test ./forge/schema/endpointSchema.ts
@@ -354,20 +370,20 @@ And you'll get a typesafe response from your endpoint:
    }
    ```
 
-5. Deploy the endpoint, and check it out in your swagger docs
+4. Deploy the endpoint, and check it out in your swagger docs
 
    ```bash
    forge deploy  ## Deploy your endpoints
    forge docs    ## Check out your swagger docs
    ```
 
-6. Grab your forge key
+5. Grab your forge key
 
    ```bash
    forge key copy forge  ## Copy your forge key to your clipboard
    ```
 
-7. Make your first request!
+6. Make your first request!
 
    ```bash
    # Make a request to your endpoint
@@ -409,6 +425,12 @@ export type EndpointConfig = {
    * if no model is included we use gpt-4o-mini by default
    * **/
   model: "gpt-4o-mini" | "gpt-4o" | "gpt-4" | "gpt-3.5-turbo" | "<custom-model-id>";
+  /** provider setting
+   * openai - the endpoint will use the openai provider
+   * groq - the endpoint will use the groq provider
+   * anthropic - the endpoint will use the anthropic provider
+   * **/
+  provider: "openai" | "groq" | "anthropic";
 };
 
 export const config: EndpointConfig = {
