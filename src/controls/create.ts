@@ -102,7 +102,7 @@ const questions: Record<string, Question> = {
   },
   contentType: {
     type: "select",
-    question: "What is the content type of your schema?\n",
+    question: "Are you querying text or images?\n",
     options: [ContentType.TEXT, ContentType.IMAGE],
   },
   provider: {
@@ -267,8 +267,6 @@ const create = async () => {
     const write = await selectOptionBinary(["Yes", "No"]);
 
     if (write === "Yes") {
-      //DOUBLE CHECK THAT THIS IS THE CORRECT FILE PATH
-      //DOUBLE CHECK NAMING CONVENTION FOR SCHEMA FILE
       const schemaDir = path.join(process.cwd(), config.schemaPath);
       const filePath = promptAnswers.path + ".ts";
 
