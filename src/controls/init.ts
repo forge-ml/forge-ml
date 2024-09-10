@@ -13,11 +13,16 @@ import { loadAndSetUsername } from "../utils/username";
 import makeRequest, { EP } from "../utils/request";
 
 const createProject = async (projectName?: string) => {
-  const response = await makeRequest(EP.PROJECT, {
-    method: "POST",
-    data: { projectName },
-  });
-  return response.data;
+  try {
+    const response = await makeRequest(EP.PROJECT, {
+      method: "POST",
+      data: { projectName },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error creating project:", error);
+    throw error;
+  }
 };
 
 const init = async () => {
@@ -68,8 +73,13 @@ const init = async () => {
   }
 
   console.log(cWrap.fm("Initializing project...\n"));
-  const projectId = await createProject(projectName);
-  projectService.projectId.set(projectId);
+  try {
+    const projectId = await createProject(projectName);
+    projectService.projectId.set(projectId);
+  } catch (error) {
+    console.error("Error initializing project:", error);
+    throw error;
+  }
 
   console.log(cWrap.fm("\nGenerating initial client code...\n"));
   await generate();
