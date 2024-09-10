@@ -176,6 +176,8 @@ forge> Creating schema...
 
 Once the schema is generated, a new forge schema file `<endpoint-path>.ts` will be created in `./forge/schema` for you to test and deploy.
 
+To learn more about creating schemas and how to use them, check out our docs [here](https://forge-ml.com/docs/schemas).
+
 ## 🛜 Forge Online
 
 Forge partners with [lsd.so](https://lsd.so/#landing-dev-section) for live data from the web.
@@ -254,19 +256,29 @@ And you'll get a typesafe response from your endpoint:
 }
 ```
 
+Learn more about the Forge SDK [here](https://forge-ml.com/docs/forge-sdk).
+
 ## 📄 RAG over your documents
 
 Forge allows you upload documents and query them using RAG. To get started, head over to forge-ml.com and sign in. Once you're logged in, upload your document and copy the key. You can now use the forge client to upload your documents.
 
 ```ts
-import forge from "./forge/client";
-
-const response = await forge.$documents.upload({
-  collectionKey: "<your-key>",
+const result = await forge.$withContext("<your-prompt>", {
+  collectionKey: "<your-collection-key>",
+  chunkCount: 10,
 });
+
+result.context.forEach((chunk) => {
+  console.log(chunk.text);
+  console.log(chunk.score);
+});
+
+console.log(result.response);
 ```
 
 If you want query multiple documents, go to collections section and create a new collection with the documents you want to query. You can now use the collection key to query the documents.
+
+To find out more about Forge RAG, check out our docs [here](https://forge-ml.com/docs/rag).
 
 ## ⚡️ Creating your first endpoint
 
