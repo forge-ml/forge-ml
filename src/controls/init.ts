@@ -10,6 +10,15 @@ import cWrap from "../utils/logging";
 import { selectOption } from "../utils/optionSelect";
 import projectService from "../svc/projectService";
 import { loadAndSetUsername } from "../utils/username";
+import makeRequest, { EP } from "../utils/request";
+
+const createProject = async (projectName?: string) => {
+  const response = await makeRequest(EP.PROJECT, {
+    method: "POST",
+    data: { projectName },
+  });
+  return response.data;
+};
 
 const init = async () => {
   // Install zod
@@ -35,10 +44,34 @@ const init = async () => {
   console.log(cWrap.fm("What language is your project?"));
   const language = await selectOption(["typescript", "javascript"]);
   projectService.language.set(language);
-  
+
   loadAndSetUsername();
 
-  console.log(cWrap.fm("\n\nGenerating initial client code...\n"));
+  console.log(cWrap.fm("\n\nWhat is the name of your project?"));
+  const projectName = await new Promise<string>((resolve) => {
+    const readline = require("readline").createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+    readline.question("", (name: string) => {
+      readline.close();
+      resolve(name.trim());
+    });
+  });
+
+  if (projectName) {
+    console.log(
+      cWrap.fm(`Project name set to: ` + cWrap.fg(projectName) + "\n")
+    );
+  } else {
+    console.log(cWrap.fy("No project name provided. Using default settings."));
+  }
+
+  console.log(cWrap.fm("Initializing project...\n"));
+  const projectId = await createProject(projectName);
+  projectService.projectId.set(projectId);
+
+  console.log(cWrap.fm("\nGenerating initial client code...\n"));
   await generate();
 
   // JS or TS
