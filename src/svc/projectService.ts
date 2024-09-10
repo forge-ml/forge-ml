@@ -5,11 +5,13 @@ import { config } from "../config/config";
 type ForgeConfig = {
   language: "typescript" | "javascript";
   username: string;
+  projectId: string;
 };
 
 const defaultForgeConfig: ForgeConfig = {
   language: "typescript",
   username: "",
+  projectId: "",
 };
 
 const projectService = {
@@ -19,9 +21,11 @@ const projectService = {
     // create if not exists
     if (!fs.existsSync(forgeConfigPath)) {
       fs.mkdirSync(dirname(forgeConfigPath), { recursive: true });
-      fs.writeFileSync(forgeConfigPath, JSON.stringify(defaultForgeConfig, null, 2));
+      fs.writeFileSync(
+        forgeConfigPath,
+        JSON.stringify(defaultForgeConfig, null, 2)
+      );
     }
-
 
     const configContent = fs.readFileSync(forgeConfigPath, "utf-8");
     return JSON.parse(configContent) as ForgeConfig;
@@ -32,9 +36,9 @@ const projectService = {
 
     const currentConfig = projectService.getForgeConfig();
     const updatedConfig = { ...currentConfig, ...newConfig };
-    
+
     fs.writeFileSync(forgeConfigPath, JSON.stringify(updatedConfig, null, 2));
-    
+
     return updatedConfig;
   },
   language: {
@@ -57,6 +61,16 @@ const projectService = {
     set: (username: string): string => {
       projectService.updateForgeConfig({ username });
       return username;
+    },
+  },
+  projectId: {
+    get: (): string => {
+      const forgeConfig = projectService.getForgeConfig();
+      return forgeConfig.projectId;
+    },
+    set: (projectId: string): string => {
+      projectService.updateForgeConfig({ projectId });
+      return projectId;
     },
   },
 };
