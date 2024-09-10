@@ -14,6 +14,7 @@ const test = async (inFile: string) => {
 
   const config = await importConfig(filePath);
   const model = config.model;
+  const provider = config.provider;
   const rl = readline.createInterface({ input, output });
 
   rl.question("Enter a prompt to test your schema: ", async (prompt) => {
@@ -23,6 +24,7 @@ const test = async (inFile: string) => {
         schema: JSON.stringify(json),
         prompt,
         model,
+        provider,
       },
     });
 
