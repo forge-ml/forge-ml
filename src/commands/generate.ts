@@ -7,9 +7,15 @@ const generateCommand = (cli: Argv) =>
     "generate",
     `${cWrap.fm("Generate a new forge client.")}
 `,
-    () => {},
-    (_args) => {
-      generate();
+    (yargs) => {
+      return yargs.option("commonjs", {
+        alias: "c",
+        type: "boolean",
+        description: "Generate CommonJS client",
+      });
+    },
+    (args) => {
+      generate(args.commonjs);
     }
   );
 

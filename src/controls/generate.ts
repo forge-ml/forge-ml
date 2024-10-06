@@ -109,26 +109,24 @@ const buildFunctions = (
     .join("\n");
 };
 
-const buildImports = (configs: { config: any; file: string }[]) => {
+const buildImports = (configs: { config: any; file: string }[], isCommonJS: boolean) => {
   return configs
     .map(
       (config) =>
-        `import ${cleanPath(
-          config.config.path
-        )}_${type_prefix} from "./${config.file.replace(
-          ".ts",
-          ".generated.ts"
-        )}"`
+        isCommonJS
+          ? `const ${cleanPath(config.config.path)}_${type_prefix} = require("./${config.file.replace(".ts", ".generated.js")}");`
+          : `import ${cleanPath(config.config.path)}_${type_prefix} from "./${config.file.replace(".ts", ".generated.ts")}";`
     )
     .join("\n");
 };
 
 const buildClient = (
   username: string,
-  configs: { config: any; file: string }[]
+  configs: { config: any; file: string }[],
+  isCommonJS: boolean
 ) => {
-  return `
-  ${buildImports(configs)}
+  const clientCode = `
+  ${buildImports(configs, isCommonJS)}
 
   const generatedClient = (forgeKey: string) => {
     return {
@@ -139,9 +137,11 @@ const buildClient = (
     };
   };
   `;
+
+  return clientCode;
 };
 
-const createClient = async () => {
+const createClient = async (isCommonJS: boolean) => {
   // Get all of the schema files
   const files = loadDirectoryFiles();
   // Ensure the forge lock directory exists
@@ -170,9 +170,15 @@ const createClient = async () => {
             {
               const destPath = path.join(
                 schemaDir,
-                file.replace(".ts", ".generated.ts")
+                file.replace(".ts", isCommonJS ? ".generated.js" : ".generated.ts")
               );
-              fs.copyFileSync(filePath, destPath);
+              if (isCommonJS) {
+                const tsCode = fs.readFileSync(filePath, 'utf-8');
+                const commonCode = tsCode.replace(/import (.+) from "(.+)";/g, 'const $1 = require("$2");');
+                compileTypeScriptModule(commonCode, destPath);
+              } else {
+                fs.copyFileSync(filePath, destPath);
+              }
             }
             break;
           case "javascript":
@@ -189,17 +195,22 @@ const createClient = async () => {
 
   const username = projectService.username.get();
 
-  return buildClient(username, configs);
+  return buildClient(username, configs, isCommonJS);
 };
 
-const compileForgeLock = async (code: string) => {
+const compileForgeLock = async (code: string, isCommonJS: boolean) => {
   console.log("Creating forge.lock (generated client)");
 
   const forgeLockPath = path.join(process.cwd(), cfg.forgeLockPath);
 
   if (projectService.language.get() === "typescript") {
-    const target = path.join(forgeLockPath, "index.ts");
-    fs.writeFileSync(target, code);
+    const target = path.join(forgeLockPath, isCommonJS ? "index.js" : "index.ts");
+    if (isCommonJS) {
+      const commonCode = code.replace(/import (.+) from "(.+)";/g, 'const $1 = require("$2");');
+      compileTypeScriptModule(commonCode, target);
+    } else {
+      fs.writeFileSync(target, code);
+    }
   } else {
     compileTypeScriptModule(code, path.join(forgeLockPath, "index.js"));
   }
@@ -217,7 +228,7 @@ const clearForgeLock = () => {
   }
 };
 
-export const generate = async () => {
+export const generate = async (isCommonJS: boolean = false) => {
   const boilerplate = loadBoilerplateFile("generated_client.ts.txt");
 
   clearForgeLock();
@@ -227,17 +238,24 @@ export const generate = async () => {
     await loadAndSetUsername();
   }
 
-  const clientCode = await createClient();
+  const clientCode = await createClient(isCommonJS);
 
   // @TODO: make this dynamic
   const variable_declarations = `
   const serverUrl = "${cfg.serverUrl}"
   `;
 
-  const ext = projectService.language.getExt();
+  const ext = isCommonJS ? ".js" : projectService.language.getExt();
+
+  // Coerce boilerplate to use require when commonjs is true
+  const commonBoilerplate = isCommonJS
+    ? boilerplate.replace(/export default Forge;/, '')
+        + '\nmodule.exports = Forge;'
+
+    : boilerplate;
 
   // write the generated client
-  compileForgeLock(variable_declarations + boilerplate + clientCode);
+  compileForgeLock(variable_declarations + commonBoilerplate + clientCode, isCommonJS);
   console.log(
     "Client code re-generated and written to " +
       cWrap.fg(path.join(cfg.forgeLockPath, "index" + ext)) +

@@ -1,5 +1,5 @@
 
-  const serverUrl = "https://api.forge-ml.com"
+  const serverUrl = "http://localhost:3009"
   
 
 /** THIS IS A GENERATED FILE, EDITS WILL BE OVERWRITTEN */
@@ -34,7 +34,7 @@ type ImageQuery = { imageUrl: string; prompt: string };
 
 type QueryType = string | ImageQuery;
 
-export const createRequest = <T>(params: GeneratedOptions) => {
+const createRequest = <T>(params: GeneratedOptions) => {
   return async (query: QueryType, opts: RequestOptions) => {
     const baseController = (() => {
       switch (params.contentType) {
@@ -302,10 +302,10 @@ const Forge = (options: ClientOptions) => {
 export default Forge;
 
 
-  import recipe_schema from "./recipe.generated.ts"
-import book_schema from "./book.generated.ts"
-import message_schema from "./message.generated.ts"
-import person_schema from "./person.generated.ts"
+  import recipe_schema from "./recipe.generated.ts";
+import book_schema from "./book.generated.ts";
+import message_schema from "./message.generated.ts";
+import person_schema from "./person.generated.ts";
 
   const generatedClient = (forgeKey: string) => {
     return {
