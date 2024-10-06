@@ -35,7 +35,7 @@ type ImageQuery = { imageUrl: string; prompt: string };
 
 type QueryType = string | ImageQuery;
 
-export const createRequest = <T>(params: GeneratedOptions) => {
+const createRequest = <T>(params: GeneratedOptions) => {
   return async (query: QueryType, opts: RequestOptions) => {
     const baseController = (() => {
       switch (params.contentType) {
@@ -348,6 +348,9 @@ const generatedClient = (forgeKey: string) => {
       },
       delete: (id: string, options?: { deleteDocuments: boolean }) => {
         return deleteCollection(id, { deleteDocuments: options?.deleteDocuments || false }, { forgeKey });
+      },
+      list: () => {
+        return listCollections({ forgeKey });
       },
     },
 
