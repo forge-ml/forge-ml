@@ -11,6 +11,7 @@ export enum EP {
   SET_PROVIDER_KEY,
   UPDATE_USERNAME,
   CREATE,
+  PROJECT,
 }
 
 const rootURL = config.serverUrl;
@@ -23,6 +24,7 @@ const EPS = {
   [EP.SET_PROVIDER_KEY]: "/cli/key",
   [EP.UPDATE_USERNAME]: "/cli/updateUsername",
   [EP.CREATE]: "/create",
+  [EP.PROJECT]: "/project",
 };
 
 type Options = {
