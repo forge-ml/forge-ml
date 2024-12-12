@@ -24,6 +24,11 @@ enum CacheType {
   INDIVIDUAL = "Individual",
 }
 
+enum ContentType {
+  TEXT = "text",
+  IMAGE = "image",
+}
+
 const askQuestion = (
   rl: readline.Interface,
   question: string
@@ -82,6 +87,11 @@ const questions: Record<string, Question> = {
     type: "select",
     question: "Would you like to cache your schema?\n",
     options: [CacheType.NONE, CacheType.COMMON, CacheType.INDIVIDUAL],
+  },
+  contentType: {
+    type: "select",
+    question: "Are you querying text or images?\n",
+    options: [ContentType.TEXT, ContentType.IMAGE],
   },
   provider: {
     type: "select",
@@ -186,6 +196,7 @@ const create = async () => {
     path: answers["path"],
     public: answers["privacy"],
     cache: answers["cache"],
+    contentType: answers["contentType"],
     model:
       answers["model"] === "Custom"
         ? answers["customModelId"]
@@ -246,8 +257,6 @@ const create = async () => {
     const write = await selectOptionBinary(["Yes", "No"]);
 
     if (write === "Yes") {
-      //DOUBLE CHECK THAT THIS IS THE CORRECT FILE PATH
-      //DOUBLE CHECK NAMING CONVENTION FOR SCHEMA FILE
       const schemaDir = path.join(process.cwd(), config.schemaPath);
       const filePath = promptAnswers.path + ".ts";
 
