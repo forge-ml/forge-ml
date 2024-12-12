@@ -1,0 +1,5 @@
+- hacker news
+- product hunt
+- reddit
+- twitter
+- linkedin
