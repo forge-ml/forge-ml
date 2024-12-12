@@ -94,7 +94,7 @@ const deploy = async (
         if (cacheSettingError) {
           console.log(
             cWrap.br("Endpoint Setting Error For Path: " + config.path),
-            cWrap.fr(cacheSettingError.message)
+            cWrap.fr(cacheSettingError.message + ": " + config.cache + ". ")
           );
           console.log(
             cWrap.fr("Please set the cache setting to ") +
@@ -109,7 +109,7 @@ const deploy = async (
         if (providerError) {
           console.log(
             cWrap.br("Endpoint Setting Error For Path: " + config.path),
-            cWrap.fr(providerError.message)
+            cWrap.fr(providerError.message + ": " + config.provider + ". ")
           );
           console.log(
             cWrap.fr(
